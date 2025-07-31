@@ -1,18 +1,18 @@
 package com.github.petrovyegor.tennisscoreboard.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
-@Setter
 @ToString
+@NoArgsConstructor
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Player {
+    @EqualsAndHashCode.Include
     private int id;
     private String name;
 
-    public Player(int id, String name){
-        this.id = id;
+    public Player(String name){
         this.name = name;
     }
 }

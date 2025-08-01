@@ -1,15 +1,19 @@
 package com.github.petrovyegor.tennisscoreboard.dao;
 
 import com.github.petrovyegor.tennisscoreboard.JpaUtil;
+import com.github.petrovyegor.tennisscoreboard.exception.DBException;
 import com.github.petrovyegor.tennisscoreboard.model.Player;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
+import java.util.Optional;
+
 public class PlayerDao {
-    public Player findById(int id) {
+    public Optional<Player> findById(int id) {
         EntityManager em = JpaUtil.getEntityManager();
         try {
-            return em.find(Player.class, id);
+            Player result = em.find(Player.class, id);
+            return Optional.ofNullable(result);
         } finally {
             em.close();
         }
@@ -26,7 +30,7 @@ public class PlayerDao {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            throw e;
+            throw new DBException("Failed to save Player with name '%s'".formatted(player.getName()));
         } finally {
             em.close();
         }

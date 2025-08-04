@@ -14,7 +14,7 @@ import java.util.Optional;
 public class PlayerDao {
     public List<Player> findAll() {
         List<Player> result = new ArrayList<>();
-        String findAllQuery = "SELECT p FROM Players p";
+        String findAllQuery = "SELECT p FROM Player p";
         try (EntityManager em = JpaUtil.getEntityManager()) {
             Query query = em.createQuery(findAllQuery, Player.class);
             //result = query.getResultList();

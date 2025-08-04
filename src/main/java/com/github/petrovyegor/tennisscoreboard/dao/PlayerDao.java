@@ -5,17 +5,29 @@ import com.github.petrovyegor.tennisscoreboard.exception.DBException;
 import com.github.petrovyegor.tennisscoreboard.model.Player;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class PlayerDao {
+    public List<Player> findAll() {
+        List<Player> result = new ArrayList<>();
+        String findAllQuery = "SELECT p FROM Players p";
+        try (EntityManager em = JpaUtil.getEntityManager()) {
+            Query query = em.createQuery(findAllQuery, Player.class);
+            //result = query.getResultList();
+            return query.getResultList();//может вернуть null
+        } catch (Throwable e) {
+            throw new DBException("Failed to get all currencies");
+        }
+    }
+
     public Optional<Player> findById(int id) {
-        EntityManager em = JpaUtil.getEntityManager();
-        try {
+        try (EntityManager em = JpaUtil.getEntityManager()) {
             Player result = em.find(Player.class, id);
             return Optional.ofNullable(result);
-        } finally {
-            em.close();
         }
     }
 

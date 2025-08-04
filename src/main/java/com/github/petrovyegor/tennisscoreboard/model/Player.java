@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "Players")
+@Table(name = "\"Players\"")
 @Getter
 @ToString
 @NoArgsConstructor
@@ -18,12 +18,12 @@ import lombok.ToString;
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
+    @Column(name = "\"Id\"")
     @Positive(message = "ID should be positive number")
     @EqualsAndHashCode.Include
     private int id;
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "\"Name\"", unique = true, nullable = false)
     @Size(min = 3, max = 30, message = "Name should be from {min} to {max} symbols")
     @NotBlank(message = "Name can not be null or contain only white spaces")
     private String name;

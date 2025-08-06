@@ -20,7 +20,7 @@ public class PlayerDao {
             //result = query.getResultList();
             return query.getResultList();//может вернуть null
         } catch (Throwable e) {
-            throw new DBException("Failed to get all currencies");
+            throw new DBException("Failed to get all players");
         }
     }
 

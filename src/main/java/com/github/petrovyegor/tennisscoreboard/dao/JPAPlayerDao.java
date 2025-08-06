@@ -11,12 +11,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class JPAPlayerDao implements CrudDao{
+public class JPAPlayerDao implements CrudDao<Player, Integer> {
     @Override
-    public Optional findById(Object o) {
+    public Optional<Player> findById(Integer id) {
+        try (EntityManager em = JpaUtil.getEntityManager()) {
+            Player result = em.find(Player.class, id);
+            if (result != null) {
+                return Optional.of(result);
+            }
+        } catch (Throwable e) {
+            throw new DBException("Failed to get player with id '%s'".formatted(id));
+        }
         return Optional.empty();
     }
 
+    @Override
     public List<Player> findAll() {
         List<Player> result = new ArrayList<>();
         String findAllQuery = "SELECT p FROM Player p";
@@ -30,25 +39,20 @@ public class JPAPlayerDao implements CrudDao{
     }
 
 
-    public Optional<Player> findById(int id) {
-        try (EntityManager em = JpaUtil.getEntityManager()) {
-            Player result = em.find(Player.class, id);
-            return Optional.ofNullable(result);
-        }
-    }
-
-    Player save(Player player) {
+    @Override
+    public Player save(Player entity) {
         EntityManager em = JpaUtil.getEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
-            em.persist(player);
+            em.persist(entity);
             transaction.commit();
+            return entity;
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            throw new DBException("Failed to save Player with name '%s'".formatted(player.getName()));
+            throw new DBException("Failed to save Player with name '%s'".formatted(entity.getName()));
         } finally {
             em.close();
         }

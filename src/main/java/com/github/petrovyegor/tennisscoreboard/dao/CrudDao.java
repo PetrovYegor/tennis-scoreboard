@@ -10,7 +10,7 @@ public interface CrudDao<T, ID> {
 
     T save(T entity);
 
-    Optional<T> update(T entity);
+    //Optional<T> update(T entity);
 
-    void delete(ID id);
+    //void delete(ID id);
 }

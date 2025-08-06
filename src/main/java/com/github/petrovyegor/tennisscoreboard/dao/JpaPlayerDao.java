@@ -11,18 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class JPAPlayerDao implements CrudDao<Player, Integer> {
+public class JpaPlayerDao implements CrudDao<Player, Integer> {
     @Override
     public Optional<Player> findById(Integer id) {
         try (EntityManager em = JpaUtil.getEntityManager()) {
             Player result = em.find(Player.class, id);
-            if (result != null) {
-                return Optional.of(result);
-            }
+            return Optional.ofNullable(result);
         } catch (Throwable e) {
             throw new DBException("Failed to get player with id '%s'".formatted(id));
         }
-        return Optional.empty();
     }
 
     @Override

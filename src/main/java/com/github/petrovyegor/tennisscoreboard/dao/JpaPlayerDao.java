@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class JpaPlayerDao implements CrudDao<Player, Integer> {
+public class JpaPlayerDao implements PlayerDao<Player, Integer> {
     @Override
     public Optional<Player> findById(Integer id) {
         try (EntityManager em = JpaUtil.getEntityManager()) {
@@ -53,5 +53,10 @@ public class JpaPlayerDao implements CrudDao<Player, Integer> {
         } finally {
             em.close();
         }
+    }
+
+    @Override
+    public Optional<Player> findByName(String name) {
+        return Optional.empty();
     }
 }

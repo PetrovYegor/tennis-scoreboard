@@ -22,6 +22,8 @@ public class NewMatchController extends HttpServlet {
         String firstPlayerName = request.getParameter("player1");
         String secondPlayerName = request.getParameter("player2");
         NewMatchRequestDto newMatchRequestDto = new NewMatchRequestDto(firstPlayerName, secondPlayerName);
+        var temp = request.getParameterMap();
+        int a = 123;
         //логика по созданию матча через нужный сервис
         //потом уже редирект на другое вью
         if (isNullOrEmpty(firstPlayerName) || isNullOrEmpty(secondPlayerName)){

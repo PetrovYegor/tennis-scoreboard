@@ -9,6 +9,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import static com.github.petrovyegor.tennisscoreboard.util.RequestAndParametersValidator.validateNewMatchPostParameters;
+import static com.github.petrovyegor.tennisscoreboard.util.RequestAndParametersValidator.validateNewMatchPostRequest;
+
 @WebServlet(name = "NewMatchController", urlPatterns = "/new-match")
 public class NewMatchController extends HttpServlet {
     @Override
@@ -18,12 +21,11 @@ public class NewMatchController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        System.out.println("Request recieved");
+        validateNewMatchPostRequest(request);
         String firstPlayerName = request.getParameter("player1");
         String secondPlayerName = request.getParameter("player2");
+        //каким-то образом сделать, чтобы если валидация ругалась, то вызывался бы doGet() и request.setAttribute("error", "One or both names are empty");
         NewMatchRequestDto newMatchRequestDto = new NewMatchRequestDto(firstPlayerName, secondPlayerName);
-        var temp = request.getParameterMap();
-        int a = 123;
         //логика по созданию матча через нужный сервис
         //потом уже редирект на другое вью
         if (isNullOrEmpty(firstPlayerName) || isNullOrEmpty(secondPlayerName)){

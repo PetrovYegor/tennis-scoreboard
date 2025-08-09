@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class JpaPlayerDao implements PlayerDao<Player, Integer> {
+public class JpaPlayerDao implements PlayerDao {
     @Override
     public Optional<Player> findById(Integer id) {
         try (EntityManager em = JpaUtil.getEntityManager()) {
@@ -57,6 +57,20 @@ public class JpaPlayerDao implements PlayerDao<Player, Integer> {
 
     @Override
     public Optional<Player> findByName(String name) {
-        return Optional.empty();
+        Player test = new Player(name);
+        return Optional.ofNullable(test);
+//        try (EntityManager em = JpaUtil.getEntityManager()) {
+//            //List<Player> result = new ArrayList<>();
+//            //String findAllQuery = "SELECT p FROM Player p";
+//            String findByNameQuery = "SELECT p FROM Player p";
+//            Query query = em.createQuery(findByNameQuery, Player.class);
+//                //result = query.getResultList();
+//                return query.getre//может вернуть null
+//
+//            Player result = em.find(Player.class, name);
+//            return Optional.ofNullable(result);
+//        } catch (Throwable e) {
+//            throw new DBException("Failed to get player with name '%s'".formatted(name));
+//        }
     }
 }

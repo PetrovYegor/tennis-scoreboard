@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-import static com.github.petrovyegor.tennisscoreboard.util.RequestAndParametersValidator.validateNewMatchPostParameters;
 import static com.github.petrovyegor.tennisscoreboard.util.RequestAndParametersValidator.validateNewMatchPostRequest;
 
 @WebServlet(name = "NewMatchController", urlPatterns = "/new-match")
@@ -28,7 +27,7 @@ public class NewMatchController extends HttpServlet {
         NewMatchRequestDto newMatchRequestDto = new NewMatchRequestDto(firstPlayerName, secondPlayerName);
         //логика по созданию матча через нужный сервис
         //потом уже редирект на другое вью
-        if (isNullOrEmpty(firstPlayerName) || isNullOrEmpty(secondPlayerName)){
+        if (isNullOrEmpty(firstPlayerName) || isNullOrEmpty(secondPlayerName)) {
             request.setAttribute("error", "One or both names are empty");
             doGet(request, response);
         } else {
@@ -36,7 +35,8 @@ public class NewMatchController extends HttpServlet {
         }
 
     }
-    private boolean isNullOrEmpty(String source){
+
+    private boolean isNullOrEmpty(String source) {
         return source == null || source.isEmpty();
     }
 }

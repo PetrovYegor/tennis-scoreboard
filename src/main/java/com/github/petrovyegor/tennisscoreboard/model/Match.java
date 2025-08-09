@@ -35,10 +35,10 @@ public class Match {
     @PositiveOrZero(message = "WinnerId must be positive number or 0")
     private int winnerId;
 
-//    public Match(int firstPlayerId, int secondPlayerId) {
-//        this.firstPlayerId = firstPlayerId;
-//        this.secondPlayerId = secondPlayerId;
-//    }
+    public Match(int firstPlayerId, int secondPlayerId) {
+        this.firstPlayerId = firstPlayerId;
+        this.secondPlayerId = secondPlayerId;
+    }
 
     public Match(int firstPlayerId, int secondPlayerId, int winnerId) {
         this.firstPlayerId = firstPlayerId;

@@ -21,8 +21,8 @@ public class NewMatchController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         validateNewMatchPostRequest(request);
-        String firstPlayerName = request.getParameter("player1");
-        String secondPlayerName = request.getParameter("player2");
+        String firstPlayerName = request.getParameter("player1_name");
+        String secondPlayerName = request.getParameter("player2_name");
         //каким-то образом сделать, чтобы если валидация ругалась, то вызывался бы doGet() и request.setAttribute("error", "One or both names are empty");
         NewMatchRequestDto newMatchRequestDto = new NewMatchRequestDto(firstPlayerName, secondPlayerName);
         //логика по созданию матча через нужный сервис

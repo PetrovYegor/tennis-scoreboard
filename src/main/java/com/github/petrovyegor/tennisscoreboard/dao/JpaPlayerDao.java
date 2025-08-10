@@ -5,9 +5,9 @@ import com.github.petrovyegor.tennisscoreboard.exception.DBException;
 import com.github.petrovyegor.tennisscoreboard.model.Player;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,12 +24,9 @@ public class JpaPlayerDao implements PlayerDao {
 
     @Override
     public List<Player> findAll() {
-        List<Player> result = new ArrayList<>();
         String findAllQuery = "SELECT p FROM Player p";
         try (EntityManager em = JpaUtil.getEntityManager()) {
-            Query query = em.createQuery(findAllQuery, Player.class);
-            //result = query.getResultList();
-            return query.getResultList();//может вернуть null
+            return em.createQuery(findAllQuery, Player.class).getResultList();
         } catch (Throwable e) {
             throw new DBException("Failed to get all players");
         }
@@ -57,20 +54,14 @@ public class JpaPlayerDao implements PlayerDao {
 
     @Override
     public Optional<Player> findByName(String name) {
-        Player test = new Player(name);
-        return Optional.ofNullable(test);
-//        try (EntityManager em = JpaUtil.getEntityManager()) {
-//            //List<Player> result = new ArrayList<>();
-//            //String findAllQuery = "SELECT p FROM Player p";
-//            String findByNameQuery = "SELECT p FROM Player p";
-//            Query query = em.createQuery(findByNameQuery, Player.class);
-//                //result = query.getResultList();
-//                return query.getre//может вернуть null
-//
-//            Player result = em.find(Player.class, name);
-//            return Optional.ofNullable(result);
-//        } catch (Throwable e) {
-//            throw new DBException("Failed to get player with name '%s'".formatted(name));
-//        }
+        try (EntityManager em = JpaUtil.getEntityManager()) {
+            String findByNameQuery = "SELECT p FROM Player p WHERE p.name = :name";
+            Player result = em.createQuery(findByNameQuery, Player.class).setParameter("name", name).getSingleResult();
+            return Optional.ofNullable(result);
+        } catch (NoResultException e){
+            return Optional.empty();
+        } catch (Throwable e) {
+            throw new DBException("Failed to get player with name '%s'".formatted(name));
+        }
     }
 }

@@ -5,27 +5,28 @@ import com.github.petrovyegor.tennisscoreboard.dto.NewMatchRequestDto;
 import com.github.petrovyegor.tennisscoreboard.model.Match;
 import com.github.petrovyegor.tennisscoreboard.model.Player;
 
+import java.util.Optional;
+
 public class NewMatchService {
-
     private final JpaPlayerDao jpaPlayerDao = new JpaPlayerDao();
-    //Получить дто+
-    //вытащить из него имена+
-    //проверить, что по заданным именнам существуют игроки+
-    // если кого-то из игроков не существует - создать их+
-    // создать матч
-    //сохранить матч в HashMap, где ключ - ид матча,
 
-    void processNewMatch(NewMatchRequestDto newMatchRequestDto) {//поменять название метода
+    public Match getNewMatch(NewMatchRequestDto newMatchRequestDto) {
         String firstPlayerName = newMatchRequestDto.firstPlayerName();
         String secondPlayerName = newMatchRequestDto.secondPlayerName();
+        Player firstPlayer = getOrCreateIfNotExists(firstPlayerName);
+        Player secondPlayer = getOrCreateIfNotExists(secondPlayerName);
+        return new Match(firstPlayer.getId(), secondPlayer.getId());
+    }
 
-        if (!jpaPlayerDao.findByName(firstPlayerName).isPresent()){//убрать дублирование
-            jpaPlayerDao.save(new Player(firstPlayerName));
+    private Player getOrCreateIfNotExists(String playerName) {//Протестировать
+        Optional<Player> player = jpaPlayerDao.findByName(playerName);
+        if (player.isEmpty()) {
+            return save(new Player(playerName));
         }
-        if (!jpaPlayerDao.findByName(secondPlayerName).isPresent()){
-            jpaPlayerDao.save(new Player(secondPlayerName));
-        }
+        return player.get();
+    }
 
-        Match match = new Match();
+    private Player save(Player player) {
+        return jpaPlayerDao.save(player);
     }
 }

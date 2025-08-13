@@ -11,6 +11,6 @@ public class OngoingMatchesService {
     private final List<MatchScore> ongoingMatches = new ArrayList<>();
 
     public void addNewOngoingMatch(Match match) {
-        ongoingMatches.add(new MatchScore(match, ""));
+        //ongoingMatches.add(new MatchScore(match, ""));
     }
 }

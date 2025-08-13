@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import static com.github.petrovyegor.tennisscoreboard.util.RequestAndParametersValidator.validateNewMatchPostRequest;
 
@@ -19,6 +18,7 @@ import static com.github.petrovyegor.tennisscoreboard.util.RequestAndParametersV
 public class NewMatchController extends HttpServlet {
     private final NewMatchService newMatchService = new NewMatchService();
     private final OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         getServletContext().getRequestDispatcher("/new-match.jsp").forward(request, response);
@@ -36,7 +36,7 @@ public class NewMatchController extends HttpServlet {
 //            request.setAttribute("error", "One or both names are empty");
 //            doGet(request, response);
 //        }
-            response.sendRedirect("/match-score?uuid=%s".formatted(newMatch.getId()));
+        response.sendRedirect("/match-score?uuid=%s".formatted(newMatch.getId()));
     }
 
     private boolean isNullOrEmpty(String source) {

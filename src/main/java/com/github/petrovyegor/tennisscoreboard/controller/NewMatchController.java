@@ -24,6 +24,13 @@ public class NewMatchController extends HttpServlet {
         getServletContext().getRequestDispatcher("/new-match.jsp").forward(request, response);
     }
 
+
+/*
+Проверяет существование игроков в таблице `Players`. Если игрока с таким именем не существует, создаём
+			- Создаём экземпляр класса, содержащего айди игроков и текущий счёт, и кладём в коллекцию текущих матчей (существующую только в памяти приложения, либо в key-value storage). Ключом коллекции является UUID, значением - счёт в матче
+			- Редирект на страницу `/match-score?uuid=$match_id`*
+* */
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         validateNewMatchPostRequest(request);

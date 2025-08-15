@@ -1,27 +1,14 @@
 package com.github.petrovyegor.tennisscoreboard.model;
 
-//public record MatchScore(Match match, String score) {
-//}
-public class MatchScore{
+import java.util.HashMap;
+import java.util.Map;
 
+public class MatchScore {
+    private Map<Integer, PlayerScore> playersScore;
+
+    public MatchScore(int firstPlayerId, int secondPlayerId) {
+        playersScore = new HashMap<>();
+        playersScore.put(firstPlayerId, new PlayerScore());
+        playersScore.put(secondPlayerId, new PlayerScore());
+    }
 }
-
-
-//ид матча
-//ид первого игрока
-//ид второго игрока
-//ид победтеля
-//Строка - счёт
-
-
-//Количество сэтов
-//Количество геймов
-//Количество очков
-
-//Каждый игрок хранит свой счёт? Или есть общий счёт на каждого игрока?
-
-/*
-
-
-
-* */

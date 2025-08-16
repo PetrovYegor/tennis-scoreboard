@@ -1,13 +1,9 @@
 package com.github.petrovyegor.tennisscoreboard.model;
 
-public class OngoingMatch {
-    private int firstPlayerId;
-    private int secondPlayerId;
+public class OngoingMatch extends Match {
     private MatchScore matchScore;
 
-    public OngoingMatch(int firstPlayerId, int secondPlayerId){
-        this.firstPlayerId = firstPlayerId;
-        this.secondPlayerId = secondPlayerId;
+    public OngoingMatch(int firstPlayerId, int secondPlayerId) {
         matchScore = new MatchScore(firstPlayerId, secondPlayerId);
     }
 }

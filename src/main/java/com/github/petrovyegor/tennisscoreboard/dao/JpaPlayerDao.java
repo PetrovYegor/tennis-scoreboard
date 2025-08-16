@@ -6,7 +6,6 @@ import com.github.petrovyegor.tennisscoreboard.model.Player;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
-import jakarta.persistence.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,7 +57,7 @@ public class JpaPlayerDao implements PlayerDao {
             String findByNameQuery = "SELECT p FROM Player p WHERE p.name = :name";
             Player result = em.createQuery(findByNameQuery, Player.class).setParameter("name", name).getSingleResult();
             return Optional.ofNullable(result);
-        } catch (NoResultException e){
+        } catch (NoResultException e) {
             return Optional.empty();
         } catch (Throwable e) {
             throw new DBException("Failed to get player with name '%s'".formatted(name));

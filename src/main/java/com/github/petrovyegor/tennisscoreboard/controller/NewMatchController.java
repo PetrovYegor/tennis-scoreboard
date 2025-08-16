@@ -2,6 +2,7 @@ package com.github.petrovyegor.tennisscoreboard.controller;
 
 import com.github.petrovyegor.tennisscoreboard.dto.NewMatchRequestDto;
 import com.github.petrovyegor.tennisscoreboard.model.Match;
+import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.service.NewMatchService;
 import com.github.petrovyegor.tennisscoreboard.service.OngoingMatchesService;
 import jakarta.servlet.ServletException;
@@ -26,9 +27,9 @@ public class NewMatchController extends HttpServlet {
 
 
 /*
-Проверяет существование игроков в таблице `Players`. Если игрока с таким именем не существует, создаём
+Проверяет существование игроков в таблице`Players`. Если игрока с таким именем не существует, создаём
 			- Создаём экземпляр класса, содержащего айди игроков и текущий счёт, и кладём в коллекцию текущих матчей (существующую только в памяти приложения, либо в key-value storage). Ключом коллекции является UUID, значением - счёт в матче
-			- Редирект на страницу `/match-score?uuid=$match_id`*
+			- Редирект на страницу`/match-score?uuid=$match_id`*
 * */
 
     @Override
@@ -37,8 +38,9 @@ public class NewMatchController extends HttpServlet {
         String firstPlayerName = request.getParameter("player1_name");
         String secondPlayerName = request.getParameter("player2_name");
         NewMatchRequestDto newMatchRequestDto = new NewMatchRequestDto(firstPlayerName, secondPlayerName);
-        Match newMatch = newMatchService.getNewMatch(newMatchRequestDto);
-        ongoingMatchesService.addNewOngoingMatch(newMatch);
+        OngoingMatch ongoingMatch = newMatchService.getMatch(newMatchRequestDto);//поменять название метода, мы создаем матч, а не получаем
+        //Match newMatch = newMatchService.getNewMatch(newMatchRequestDto);
+        //ongoingMatchesService.addNewOngoingMatch(newMatch);
 //        if (isNullOrEmpty(firstPlayerName) || isNullOrEmpty(secondPlayerName)) {
 //            request.setAttribute("error", "One or both names are empty");
 //            doGet(request, response);

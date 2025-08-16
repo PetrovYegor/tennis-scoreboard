@@ -1,19 +1,11 @@
 package com.github.petrovyegor.tennisscoreboard.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 public class PlayerScore {
-//    private UUID id;
-    private List<Set> sets;
-    private List<Game> games;
+    private int sets;//нужна валидация, что нельзя присвоить меньше нуля и что после 2 выигрывается
+    private int games;
     private Point currentPoint;
 
     public PlayerScore() {
-        //id = UUID.randomUUID();
-        sets = new ArrayList<>();
-        games = new ArrayList<>();
         currentPoint = Point.LOVE;
     }
 
@@ -21,12 +13,27 @@ public class PlayerScore {
         currentPoint = getNextPoint(currentPoint);
     }
 
-    private void addGame(UUID playerScoreId){
-        games.add(new Game());
+    private void addGame() {
+        games++;
     }
 
-    private void addSet(){
-        sets.add(new Set());
+    private void addSet() {
+        sets++;
+    }
+
+    private void checkScoreState() {
+        if (isGameFinished()) {
+            addGame();
+            resetPoint();
+        }
+    }
+
+    private void resetPoint() {
+        currentPoint = Point.LOVE;
+    }
+
+    private boolean isGameFinished(){
+        return currentPoint.equals(Point.LOVE);
     }
 
     private Point getNextPoint(Point currentPoint) {
@@ -40,8 +47,6 @@ public class PlayerScore {
         };
         return nextValue;
     }
-
-
 
 
 //    public List<Set> getSets() {

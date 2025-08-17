@@ -8,13 +8,13 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class OngoingMatchDao {
-    private ConcurrentHashMap<UUID, OngoingMatch> ongoingMatches;
+    private final ConcurrentHashMap<UUID, OngoingMatch> ongoingMatches;
 
     public OngoingMatchDao() {
         ongoingMatches = new ConcurrentHashMap<>();
     }
 
-    public Optional<OngoingMatch> findById(UUID id) {// погуглить методы computeIfAbsent
+    public Optional<OngoingMatch> findById(UUID id) {//подумать, может ли прилелеть запрос на поиск ид, которого не сущесвтует. Как реагировать? Исключение?
         OngoingMatch ongoingMatch = ongoingMatches.get(id);
         return Optional.ofNullable(ongoingMatch);
     }

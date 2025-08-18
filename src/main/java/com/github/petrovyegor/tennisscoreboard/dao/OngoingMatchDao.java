@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class OngoingMatchDao {
+public class OngoingMatchDao implements CrudDao<OngoingMatch, UUID> {
     private final ConcurrentHashMap<UUID, OngoingMatch> ongoingMatches;
 
     public OngoingMatchDao() {
@@ -19,13 +19,14 @@ public class OngoingMatchDao {
         return Optional.ofNullable(ongoingMatch);
     }
 
-    public OngoingMatch save(UUID id, OngoingMatch ongoingMatch) {
-        ongoingMatches.put(id, ongoingMatch);
+    public OngoingMatch save(OngoingMatch ongoingMatch) {
+        ongoingMatches.put(ongoingMatch.getUuid(), ongoingMatch);
         return ongoingMatch;
     }
 
     public List<OngoingMatch> findAll() {
         return ongoingMatches.values().stream().toList();
     }
+
 }
 

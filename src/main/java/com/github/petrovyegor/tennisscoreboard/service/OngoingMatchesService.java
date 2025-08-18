@@ -18,16 +18,16 @@ public class OngoingMatchesService {
 
     public NewMatchResponseDto prepareNewMatch(NewMatchRequestDto newMatchRequestDto) {
         OngoingMatch ongoingMatch = createOngoingMatch(newMatchRequestDto);
-        UUID tempMatchId = UUID.randomUUID();
-        saveOngoingMatch(tempMatchId, ongoingMatch);
-        return new NewMatchResponseDto(tempMatchId);
+        saveOngoingMatch(ongoingMatch);
+        return new NewMatchResponseDto(ongoingMatch.getUuid());
     }
 
     private OngoingMatch createOngoingMatch(NewMatchRequestDto newMatchRequestDto) {
         List<Player> players = getPlayers(newMatchRequestDto);
         int firstPlayerId = players.get(0).getId();
         int secondPlayerId = players.get(1).getId();
-        return new OngoingMatch(firstPlayerId, secondPlayerId);
+        UUID ongoingMatchId = UUID.randomUUID();
+        return new OngoingMatch(ongoingMatchId, firstPlayerId, secondPlayerId);
     }
 
     private List<Player> getPlayers(NewMatchRequestDto newMatchRequestDto) {
@@ -51,7 +51,7 @@ public class OngoingMatchesService {
         return jpaPlayerDao.save(player);
     }
 
-    private OngoingMatch saveOngoingMatch(UUID id, OngoingMatch ongoingMatch) {
-        return ongoingMatchDao.save(id, ongoingMatch);
+    private OngoingMatch saveOngoingMatch(OngoingMatch ongoingMatch) {
+        return ongoingMatchDao.save(ongoingMatch);
     }
 }

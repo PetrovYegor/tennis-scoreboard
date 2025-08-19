@@ -32,8 +32,8 @@ public class OngoingMatchesService {
 
     private List<Player> getPlayers(NewMatchRequestDto newMatchRequestDto) {
         List<Player> result = new ArrayList<>();
-        String firstPlayerName = newMatchRequestDto.firstPlayerName();
-        String secondPlayerName = newMatchRequestDto.secondPlayerName();
+        String firstPlayerName = newMatchRequestDto.getFirstPlayerName();
+        String secondPlayerName = newMatchRequestDto.getSecondPlayerName();
         result.add(getOrCreateIfNotExists(firstPlayerName));
         result.add(getOrCreateIfNotExists(secondPlayerName));
         return result;

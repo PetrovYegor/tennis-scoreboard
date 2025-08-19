@@ -33,19 +33,19 @@ public class JpaPlayerDao implements PlayerDao {
 
 
     @Override
-    public Player save(Player entity) {
+    public Player save(Player player) {
         EntityManager em = JpaUtil.getEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
-            em.persist(entity);
+            em.persist(player);
             transaction.commit();
-            return entity;
+            return player;
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            throw new DBException("Failed to save Player with name '%s'".formatted(entity.getName()));
+            throw new DBException("Failed to save Player with name '%s'".formatted(player.getName()));
         } finally {
             em.close();
         }

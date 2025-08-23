@@ -1,6 +1,7 @@
 package com.github.petrovyegor.tennisscoreboard.controller;
 
 import com.github.petrovyegor.tennisscoreboard.dto.NewMatchRequestDto;
+import com.github.petrovyegor.tennisscoreboard.exception.InvalidParamException;
 import com.github.petrovyegor.tennisscoreboard.service.OngoingMatchesService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,7 +18,7 @@ import java.util.UUID;
 
 @WebServlet(name = "NewMatchController", urlPatterns = "/new-match")
 public class NewMatchController extends HttpServlet {
-    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
     private final OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();
 
     @Override
@@ -37,7 +38,7 @@ public class NewMatchController extends HttpServlet {
         String firstPlayerName = request.getParameter("player1_name");
         String secondPlayerName = request.getParameter("player2_name");
         NewMatchRequestDto newMatchRequestDto = new NewMatchRequestDto(firstPlayerName, secondPlayerName);
-        Set<ConstraintViolation<NewMatchRequestDto>> violations = validator.validate(newMatchRequestDto);
+        vaidateRequestDto(newMatchRequestDto);
 
         UUID tempMatchId = ongoingMatchesService.prepareNewMatch(newMatchRequestDto).tempMatchId();
         //Match newMatch = newMatchService.getNewMatch(newMatchRequestDto);
@@ -53,10 +54,11 @@ public class NewMatchController extends HttpServlet {
         return source == null || source.isEmpty();
     }
 
-//    private void vaidatePostParameters(NewMatchRequestDto newMatchRequestDto) {
-//        Set<ConstraintViolation<NewMatchRequestDto>> violations = validator.validate(newMatchRequestDto);
-//        if (violations.size() != 0) {
-//            throw new InvalidParamException();
-//        }
-//    }
+    private void vaidateRequestDto(NewMatchRequestDto newMatchRequestDto) {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<NewMatchRequestDto>> violations = validator.validate(newMatchRequestDto);
+        if (!violations.isEmpty()) {
+            throw new InvalidParamException(violations.toString());
+        }
+    }
 }

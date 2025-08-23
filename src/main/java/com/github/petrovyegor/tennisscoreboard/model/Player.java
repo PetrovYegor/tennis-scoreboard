@@ -30,8 +30,8 @@ public class Player {
         this.name = name;
     }
 
-    public Player(int id, String name) {//нужен был для теста
-        this.id = id;
-        this.name = name;
-    }
+//    public Player(int id, String name) {//нужен был для теста
+//        this.id = id;
+//        this.name = name;
+//    }
 }

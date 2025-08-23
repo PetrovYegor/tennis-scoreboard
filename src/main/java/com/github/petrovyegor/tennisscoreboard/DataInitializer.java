@@ -14,9 +14,6 @@ public class DataInitializer {
 
         try {
             transaction.begin();
-            em.createQuery("DELETE FROM Match").executeUpdate();
-            em.createQuery("DELETE FROM Player").executeUpdate();
-
             Player player1 = new Player("John");
             Player player2 = new Player("William");
             Player player3 = new Player("Robert");
@@ -31,7 +28,6 @@ public class DataInitializer {
             em.persist(player5);
             em.persist(player6);
 
-            // Создание матчей
             Match match1 = new Match(player1.getId(), player2.getId(), player1.getId());
             Match match2 = new Match(player6.getId(), player5.getId(), player6.getId());
             Match match3 = new Match(player2.getId(), player3.getId(), player2.getId());
@@ -44,7 +40,7 @@ public class DataInitializer {
             Match match10 = new Match(player2.getId(), player1.getId(), player1.getId());
             Match match11 = new Match(player6.getId(), player4.getId(), player6.getId());
             Match match12 = new Match(player3.getId(), player5.getId(), player5.getId());
-//
+
             em.persist(match1);
             em.persist(match2);
             em.persist(match3);

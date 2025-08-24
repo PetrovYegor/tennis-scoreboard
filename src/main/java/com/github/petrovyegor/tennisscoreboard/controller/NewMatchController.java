@@ -47,6 +47,7 @@ public class NewMatchController extends HttpServlet {
 //            request.setAttribute("error", "One or both names are empty");
 //            doGet(request, response);
 //        }
+
         response.sendRedirect("/match-score?uuid=%s".formatted(tempMatchId));
     }
 

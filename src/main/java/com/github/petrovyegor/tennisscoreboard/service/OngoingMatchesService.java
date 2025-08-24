@@ -1,7 +1,7 @@
 package com.github.petrovyegor.tennisscoreboard.service;
 
 import com.github.petrovyegor.tennisscoreboard.dao.JpaPlayerDao;
-import com.github.petrovyegor.tennisscoreboard.dao.OngoingMatchDao;
+import com.github.petrovyegor.tennisscoreboard.dao.MemoryOngoingMatchDao;
 import com.github.petrovyegor.tennisscoreboard.dto.NewMatchRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.NewMatchResponseDto;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class OngoingMatchesService {
     private final JpaPlayerDao jpaPlayerDao = new JpaPlayerDao();
-    private final OngoingMatchDao ongoingMatchDao = new OngoingMatchDao();
+    private final MemoryOngoingMatchDao memoryOngoingMatchDao = new MemoryOngoingMatchDao();
 
     public NewMatchResponseDto prepareNewMatch(NewMatchRequestDto newMatchRequestDto) {
         OngoingMatch ongoingMatch = createOngoingMatch(newMatchRequestDto);
@@ -52,6 +52,6 @@ public class OngoingMatchesService {
     }
 
     private OngoingMatch saveOngoingMatch(OngoingMatch ongoingMatch) {
-        return ongoingMatchDao.save(ongoingMatch);
+        return memoryOngoingMatchDao.save(ongoingMatch);
     }
 }

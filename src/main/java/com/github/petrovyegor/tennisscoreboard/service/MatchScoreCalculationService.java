@@ -1,46 +1,41 @@
 package com.github.petrovyegor.tennisscoreboard.service;
 
-import com.github.petrovyegor.tennisscoreboard.model.Point;
+import com.github.petrovyegor.tennisscoreboard.dao.JpaPlayerDao;
+import com.github.petrovyegor.tennisscoreboard.dao.MemoryOngoingMatchDao;
+import com.github.petrovyegor.tennisscoreboard.dto.MatchScoreRequestDto;
+import com.github.petrovyegor.tennisscoreboard.exception.ErrorMessage;
+import com.github.petrovyegor.tennisscoreboard.exception.RestErrorException;
+import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
+import com.github.petrovyegor.tennisscoreboard.model.Player;
+import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
+import jakarta.servlet.http.HttpServletResponse;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 
 public class MatchScoreCalculationService {
-    private final Map<Integer, Point> pointsByPlayers = new HashMap<>();
     //обновляет счёт в матче. Реализует логику подсчёта счёта матча по очкам/геймам/сетам
-    private void addPont(int playerId) {
-        //int playerId = player.getId();
-        Point currentValue = pointsByPlayers.get(playerId);
-        Point nextValue = getNextPoint(currentValue);
-        pointsByPlayers.put(playerId, nextValue);
-    }
+    //имя, количество сетов, количество геймов, текущее начение Point
+    private final JpaPlayerDao jpaPlayerDao = new JpaPlayerDao();
+    private final MemoryOngoingMatchDao memoryOngoingMatchDao = new MemoryOngoingMatchDao();
 
-    private Point getNextPoint(Point current) {
-        Point nextValue = switch (current) {
-            case LOVE -> Point.FIFTEEN;
-            case FIFTEEN -> Point.THIRTY;
-            case THIRTY -> Point.FORTY;
-            case FORTY -> Point.ADVANTAGE;
-            case ADVANTAGE -> Point.GAME;
-            default -> throw new IllegalStateException("Unsupported Enum value given");
-        };
-        return nextValue;
-    }
+    public MatchScoreRequestDto getGameState(UUID matchUuid) {
+        OngoingMatch ongoingMatch = memoryOngoingMatchDao.findById(matchUuid)
+                .orElseThrow(() -> new RestErrorException(ErrorMessage.ONGOING_MATCH_NOT_FOUND_BY_UUID));
+        Player firstPlayer = jpaPlayerDao.findById(ongoingMatch.getFirstPlayerId()).get();//переписать. Если продолжающийся матч создан, то и игроки должны быть уже созданы
+        Player secondPlayer = jpaPlayerDao.findById(ongoingMatch.getSecondPlayerId()).get();
+        PlayerScore firstPlayerScore = ongoingMatch.getMatchScore().getPlayersScore().get(firstPlayer.getId());
+        PlayerScore secondPlayerScore = ongoingMatch.getMatchScore().getPlayersScore().get(secondPlayer.getId());
+        MatchScoreRequestDto matchScoreRequestDto = new MatchScoreRequestDto(
+                firstPlayer.getName()
+                , secondPlayer.getName()
+                , firstPlayerScore.getSets()
+                , secondPlayerScore.getSets()
+                , firstPlayerScore.getGames()
+                , secondPlayerScore.getGames()
+                , firstPlayerScore.getCurrentPoint()
+                , secondPlayerScore.getCurrentPoint()
+        );
 
-    private boolean isGameOver() {
-        return pointsByPlayers.containsValue(Point.GAME);
-    }
-
-    private int getWinnerId() {
-        int winnerId = 0;
-        for (Map.Entry<Integer, Point> pair : pointsByPlayers.entrySet()) {
-            if (pair.getValue().equals(Point.GAME)) {
-                winnerId = pair.getKey();
-            }
-        }
-        return winnerId;
-    }
-    private void resetPoints(){
-        pointsByPlayers.replaceAll((k, v) -> Point.LOVE);
+        return matchScoreRequestDto;
     }
 }

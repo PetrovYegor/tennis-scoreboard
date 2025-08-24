@@ -1,5 +1,8 @@
 package com.github.petrovyegor.tennisscoreboard.model;
 
+import lombok.Getter;
+
+@Getter
 public class PlayerScore {
     private int sets;//нужна валидация, что нельзя присвоить меньше нуля и что после 2 выигрывается
     private int games;

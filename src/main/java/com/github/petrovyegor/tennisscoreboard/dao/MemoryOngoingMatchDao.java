@@ -7,10 +7,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class OngoingMatchDao implements CrudDao<OngoingMatch, UUID> {
+public class MemoryOngoingMatchDao implements CrudDao<OngoingMatch, UUID> {
     private final ConcurrentHashMap<UUID, OngoingMatch> ongoingMatches;
 
-    public OngoingMatchDao() {
+    public MemoryOngoingMatchDao() {
         ongoingMatches = new ConcurrentHashMap<>();
     }
 

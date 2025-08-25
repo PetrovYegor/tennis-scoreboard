@@ -5,6 +5,8 @@ import lombok.Data;
 
 @Data
 public class MatchScoreRequestDto {
+    private int firstPlayerId;
+    private int secondPlayerId;
     private String firstPlayerName;
     private String secondPlayerName;
     private int firstPlayerSets;
@@ -14,9 +16,11 @@ public class MatchScoreRequestDto {
     private Point firstPlayerPoint;
     private Point secondPlayerPoint;
 
-    public MatchScoreRequestDto(String firstPlayerName, String secondPlayerName, int firstPlayerSets
+    public MatchScoreRequestDto(int firstPlayerId, int secondPlayerId, String firstPlayerName, String secondPlayerName, int firstPlayerSets
             , int secondPlayerSets, int firstPlayerGames, int secondPlayerGames
             , Point firstPlayerPoint, Point secondPlayerPoint) {
+        this.firstPlayerId = firstPlayerId;
+        this.secondPlayerId = secondPlayerId;
         this.firstPlayerName = firstPlayerName;
         this.secondPlayerName = secondPlayerName;
         this.firstPlayerSets = firstPlayerSets;

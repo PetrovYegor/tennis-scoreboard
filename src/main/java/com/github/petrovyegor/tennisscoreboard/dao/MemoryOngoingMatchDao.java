@@ -8,11 +8,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MemoryOngoingMatchDao implements CrudDao<OngoingMatch, UUID> {
-    private final ConcurrentHashMap<UUID, OngoingMatch> ongoingMatches;
-
-    public MemoryOngoingMatchDao() {
-        ongoingMatches = new ConcurrentHashMap<>();
-    }
+    private static final ConcurrentHashMap<UUID, OngoingMatch> ongoingMatches = new ConcurrentHashMap<>();
 
     public Optional<OngoingMatch> findById(UUID id) {//подумать, может ли прилелеть запрос на поиск ид, которого не сущесвтует. Как реагировать? Исключение?
         OngoingMatch ongoingMatch = ongoingMatches.get(id);

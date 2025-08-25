@@ -12,10 +12,6 @@ public class PlayerScore {
         currentPoint = Point.LOVE;
     }
 
-    private void addPoint() {
-        currentPoint = getNextPoint(currentPoint);
-    }
-
     private void addGame() {
         games++;
     }

@@ -25,12 +25,12 @@
 <p>Point:<%=matchScoreRequestDto.getSecondPlayerPoint().getValue()%></p>
 
 <form method="post" action="/match-score">
-    <input type="hidden" name="playerId" value="player1">
+    <input type="hidden" name="playerId" value=<%= matchScoreRequestDto.getFirstPlayerId()%> >
     <button type="submit">Score</button>
 </form>
 
 <form method="post" action="/match-score">
-    <input type="hidden" name="playerId" value="player2">
+    <input type="hidden" name="playerId" value=<%= matchScoreRequestDto.getSecondPlayerId()%> >
     <button type="submit">Score</button>
 </form>
 

@@ -2,7 +2,7 @@ package com.github.petrovyegor.tennisscoreboard.service;
 
 import com.github.petrovyegor.tennisscoreboard.dao.JpaPlayerDao;
 import com.github.petrovyegor.tennisscoreboard.dao.MemoryOngoingMatchDao;
-import com.github.petrovyegor.tennisscoreboard.dto.MatchScoreRequestDto;
+import com.github.petrovyegor.tennisscoreboard.dto.OngoingMatchDto;
 import com.github.petrovyegor.tennisscoreboard.dto.NewMatchRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.NewMatchResponseDto;
 import com.github.petrovyegor.tennisscoreboard.exception.ErrorMessage;
@@ -59,14 +59,14 @@ public class OngoingMatchesService {
         return memoryOngoingMatchDao.save(ongoingMatch);
     }
 
-    public MatchScoreRequestDto getGameState(UUID matchUuid) {//перенести в сервис Ongoin match
+    public OngoingMatchDto getGameState(UUID matchUuid) {//перенести в сервис Ongoin match
         OngoingMatch ongoingMatch = memoryOngoingMatchDao.findById(matchUuid)
                 .orElseThrow(() -> new RestErrorException(ErrorMessage.ONGOING_MATCH_NOT_FOUND_BY_UUID.formatted(matchUuid)));
         Player firstPlayer = jpaPlayerDao.findById(ongoingMatch.getFirstPlayerId()).get();//переписать. Если продолжающийся матч создан, то и игроки должны быть уже созданы
         Player secondPlayer = jpaPlayerDao.findById(ongoingMatch.getSecondPlayerId()).get();
         PlayerScore firstPlayerScore = ongoingMatch.getMatchScore().getPlayersScore().get(firstPlayer.getId());
         PlayerScore secondPlayerScore = ongoingMatch.getMatchScore().getPlayersScore().get(secondPlayer.getId());
-        MatchScoreRequestDto matchScoreRequestDto = new MatchScoreRequestDto(
+        OngoingMatchDto ongoingMatchDto = new OngoingMatchDto(
                 firstPlayer.getId()
                 ,secondPlayer.getId()
                 ,firstPlayer.getName()
@@ -79,6 +79,6 @@ public class OngoingMatchesService {
                 , secondPlayerScore.getCurrentPoint()
         );
 
-        return matchScoreRequestDto;
+        return ongoingMatchDto;
     }
 }

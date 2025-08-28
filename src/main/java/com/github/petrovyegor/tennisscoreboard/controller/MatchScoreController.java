@@ -1,5 +1,7 @@
 package com.github.petrovyegor.tennisscoreboard.controller;
 
+import com.github.petrovyegor.tennisscoreboard.dto.MatchScoreRequestDto;
+import com.github.petrovyegor.tennisscoreboard.service.MatchScoreCalculationService;
 import com.github.petrovyegor.tennisscoreboard.service.OngoingMatchesService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -8,10 +10,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @WebServlet(name = "MatchScoreController", urlPatterns = "/match-score")
 public class MatchScoreController extends HttpServlet {
-    private final OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();
+    private final MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -24,7 +27,11 @@ public class MatchScoreController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("Post method received in MatchScoreController");
-        String id = request.getParameter("playerId");
-        System.out.println(id + "!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        int wonPointPlayerId = Integer.parseInt(request.getParameter("playerId"));
+        String stringMatchId = request.getParameter("matchUuid");
+        UUID matchUuidId = UUID.fromString(stringMatchId);
+        MatchScoreRequestDto matchScoreRequestDto = new MatchScoreRequestDto(matchUuidId, wonPointPlayerId);
+        matchScoreCalculationService.processAction(matchScoreRequestDto);
+        response.sendRedirect("/match-score?uuid=%s".formatted(matchUuidId));
     }
 }

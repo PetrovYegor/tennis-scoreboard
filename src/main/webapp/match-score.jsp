@@ -5,14 +5,14 @@
 </head>
 <body>
 <br>
-<%@ page import="com.github.petrovyegor.tennisscoreboard.dto.MatchScoreRequestDto" %>
+<%@ page import="com.github.petrovyegor.tennisscoreboard.dto.OngoingMatchDto" %>
 <%@ page import="com.github.petrovyegor.tennisscoreboard.service.MatchScoreCalculationService" %>
 <%@ page import="java.util.UUID" %>
 <%@ page import="com.github.petrovyegor.tennisscoreboard.service.OngoingMatchesService" %>
 
 <% OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();%>
     <% UUID matchUuid = UUID.fromString(((String)request.getAttribute("matchUuid"))); %>
-<%    MatchScoreRequestDto matchScoreRequestDto = ongoingMatchesService.getGameState(matchUuid); %>
+<%    OngoingMatchDto matchScoreRequestDto = ongoingMatchesService.getGameState(matchUuid); %>
     <p>Player1: <%= matchScoreRequestDto.getFirstPlayerName()%></p>
     <p>Sets: <%=matchScoreRequestDto.getFirstPlayerSets()%></p>
     <p>Games:<%=matchScoreRequestDto.getFirstPlayerGames()%></p>
@@ -26,11 +26,13 @@
 
 <form method="post" action="/match-score">
     <input type="hidden" name="playerId" value=<%= matchScoreRequestDto.getFirstPlayerId()%> >
+    <input type="hidden" name="matchUuid" value=<%= request.getParameter("uuid")%> >
     <button type="submit">Score</button>
 </form>
 
 <form method="post" action="/match-score">
     <input type="hidden" name="playerId" value=<%= matchScoreRequestDto.getSecondPlayerId()%> >
+    <input type="hidden" name="matchUuid" value=<%= request.getParameter("uuid")%> >
     <button type="submit">Score</button>
 </form>
 

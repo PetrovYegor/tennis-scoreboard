@@ -20,22 +20,26 @@ public class PlayerScore {
         sets++;
     }
 
-    private void checkScoreState() {
+    public void addPoint(){
+        currentPoint = getNextPoint();
+    }
+
+    public void checkScoreState() {
         if (isGameFinished()) {
             addGame();
             resetPoint();
         }
     }
 
-    private void resetPoint() {
+    public void resetPoint() {
         currentPoint = Point.LOVE;
     }
 
-    private boolean isGameFinished(){
+    public boolean isGameFinished(){
         return currentPoint.equals(Point.LOVE);
     }
 
-    private Point getNextPoint(Point currentPoint) {
+    private Point getNextPoint() {
         Point nextValue = switch (currentPoint) {
             case LOVE -> Point.FIFTEEN;
             case FIFTEEN -> Point.THIRTY;

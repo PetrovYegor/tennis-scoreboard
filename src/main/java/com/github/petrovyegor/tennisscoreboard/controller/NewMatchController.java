@@ -40,7 +40,7 @@ public class NewMatchController extends HttpServlet {
         NewMatchRequestDto newMatchRequestDto = new NewMatchRequestDto(firstPlayerName, secondPlayerName);
         vaidateRequestDto(newMatchRequestDto);
 
-        UUID tempMatchId = ongoingMatchesService.prepareNewMatch(newMatchRequestDto).tempMatchId();
+        UUID matchUuid = ongoingMatchesService.prepareNewMatch(newMatchRequestDto).matchUuid();
         //Match newMatch = newMatchService.getNewMatch(newMatchRequestDto);
         //ongoingMatchesService.addNewOngoingMatch(newMatch);
 //        if (isNullOrEmpty(firstPlayerName) || isNullOrEmpty(secondPlayerName)) {
@@ -48,7 +48,7 @@ public class NewMatchController extends HttpServlet {
 //            doGet(request, response);
 //        }
 
-        response.sendRedirect("/match-score?uuid=%s".formatted(tempMatchId));
+        response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));
     }
 
     private boolean isNullOrEmpty(String source) {

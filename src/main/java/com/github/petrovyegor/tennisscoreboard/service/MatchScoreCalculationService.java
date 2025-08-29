@@ -6,6 +6,7 @@ import com.github.petrovyegor.tennisscoreboard.dto.MatchScoreRequestDto;
 import com.github.petrovyegor.tennisscoreboard.model.MatchScore;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
+import com.github.petrovyegor.tennisscoreboard.model.Point;
 
 import java.util.UUID;
 
@@ -24,7 +25,7 @@ public class MatchScoreCalculationService {
 
     }
 
-    public void processAction(MatchScoreRequestDto matchScoreRequestDto){
+    public void processAction(MatchScoreRequestDto matchScoreRequestDto) {
         UUID matchUuid = matchScoreRequestDto.getMatchUuid();
         int roundWinnerId = matchScoreRequestDto.getRoundWinnerId();
         int firstPlayerId = matchScoreRequestDto.getFirstPlayerId();
@@ -33,12 +34,22 @@ public class MatchScoreCalculationService {
         MatchScore matchScore = ongoingMatch.getMatchScore();
         PlayerScore firstPlayerScore = matchScore.getPlayersScore().get(firstPlayerId);
         PlayerScore secondPlayerScore = matchScore.getPlayersScore().get(secondPlayerId);
+        Point firstPlayerCurrentPoint = firstPlayerScore.getCurrentPoint();
+        Point secondPlayerCurrentPoint = secondPlayerScore.getCurrentPoint();
 
         //ВОЗМОЖНО НУЖНО ВОЗВРАЩАТЬ КАКОЕ-то ДТО!!!!!!
     }
 
-    private boolean isEarlyFinish(){
+    private boolean isEarlyFinish(Point firstPlayerCurrentPoint, Point secondPlayerCurrentPoint) {
+        if (firstPlayerCurrentPoint.equals(Point.FORTY) &&
+                (secondPlayerCurrentPoint.equals(Point.LOVE) ||
+                        secondPlayerCurrentPoint.equals(Point.FIFTEEN) ||
+                        secondPlayerCurrentPoint.equals(Point.THIRTY))
+        ) {
+            return true;
+        }
         return false;
     }
+}
 
 }

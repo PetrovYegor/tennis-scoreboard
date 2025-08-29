@@ -71,9 +71,9 @@ public class PlayerScore {
 //        this.games = games;
 //    }
 //
-//    public Point getCurrentPoint() {
-//        return currentPoint;
-//    }
+    public Point getCurrentPoint() {
+        return currentPoint;
+    }
 //
 //    public void setCurrentPoint(Point currentPoint) {
 //        this.currentPoint = currentPoint;

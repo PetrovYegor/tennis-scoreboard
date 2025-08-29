@@ -12,26 +12,31 @@
 
 <% OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();%>
     <% UUID matchUuid = UUID.fromString(((String)request.getAttribute("matchUuid"))); %>
-<%    OngoingMatchDto matchScoreRequestDto = ongoingMatchesService.getGameState(matchUuid); %>
-    <p>Player1: <%= matchScoreRequestDto.getFirstPlayerName()%></p>
-    <p>Sets: <%=matchScoreRequestDto.getFirstPlayerSets()%></p>
-    <p>Games:<%=matchScoreRequestDto.getFirstPlayerGames()%></p>
-    <p>Point:<%=matchScoreRequestDto.getFirstPlayerPoint().getValue()%></p>
+<%    OngoingMatchDto ongoingMatchDto = ongoingMatchesService.getGameState(matchUuid); %>
+    <p>Player1: <%= ongoingMatchDto.getFirstPlayerName()%></p>
+    <p>Sets: <%=ongoingMatchDto.getFirstPlayerSets()%></p>
+    <p>Games:<%=ongoingMatchDto.getFirstPlayerGames()%></p>
+    <p>Point:<%=ongoingMatchDto.getFirstPlayerPoint().getValue()%></p>
 <br>
 <br>
-<p>Player2: <%= matchScoreRequestDto.getSecondPlayerName()%></p>
-<p>Sets: <%=matchScoreRequestDto.getSecondPlayerSets()%></p>
-<p>Games:<%=matchScoreRequestDto.getSecondPlayerGames()%></p>
-<p>Point:<%=matchScoreRequestDto.getSecondPlayerPoint().getValue()%></p>
+<p>Player2: <%= ongoingMatchDto.getSecondPlayerName()%></p>
+<p>Sets: <%=ongoingMatchDto.getSecondPlayerSets()%></p>
+<p>Games:<%=ongoingMatchDto.getSecondPlayerGames()%></p>
+<p>Point:<%=ongoingMatchDto.getSecondPlayerPoint().getValue()%></p>
 
 <form method="post" action="/match-score">
-    <input type="hidden" name="playerId" value=<%= matchScoreRequestDto.getFirstPlayerId()%> >
+
+    <input type="hidden" name="firstPlayerId" value=<%= ongoingMatchDto.getFirstPlayerId()%>>
+    <input type="hidden" name="secondPlayerId" value=<%= ongoingMatchDto.getSecondPlayerId()%>>
+    <input type="hidden" name="winnerId" value=<%= ongoingMatchDto.getFirstPlayerId()%>>
     <input type="hidden" name="matchUuid" value=<%= request.getParameter("uuid")%> >
     <button type="submit">Score</button>
 </form>
 
 <form method="post" action="/match-score">
-    <input type="hidden" name="playerId" value=<%= matchScoreRequestDto.getSecondPlayerId()%> >
+    <input type="hidden" name="firstPlayerId" value=<%= ongoingMatchDto.getFirstPlayerId()%>>
+    <input type="hidden" name="secondPlayerId" value=<%= ongoingMatchDto.getSecondPlayerId()%>>
+    <input type="hidden" name="winnerId" value=<%= ongoingMatchDto.getSecondPlayerId()%>>
     <input type="hidden" name="matchUuid" value=<%= request.getParameter("uuid")%> >
     <button type="submit">Score</button>
 </form>

@@ -27,10 +27,12 @@ public class MatchScoreController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("Post method received in MatchScoreController");
-        int wonPointPlayerId = Integer.parseInt(request.getParameter("playerId"));
+        int roundWinnerId = Integer.parseInt(request.getParameter("winnerId"));//сюда по идее валидацию, чтобы с постмана шлак не слать
+        int firstPlayerId = Integer.parseInt(request.getParameter("firstPlayerId"));
+        int secondPlayerId = Integer.parseInt(request.getParameter("secondPlayerId"));
         String stringMatchId = request.getParameter("matchUuid");
         UUID matchUuidId = UUID.fromString(stringMatchId);
-        MatchScoreRequestDto matchScoreRequestDto = new MatchScoreRequestDto(matchUuidId, wonPointPlayerId);
+        MatchScoreRequestDto matchScoreRequestDto = new MatchScoreRequestDto(matchUuidId, firstPlayerId, secondPlayerId, roundWinnerId);
         matchScoreCalculationService.processAction(matchScoreRequestDto);
         response.sendRedirect("/match-score?uuid=%s".formatted(matchUuidId));
     }

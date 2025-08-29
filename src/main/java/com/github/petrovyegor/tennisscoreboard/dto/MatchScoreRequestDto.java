@@ -7,10 +7,14 @@ import java.util.UUID;
 @Data
 public class MatchScoreRequestDto {
     private UUID matchUuid;
-    private int playerId;
+    private int firstPlayerId;
+    private int secondPlayerId;
+    private int roundWinnerId;
 
-    public MatchScoreRequestDto(UUID matchUuid, int playerId){
+    public MatchScoreRequestDto(UUID matchUuid, int firstPlayerId, int secondPlayerId, int roundWinnerId) {
         this.matchUuid = matchUuid;
-        this.playerId = playerId;
+        this.firstPlayerId = firstPlayerId;
+        this.secondPlayerId = secondPlayerId;
+        this.roundWinnerId = roundWinnerId;
     }
 }

@@ -7,6 +7,7 @@ public class PlayerScore {
     private int sets;//нужна валидация, что нельзя присвоить меньше нуля и что после 2 выигрывается
     private int games;
     private Point currentPoint;
+    private boolean hasAdvantage;
 
     public PlayerScore() {
         currentPoint = Point.LOVE;
@@ -36,8 +37,10 @@ public class PlayerScore {
     }
 
     public boolean isGameFinished(){
-        return currentPoint.equals(Point.LOVE);
+        return currentPoint.equals(Point.GAME);
     }
+
+
 
     private Point getNextPoint() {
         Point nextValue = switch (currentPoint) {

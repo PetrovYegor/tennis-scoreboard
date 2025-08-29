@@ -25,13 +25,20 @@ public class MatchScoreCalculationService {
     }
 
     public void processAction(MatchScoreRequestDto matchScoreRequestDto){
-        int playerId = matchScoreRequestDto.getPlayerId();
         UUID matchUuid = matchScoreRequestDto.getMatchUuid();
+        int roundWinnerId = matchScoreRequestDto.getRoundWinnerId();
+        int firstPlayerId = matchScoreRequestDto.getFirstPlayerId();
+        int secondPlayerId = matchScoreRequestDto.getSecondPlayerId();
         OngoingMatch ongoingMatch = memOngoingMatchDao.findById(matchUuid).get();//переписать
         MatchScore matchScore = ongoingMatch.getMatchScore();
-        PlayerScore playerScore = matchScore.getPlayersScore().get(playerId);
-        playerScore.addPoint();
+        PlayerScore firstPlayerScore = matchScore.getPlayersScore().get(firstPlayerId);
+        PlayerScore secondPlayerScore = matchScore.getPlayersScore().get(secondPlayerId);
+
         //ВОЗМОЖНО НУЖНО ВОЗВРАЩАТЬ КАКОЕ-то ДТО!!!!!!
+    }
+
+    private boolean isEarlyFinish(){
+        return false;
     }
 
 }

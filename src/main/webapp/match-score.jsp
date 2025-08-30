@@ -9,6 +9,7 @@
 <%@ page import="com.github.petrovyegor.tennisscoreboard.service.MatchScoreCalculationService" %>
 <%@ page import="java.util.UUID" %>
 <%@ page import="com.github.petrovyegor.tennisscoreboard.service.OngoingMatchesService" %>
+<%@ page import="com.github.petrovyegor.tennisscoreboard.model.Point" %>
 
 <% OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();%>
     <% UUID matchUuid = UUID.fromString(((String)request.getAttribute("matchUuid"))); %>
@@ -16,13 +17,27 @@
     <p>Player1: <%= ongoingMatchDto.getFirstPlayerName()%></p>
     <p>Sets: <%=ongoingMatchDto.getFirstPlayerSets()%></p>
     <p>Games:<%=ongoingMatchDto.getFirstPlayerGames()%></p>
-    <p>Point:<%=ongoingMatchDto.getFirstPlayerPoint().getValue()%></p>
+    <% String firstPlayerCurrentPoint;
+        if (ongoingMatchDto.isHasAdvantageFirstPlayer()){
+            firstPlayerCurrentPoint = Point.ADVANTAGE.getValue();
+        } else {
+            firstPlayerCurrentPoint = ongoingMatchDto.getFirstPlayerPoint().getValue();
+        }
+    %>
+    <p>Point:<%= firstPlayerCurrentPoint%></p>
 <br>
 <br>
 <p>Player2: <%= ongoingMatchDto.getSecondPlayerName()%></p>
 <p>Sets: <%=ongoingMatchDto.getSecondPlayerSets()%></p>
 <p>Games:<%=ongoingMatchDto.getSecondPlayerGames()%></p>
-<p>Point:<%=ongoingMatchDto.getSecondPlayerPoint().getValue()%></p>
+<% String secondPlayerCurrentPoint;
+    if (ongoingMatchDto.isHasAdvantageSecondPlayer()){
+        secondPlayerCurrentPoint = Point.ADVANTAGE.getValue();
+    } else {
+        secondPlayerCurrentPoint = ongoingMatchDto.getSecondPlayerPoint().getValue();
+    }
+%>
+<p>Point:<%=secondPlayerCurrentPoint%></p>
 
 <form method="post" action="/match-score">
 

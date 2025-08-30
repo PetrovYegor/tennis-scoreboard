@@ -35,21 +35,9 @@ public class PlayerScore {
         currentPoint = getNextPoint();
     }
 
-    public void checkScoreState() {
-        if (isGameFinished()) {
-            addGame();
-            resetPoint();
-        }
-    }
-
     public void resetPoint() {
         currentPoint = Point.LOVE;
     }
-
-    public boolean isGameFinished(){
-        return currentPoint.equals(Point.GAME);
-    }
-
 
 
     private Point getNextPoint() {
@@ -58,7 +46,6 @@ public class PlayerScore {
             case FIFTEEN -> Point.THIRTY;
             case THIRTY -> Point.FORTY;
             case FORTY -> Point.ADVANTAGE;
-            case ADVANTAGE -> Point.GAME;
             default -> throw new IllegalStateException("Unsupported Enum value given");
         };
         return nextValue;

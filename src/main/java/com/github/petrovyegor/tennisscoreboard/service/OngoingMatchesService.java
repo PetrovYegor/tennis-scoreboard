@@ -77,6 +77,8 @@ public class OngoingMatchesService {
                 , secondPlayerScore.getGames()
                 , firstPlayerScore.getCurrentPoint()
                 , secondPlayerScore.getCurrentPoint()
+                , firstPlayerScore.isHasAdvantage()
+                , secondPlayerScore.isHasAdvantage()
         );
 
         return ongoingMatchDto;

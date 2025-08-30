@@ -34,44 +34,55 @@ public class MatchScoreCalculationService {
         MatchScore matchScore = ongoingMatch.getMatchScore();
         PlayerScore firstPlayerScore = matchScore.getPlayersScore().get(firstPlayerId);
         PlayerScore secondPlayerScore = matchScore.getPlayersScore().get(secondPlayerId);
-
-        //сделать развилку иф - если виннерИд равен первому игроку - то processRound с одной последовательностью ид, иначе с другой
-        //ВОЗМОЖНО НУЖНО ВОЗВРАЩАТЬ КАКОЕ-то ДТО!!!!!!
+        //нужна проверка, что если после очка завершился матч, то через отдельный сервис проставляем нужным сущностям ид игрока, выигравшего матч и сохраняем его в БД
+        if (roundWinnerId == firstPlayerId){
+            processRound(firstPlayerScore, secondPlayerScore);
+            return;
+        } else if (roundWinnerId == secondPlayerId) {
+            processRound(secondPlayerScore, firstPlayerScore);
+            return;
+        }
+        throw new IllegalStateException("Сюда не должно доходить выполнение кода");//временно, переделать
     }
 
-    private boolean isEqualsForty(Point point){
+    private boolean isEqualsForty(Point point) {
         return point.equals(Point.FORTY);
     }
 
-    private void processRound(PlayerScore winnerScore, PlayerScore enemyScore, int winnerId){
+    private void processRound(PlayerScore winnerScore, PlayerScore enemyScore) {
         Point winnerCurrentPoint = winnerScore.getCurrentPoint();
         Point enemyCurrentPoint = enemyScore.getCurrentPoint();//переименовать enemy
-        if (!isEqualsForty(winnerCurrentPoint)){
+        if (!isEqualsForty(winnerCurrentPoint)) {
             winnerScore.addPoint();
             return;
         }
 
-        if (!isEqualsForty(enemyCurrentPoint)){
+        if (!isEqualsForty(enemyCurrentPoint)) {
             winnerScore.addGame();
-            winnerScore.resetPoint();//тут возможно придётся булеаны сбрасывать, их пока нет
-            enemyScore.resetPoint();
+            resetPoints(winnerScore, enemyScore);
             return;
         }
 
-        if (!winnerScore.isHasAdvantage() && !enemyScore.isHasAdvantage()){
+        if (!winnerScore.isHasAdvantage() && !enemyScore.isHasAdvantage()) {
             winnerScore.setAdvantage();
             return;
         }
 
-        if (winnerScore.getPlayerId() != winnerId){
-            winnerScore.resetAdvantage();
+        if (!winnerScore.isHasAdvantage()){
+            enemyScore.resetAdvantage();
+            return;
         }
 
-
-
+        winnerScore.addGame();
+        resetPoints(winnerScore, enemyScore);
     }
 
-
+    private void resetPoints(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore) {
+        firstPlayerScore.resetPoint();
+        secondPlayerScore.resetPoint();
+        firstPlayerScore.resetAdvantage();
+        secondPlayerScore.resetAdvantage();
+    }
 }
 
 

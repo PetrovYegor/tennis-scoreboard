@@ -34,22 +34,44 @@ public class MatchScoreCalculationService {
         MatchScore matchScore = ongoingMatch.getMatchScore();
         PlayerScore firstPlayerScore = matchScore.getPlayersScore().get(firstPlayerId);
         PlayerScore secondPlayerScore = matchScore.getPlayersScore().get(secondPlayerId);
-        Point firstPlayerCurrentPoint = firstPlayerScore.getCurrentPoint();
-        Point secondPlayerCurrentPoint = secondPlayerScore.getCurrentPoint();
 
+        //сделать развилку иф - если виннерИд равен первому игроку - то processRound с одной последовательностью ид, иначе с другой
         //ВОЗМОЖНО НУЖНО ВОЗВРАЩАТЬ КАКОЕ-то ДТО!!!!!!
     }
 
-    private boolean isEarlyFinish(Point firstPlayerCurrentPoint, Point secondPlayerCurrentPoint) {
-        if (firstPlayerCurrentPoint.equals(Point.FORTY) &&
-                (secondPlayerCurrentPoint.equals(Point.LOVE) ||
-                        secondPlayerCurrentPoint.equals(Point.FIFTEEN) ||
-                        secondPlayerCurrentPoint.equals(Point.THIRTY))
-        ) {
-            return true;
-        }
-        return false;
+    private boolean isEqualsForty(Point point){
+        return point.equals(Point.FORTY);
     }
-}
+
+    private void processRound(PlayerScore winnerScore, PlayerScore enemyScore, int winnerId){
+        Point winnerCurrentPoint = winnerScore.getCurrentPoint();
+        Point enemyCurrentPoint = enemyScore.getCurrentPoint();//переименовать enemy
+        if (!isEqualsForty(winnerCurrentPoint)){
+            winnerScore.addPoint();
+            return;
+        }
+
+        if (!isEqualsForty(enemyCurrentPoint)){
+            winnerScore.addGame();
+            winnerScore.resetPoint();//тут возможно придётся булеаны сбрасывать, их пока нет
+            enemyScore.resetPoint();
+            return;
+        }
+
+        if (!winnerScore.isHasAdvantage() && !enemyScore.isHasAdvantage()){
+            winnerScore.setAdvantage();
+            return;
+        }
+
+        if (winnerScore.getPlayerId() != winnerId){
+            winnerScore.resetAdvantage();
+        }
+
+
+
+    }
+
 
 }
+
+

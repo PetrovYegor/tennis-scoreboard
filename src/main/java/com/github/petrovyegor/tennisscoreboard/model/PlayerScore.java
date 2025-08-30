@@ -4,21 +4,31 @@ import lombok.Getter;
 
 @Getter
 public class PlayerScore {
+    private int playerId;
     private int sets;//нужна валидация, что нельзя присвоить меньше нуля и что после 2 выигрывается
     private int games;
     private Point currentPoint;
     private boolean hasAdvantage;
 
-    public PlayerScore() {
+    public PlayerScore(int playerId) {
+        this.playerId = playerId;
         currentPoint = Point.LOVE;
     }
 
-    private void addGame() {
+    public void addGame() {
         games++;
     }
 
     private void addSet() {
         sets++;
+    }
+
+    public void setAdvantage(){
+        hasAdvantage = true;
+    }
+
+    public void resetAdvantage(){
+        hasAdvantage = false;
     }
 
     public void addPoint(){

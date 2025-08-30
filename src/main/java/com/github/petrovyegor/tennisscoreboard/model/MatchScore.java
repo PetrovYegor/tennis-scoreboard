@@ -11,7 +11,7 @@ public class MatchScore {
 
     public MatchScore(int firstPlayerId, int secondPlayerId) {
         playersScore = new HashMap<>();
-        playersScore.put(firstPlayerId, new PlayerScore());
-        playersScore.put(secondPlayerId, new PlayerScore());
+        playersScore.put(firstPlayerId, new PlayerScore(firstPlayerId));
+        playersScore.put(secondPlayerId, new PlayerScore(secondPlayerId));
     }
 }

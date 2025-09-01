@@ -68,7 +68,7 @@ public class MatchScoreCalculationService {
             return;
         }
 
-        if (!winnerScore.isHasAdvantage()){
+        if (!winnerScore.isHasAdvantage() ){
             enemyScore.resetAdvantage();
             return;
         }

@@ -35,7 +35,7 @@ public class MatchScoreCalculationService {
         PlayerScore firstPlayerScore = matchScore.getPlayersScore().get(firstPlayerId);
         PlayerScore secondPlayerScore = matchScore.getPlayersScore().get(secondPlayerId);
         //нужна проверка, что если после очка завершился матч, то через отдельный сервис проставляем нужным сущностям ид игрока, выигравшего матч и сохраняем его в БД
-        if (roundWinnerId == firstPlayerId){
+         if (roundWinnerId == firstPlayerId){
             processRound(firstPlayerScore, secondPlayerScore);
             return;
         } else if (roundWinnerId == secondPlayerId) {

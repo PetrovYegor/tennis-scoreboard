@@ -75,8 +75,8 @@ public class OngoingMatchesService {
                 , secondPlayerScore.getSets()
                 , firstPlayerScore.getGames()
                 , secondPlayerScore.getGames()
-                , firstPlayerScore.getCurrentPoint()
-                , secondPlayerScore.getCurrentPoint()
+                , firstPlayerScore.getPoint()
+                , secondPlayerScore.getPoint()
                 , firstPlayerScore.isHasAdvantage()
                 , secondPlayerScore.isHasAdvantage()
         );

@@ -6,7 +6,6 @@ import com.github.petrovyegor.tennisscoreboard.dto.MatchScoreRequestDto;
 import com.github.petrovyegor.tennisscoreboard.model.MatchScore;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
-import com.github.petrovyegor.tennisscoreboard.model.Point;
 
 import java.util.UUID;
 
@@ -37,16 +36,16 @@ public class MatchScoreCalculationService {
         throw new IllegalStateException("Сюда не должно доходить выполнение кода");//временно, переделать
     }
 
-    private void processPoint(PlayerScore winnerScore, PlayerScore enemyScore) {
+    private void processPoint(PlayerScore winnerScore, PlayerScore opponentScore) {
         if (isTieBreak) {
-            processTieBreak(winnerScore, enemyScore);
+            processTieBreak(winnerScore, opponentScore);
             //должны очиститься очки, геймы, закончиться матч и сохраниться. Редиректнуться на новую страницу
         }
-        processGame(winnerScore, enemyScore);
+        processGame(winnerScore, opponentScore);
         if (isGameOver(winnerScore)) {//---Поинт победителя равен Game
-            processFinishedGame(winnerScore, enemyScore);
+            processFinishedGame(winnerScore, opponentScore);
         }
-        checkIfMatchIsOver(winnerScore, enemyScore);
+        checkIfMatchIsOver(winnerScore, opponentScore);
         if (isMatchOver) {
             System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -61,27 +60,26 @@ public class MatchScoreCalculationService {
 
     }
 
-    private void processFinishedGame(PlayerScore winnerScore, PlayerScore enemyScore) {
+    private void processFinishedGame(PlayerScore winnerScore, PlayerScore opponentScore) {
         winnerScore.addGame();
-        resetPointsAndAdvantage(winnerScore, enemyScore);
+        resetPointsAndAdvantage(winnerScore, opponentScore);
     }
 
-    private void processGame(PlayerScore winnerScore, PlayerScore enemyScore) {
-        if (isDeuce(winnerScore, enemyScore)) {//если равно - отыгрываем равно
-            processDeuce(winnerScore, enemyScore);
+    private void processGame(PlayerScore winnerScore, PlayerScore opponentScore) {
+        if (isDeuce(winnerScore, opponentScore)) {//если равно - отыгрываем равно
+            processDeuce(winnerScore, opponentScore);
         } else {
-            processRound(winnerScore, enemyScore);
+            processRound(winnerScore, opponentScore);
         }
     }
 
     private boolean isDeuce(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore) {//40 или AD
-        if ((firstPlayerScore.getCurrentPoint() == Point.FORTY || firstPlayerScore.getCurrentPoint() == Point.ADVANTAGE) && (secondPlayerScore.getCurrentPoint() == Point.FORTY || secondPlayerScore.getCurrentPoint() == Point.ADVANTAGE)) {
-            return true;
-        }
-        return false;
+        boolean firstPlayerHasFortyOrAD = firstPlayerScore.isFortyOrAd();
+        boolean secondPlayerHasFortyOrAd = secondPlayerScore.isFortyOrAd();
+        return firstPlayerHasFortyOrAD && secondPlayerHasFortyOrAd;
     }
 
-    private void checkIfMatchIsOver(PlayerScore winnerScore, PlayerScore enemyScore) {
+    private void checkIfMatchIsOver(PlayerScore winnerScore, PlayerScore opponentScore) {
 /*
 после processRound у выигравшего очко стало 6 геймов?
 	да
@@ -103,16 +101,16 @@ public class MatchScoreCalculationService {
 		играется следующий гейм
 * */
         if (winnerScore.getGames() == 6) {//после processRound у выигравшего очко стало 6 геймов?
-            if (winnerScore.getGames() - enemyScore.getGames() >= 2) {//имеется разница в 2 и более гейма относительно соперника?
+            if (winnerScore.getGames() - opponentScore.getGames() >= 2) {//имеется разница в 2 и более гейма относительно соперника?
                 if (winnerScore.getSets() == 1) {//выигравший игрок уже имеет 1 сэт за плечами?
                     isMatchOver = true;
                 }
-                    winnerScore.addSet();
-                    winnerScore.resetGames();
-                    resetGame(winnerScore, enemyScore);
+                winnerScore.addSet();
+                winnerScore.resetGames();
+                resetGame(winnerScore, opponentScore);
             }
         } else {
-            if (enemyScore.getGames() == 6) {
+            if (opponentScore.getGames() == 6) {
                 isTieBreak = true;
             }
 
@@ -120,10 +118,10 @@ public class MatchScoreCalculationService {
     }
 
     private boolean isGameOver(PlayerScore winnerScore) {
-        return winnerScore.getCurrentPoint() == Point.GAME;
+        return winnerScore.isEqualsGame();
     }
 
-    private void processDeuce(PlayerScore winnerScore, PlayerScore enemyScore) {
+    private void processDeuce(PlayerScore winnerScore, PlayerScore opponentScore) {
 /*
 					если преимущество у получившего очко
 							выигрывший получает Поинт Game и return
@@ -133,25 +131,25 @@ public class MatchScoreCalculationService {
 
 					добавляем преимущество выигрывшему игроку и return
 * */
-        if (winnerScore.isHasAdvantage()) {
+        if (winnerScore.hasAdvantage()) {
             winnerScore.addPoint();
             return;
         }
 
-        if (enemyScore.isHasAdvantage()) {
-            enemyScore.resetAdvantage();//переименовать в lose?
+        if (opponentScore.hasAdvantage()) {
+            opponentScore.loseAdvantage();//переименовать в lose?
             return;
         }
         winnerScore.setAdvantage();
     }
 
-    private void processTieBreak(PlayerScore winnerScore, PlayerScore enemyScore) {
+    private void processTieBreak(PlayerScore winnerScore, PlayerScore opponentScore) {
         winnerScore.addTieBreakPoint();
         int firstPlayerTieBreakScore = winnerScore.getTieBreakScore();
-        int secondPlayerTieBreakScore = enemyScore.getTieBreakScore();
-        if (firstPlayerTieBreakScore >= 7 && (firstPlayerTieBreakScore - secondPlayerTieBreakScore >=2)){//какой-то игрок уже имеет 7 очков?
+        int secondPlayerTieBreakScore = opponentScore.getTieBreakScore();
+        if (firstPlayerTieBreakScore >= 7 && (firstPlayerTieBreakScore - secondPlayerTieBreakScore >= 2)) {//какой-то игрок уже имеет 7 очков?
             winnerScore.addSet();
-            resetGame(winnerScore, enemyScore);
+            resetGame(winnerScore, opponentScore);
 
         }
 /*
@@ -175,36 +173,32 @@ public class MatchScoreCalculationService {
     }
 
 
-    private void processRound(PlayerScore winnerScore, PlayerScore enemyScore) {
-        Point winnerCurrentPoint = winnerScore.getCurrentPoint();
-        Point enemyCurrentPoint = enemyScore.getCurrentPoint();//переименовать enemy
-        if (isEarltVictory(winnerScore, enemyScore)) {
+    private void processRound(PlayerScore winnerScore, PlayerScore opponentScore) {
+        if (isEarlyVictory(winnerScore, opponentScore)) {
             winnerScore.assignGame();
         } else {
             winnerScore.addPoint();
         }
-
-
     }
 
-    private boolean isEarltVictory(PlayerScore winnerScore, PlayerScore enemyScore) {//----текущий счёт выигрывшего очко равен 40, а счёт соперника не равен 40 или AD Game?
-        if (winnerScore.getCurrentPoint() == Point.FORTY && (enemyScore.getCurrentPoint() != Point.FORTY || enemyScore.getCurrentPoint() != Point.ADVANTAGE)) {
-            return true;
-        }
-        return false;
+    private boolean isEarlyVictory(PlayerScore winnerScore, PlayerScore opponentScore) {//----текущий счёт выигрывшего очко равен 40, а счёт соперника не равен 40 или AD Game?
+        boolean winnerHasForty = winnerScore.isEqualsForty();
+        boolean opponentHasFortyOrAdvantage = opponentScore.isFortyOrAd();
+        return winnerHasForty && !opponentHasFortyOrAdvantage;
     }
+
 
     private void resetPointsAndAdvantage(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore) {
         firstPlayerScore.resetPoint();
         secondPlayerScore.resetPoint();
-        firstPlayerScore.resetAdvantage();
-        secondPlayerScore.resetAdvantage();
+        firstPlayerScore.loseAdvantage();
+        secondPlayerScore.loseAdvantage();
     }
 
-    private void resetGame(PlayerScore winnerScore, PlayerScore enemyScore) {//переименовать
+    private void resetGame(PlayerScore winnerScore, PlayerScore opponentScore) {//переименовать
         winnerScore.resetGames();
-        enemyScore.resetGames();
-        resetPointsAndAdvantage(winnerScore, enemyScore);
+        opponentScore.resetGames();
+        resetPointsAndAdvantage(winnerScore, opponentScore);
     }
 }
 

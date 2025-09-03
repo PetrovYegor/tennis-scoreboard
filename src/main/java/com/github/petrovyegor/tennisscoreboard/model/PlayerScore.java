@@ -7,16 +7,24 @@ public class PlayerScore {
     private int playerId;
     private int sets;//нужна валидация, что нельзя присвоить меньше нуля и что после 2 выигрывается
     private int games;
-    private Point currentPoint;
+    private Point point;
     private boolean hasAdvantage;
     private int tieBreakScore;
 
     public PlayerScore(int playerId) {
         this.playerId = playerId;
-        currentPoint = Point.LOVE;
+        point = Point.LOVE;
     }
 
-    public void addTieBreakPoint(){
+    public boolean hasAdvantage() {
+        return hasAdvantage;
+    }
+
+    public void assignGame() {
+        point = Point.GAME;
+    }
+
+    public void addTieBreakPoint() {
         tieBreakScore++;
     }
 
@@ -28,33 +36,28 @@ public class PlayerScore {
         sets++;
     }
 
-    public void setAdvantage(){
+    public void addPoint() {
+        point = getNextPoint();
+    }
+
+    public void setAdvantage() {
         hasAdvantage = true;
     }
 
-    public void resetGames(){
+    public void resetGames() {
         games = 0;
     }
 
-    public void resetAdvantage(){
+    public void loseAdvantage() {
         hasAdvantage = false;
     }
 
-    public void addPoint(){
-        currentPoint = getNextPoint();
-    }
-
     public void resetPoint() {
-        currentPoint = Point.LOVE;
+        point = Point.LOVE;
     }
-
-    public void assignGame(){
-        currentPoint = Point.GAME;
-    }
-
 
     private Point getNextPoint() {
-        Point nextValue = switch (currentPoint) {
+        Point nextValue = switch (point) {
             case LOVE -> Point.FIFTEEN;
             case FIFTEEN -> Point.THIRTY;
             case THIRTY -> Point.FORTY;
@@ -64,34 +67,15 @@ public class PlayerScore {
         return nextValue;
     }
 
-
-//    public List<Set> getSets() {
-//        return sets;
-//    }
-//
-//    public void setSets(List<Set> sets) {
-//        this.sets = sets;
-//    }
-//
-//    public List<Game> getGames() {
-//        return games;
-//    }
-//
-//    public void setGames(List<Game> games) {
-//        this.games = games;
-//    }
-//
-    public Point getCurrentPoint() {
-        return currentPoint;
+    public boolean isEqualsForty() {
+        return point == Point.FORTY;
     }
-//
-//    public void setCurrentPoint(Point currentPoint) {
-//        this.currentPoint = currentPoint;
-//    }
-//
-//    public PlayerScore getNewPlayerScore() {
-//        return new PlayerScore();
-//    }
 
+    public boolean isFortyOrAd() {
+        return point == Point.FORTY || point == Point.ADVANTAGE;
+    }
 
+    public boolean isEqualsGame() {
+        return point == Point.GAME;
+    }
 }

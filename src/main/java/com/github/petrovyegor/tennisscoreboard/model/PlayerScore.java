@@ -9,22 +9,31 @@ public class PlayerScore {
     private int games;
     private Point currentPoint;
     private boolean hasAdvantage;
+    private int tieBreakScore;
 
     public PlayerScore(int playerId) {
         this.playerId = playerId;
         currentPoint = Point.LOVE;
     }
 
+    public void addTieBreakPoint(){
+        tieBreakScore++;
+    }
+
     public void addGame() {
         games++;
     }
 
-    private void addSet() {
+    public void addSet() {
         sets++;
     }
 
     public void setAdvantage(){
         hasAdvantage = true;
+    }
+
+    public void resetGames(){
+        games = 0;
     }
 
     public void resetAdvantage(){
@@ -37,6 +46,10 @@ public class PlayerScore {
 
     public void resetPoint() {
         currentPoint = Point.LOVE;
+    }
+
+    public void assignGame(){
+        currentPoint = Point.GAME;
     }
 
 

@@ -17,10 +17,13 @@ public class OngoingMatchDto {
     private Point secondPlayerPoint;
     private boolean hasAdvantageFirstPlayer;
     private boolean hasAdvantageSecondPlayer;
+    private int firstPlayerTieBreakPoints;
+    private int secondPlayerTieBreakPoints;
 
     public OngoingMatchDto(int firstPlayerId, int secondPlayerId, String firstPlayerName, String secondPlayerName, int firstPlayerSets
             , int secondPlayerSets, int firstPlayerGames, int secondPlayerGames
-            , Point firstPlayerPoint, Point secondPlayerPoint, boolean hasAdvantageFirstPlayer, boolean hasAdvantageSecondPlayer) {
+            , Point firstPlayerPoint, Point secondPlayerPoint, boolean hasAdvantageFirstPlayer, boolean hasAdvantageSecondPlayer
+            , int firstPlayerTieBreakPoints, int secondPlayerTieBreakPoints) {
         this.firstPlayerId = firstPlayerId;
         this.secondPlayerId = secondPlayerId;
         this.firstPlayerName = firstPlayerName;
@@ -33,5 +36,7 @@ public class OngoingMatchDto {
         this.secondPlayerPoint = secondPlayerPoint;
         this.hasAdvantageFirstPlayer = hasAdvantageFirstPlayer;
         this.hasAdvantageSecondPlayer = hasAdvantageSecondPlayer;
+        this.firstPlayerTieBreakPoints = firstPlayerTieBreakPoints;
+        this.secondPlayerTieBreakPoints = secondPlayerTieBreakPoints;
     }
 }

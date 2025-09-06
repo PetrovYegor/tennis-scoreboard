@@ -77,8 +77,10 @@ public class OngoingMatchesService {
                 , secondPlayerScore.getGames()
                 , firstPlayerScore.getPoint()
                 , secondPlayerScore.getPoint()
-                , firstPlayerScore.isHasAdvantage()
-                , secondPlayerScore.isHasAdvantage()
+                , firstPlayerScore.isAdvantage()
+                , secondPlayerScore.isAdvantage()
+                , firstPlayerScore.getTieBreakPoints()
+                , secondPlayerScore.getTieBreakPoints()
         );
 
         return ongoingMatchDto;

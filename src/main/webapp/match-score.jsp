@@ -18,8 +18,11 @@
     <p>Sets: <%=ongoingMatchDto.getFirstPlayerSets()%></p>
     <p>Games:<%=ongoingMatchDto.getFirstPlayerGames()%></p>
     <% String firstPlayerCurrentPoint;
+        boolean isTieBreak = ongoingMatchDto.getFirstPlayerGames() == 6 && ongoingMatchDto.getSecondPlayerGames() == 6;
         if (ongoingMatchDto.isHasAdvantageFirstPlayer()){
             firstPlayerCurrentPoint = Point.ADVANTAGE.getValue();
+        } else if (isTieBreak){
+            firstPlayerCurrentPoint = String.valueOf(ongoingMatchDto.getFirstPlayerTieBreakPoints());
         } else {
             firstPlayerCurrentPoint = ongoingMatchDto.getFirstPlayerPoint().getValue();
         }
@@ -33,7 +36,9 @@
 <% String secondPlayerCurrentPoint;
     if (ongoingMatchDto.isHasAdvantageSecondPlayer()){
         secondPlayerCurrentPoint = Point.ADVANTAGE.getValue();
-    } else {
+    } else if (isTieBreak){
+        secondPlayerCurrentPoint = String.valueOf(ongoingMatchDto.getSecondPlayerTieBreakPoints());
+    }else {
         secondPlayerCurrentPoint = ongoingMatchDto.getSecondPlayerPoint().getValue();
     }
 %>

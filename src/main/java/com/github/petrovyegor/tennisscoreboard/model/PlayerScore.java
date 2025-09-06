@@ -5,19 +5,19 @@ import lombok.Getter;
 @Getter
 public class PlayerScore {
     private int playerId;
-    private int sets;//нужна валидация, что нельзя присвоить меньше нуля и что после 2 выигрывается
+    private int sets;
     private int games;
     private Point point;
-    private boolean hasAdvantage;
-    private int tieBreakScore;
+    private boolean advantage;
+    private int tieBreakPoints;
 
     public PlayerScore(int playerId) {
         this.playerId = playerId;
-        point = Point.LOVE;
-    }
-
-    public boolean hasAdvantage() {
-        return hasAdvantage;
+        this.sets = 0;
+        this.games = 0;
+        this.point = Point.LOVE;
+        this.advantage = false;
+        this.tieBreakPoints = 0;
     }
 
     public void assignGame() {
@@ -25,15 +25,7 @@ public class PlayerScore {
     }
 
     public void addTieBreakPoint() {
-        tieBreakScore++;
-    }
-
-    public void addGame() {
-        games++;
-    }
-
-    public void addSet() {
-        sets++;
+        tieBreakPoints++;
     }
 
     public void addPoint() {
@@ -41,19 +33,11 @@ public class PlayerScore {
     }
 
     public void setAdvantage() {
-        hasAdvantage = true;
-    }
-
-    public void resetGames() {
-        games = 0;
+        advantage = true;
     }
 
     public void loseAdvantage() {
-        hasAdvantage = false;
-    }
-
-    public void resetPoint() {
-        point = Point.LOVE;
+        advantage = false;
     }
 
     private Point getNextPoint() {
@@ -62,9 +46,14 @@ public class PlayerScore {
             case FIFTEEN -> Point.THIRTY;
             case THIRTY -> Point.FORTY;
             case FORTY -> Point.ADVANTAGE;
-            default -> throw new IllegalStateException("Unsupported Enum value given");
+            case GAME -> throw new IllegalStateException("GAME has no next point");//возможно не нужно
+            default -> throw new IllegalStateException("Unsupported Enum value given");//возможно не нужно
         };
         return nextValue;
+    }
+
+    public boolean isUnderForty() {
+        return point == Point.LOVE || point == Point.FIFTEEN || point == Point.THIRTY;
     }
 
     public boolean isEqualsForty() {
@@ -77,5 +66,29 @@ public class PlayerScore {
 
     public boolean isEqualsGame() {
         return point == Point.GAME;
+    }
+
+    public void winGame() {
+        games++;
+        resetAfterGame();
+    }
+
+    public void winSet() {
+        sets++;
+        resetAfterSet();
+    }
+
+    public void resetAfterGame() {
+        point = Point.LOVE;
+        advantage = false;
+    }
+
+    public void resetAfterSet(){
+        resetAfterGame();
+        games = 0;
+    }
+
+    public void resetTieBreakPoint(){
+        tieBreakPoints = 0;
     }
 }

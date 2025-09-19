@@ -1,11 +1,10 @@
 package com.github.petrovyegor.tennisscoreboard;
 
 import com.github.petrovyegor.tennisscoreboard.exception.DBException;
-import com.github.petrovyegor.tennisscoreboard.model.Player;
-import com.github.petrovyegor.tennisscoreboard.model.Match;
+import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
+import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.transaction.Transaction;
 
 public class DataInitializer {
     public static void initTestData(){

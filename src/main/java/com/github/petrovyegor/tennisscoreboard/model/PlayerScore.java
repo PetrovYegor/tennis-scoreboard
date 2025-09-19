@@ -20,10 +20,6 @@ public class PlayerScore {
         this.tieBreakPoints = 0;
     }
 
-    public void assignGame() {
-        point = Point.GAME;
-    }
-
     public void addTieBreakPoint() {
         tieBreakPoints++;
     }
@@ -46,8 +42,7 @@ public class PlayerScore {
             case FIFTEEN -> Point.THIRTY;
             case THIRTY -> Point.FORTY;
             case FORTY -> Point.ADVANTAGE;
-            case GAME -> throw new IllegalStateException("GAME has no next point");//возможно не нужно
-            default -> throw new IllegalStateException("Unsupported Enum value given");//возможно не нужно
+            default -> throw new IllegalStateException("Unsupported Enum value given");
         };
         return nextValue;
     }
@@ -62,10 +57,6 @@ public class PlayerScore {
 
     public boolean isFortyOrAd() {
         return point == Point.FORTY || point == Point.ADVANTAGE;
-    }
-
-    public boolean isEqualsGame() {
-        return point == Point.GAME;
     }
 
     public void winGame() {

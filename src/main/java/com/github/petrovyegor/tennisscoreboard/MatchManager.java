@@ -3,16 +3,19 @@ package com.github.petrovyegor.tennisscoreboard;
 import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
 
 public class MatchManager {
-    private PlayerScore firstPlayerScore;
+    private PlayerScore firstPlayerScore;//убрать геттеры, я их добавил для тестов
     private PlayerScore secondPlayerScore;
-    private final int GAMES_TO_TIE_BREAK = 6;
+    private final int gamesToTieBreak;
 
-    public MatchManager(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore) {
+    public MatchManager(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore, int gamesToTieBreak) {
         this.firstPlayerScore = firstPlayerScore;
         this.secondPlayerScore = secondPlayerScore;
+        this.gamesToTieBreak = gamesToTieBreak;
     }
 
     //public void processWonPoint(int pointWinnerId) {
+    //СЕЙЧАС ЕСТЬ ПРОБЛЕМА, ЧТО ПРИ ПОПЫТКЕ СОЗДАТЬ НОВЫЙ МАТЧ
+    // ОН НЕ ОТЫГРАЕТСЯ, Т К прилеатет булеан о том, что матч закончен
     public boolean processWonPoint(int pointWinnerId) {//булеан временно
         PlayerScore winnerScore = getWinnerScore(pointWinnerId);
         PlayerScore opponentScore = getOpponentScore(pointWinnerId);
@@ -90,7 +93,7 @@ public class MatchManager {
     }
 
     private boolean isTieBreak() {
-        return firstPlayerScore.getGames() == GAMES_TO_TIE_BREAK && secondPlayerScore.getGames() == GAMES_TO_TIE_BREAK;
+        return firstPlayerScore.getGames() == gamesToTieBreak && secondPlayerScore.getGames() == gamesToTieBreak;
     }
 
     private PlayerScore getWinnerScore(int pointWinnerId) {
@@ -107,7 +110,15 @@ public class MatchManager {
         return firstPlayerScore;
     }
 
-    private boolean isWinnerExists(){
+    public boolean isWinnerExists(){//сделать приватным, сделал паблик для тестовreturn true;
         return firstPlayerScore.getSets() == 2 || secondPlayerScore.getSets() == 2;
+    }
+
+    public PlayerScore getFirstPlayerScore() {
+        return firstPlayerScore;
+    }
+
+    public PlayerScore getSecondPlayerScore() {
+        return secondPlayerScore;
     }
 }

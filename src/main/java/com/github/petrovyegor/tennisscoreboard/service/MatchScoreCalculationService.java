@@ -24,7 +24,7 @@ public class MatchScoreCalculationService {
             MatchScore matchScore = ongoingMatch.getMatchScore();
             PlayerScore firstPlayerScore = matchScore.getPlayersScore().get(firstPlayerId);
             PlayerScore secondPlayerScore = matchScore.getPlayersScore().get(secondPlayerId);
-            MatchManager matchManager = new MatchManager(firstPlayerScore, secondPlayerScore);
+            MatchManager matchManager = new MatchManager(firstPlayerScore, secondPlayerScore, 6);
             isMatchOver = matchManager.processWonPoint(roundWinnerId);
 
             //throw new IllegalStateException("Сюда не должно доходить выполнение кода");//временно, переделать

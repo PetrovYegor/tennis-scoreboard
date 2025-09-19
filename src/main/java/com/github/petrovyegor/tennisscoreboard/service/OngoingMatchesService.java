@@ -1,88 +1,70 @@
 package com.github.petrovyegor.tennisscoreboard.service;
 
-import com.github.petrovyegor.tennisscoreboard.dao.JpaPlayerDao;
 import com.github.petrovyegor.tennisscoreboard.dao.MemoryOngoingMatchDao;
-import com.github.petrovyegor.tennisscoreboard.dto.OngoingMatchDto;
 import com.github.petrovyegor.tennisscoreboard.dto.NewMatchRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.NewMatchResponseDto;
-import com.github.petrovyegor.tennisscoreboard.exception.ErrorMessage;
-import com.github.petrovyegor.tennisscoreboard.exception.RestErrorException;
+import com.github.petrovyegor.tennisscoreboard.dto.OngoingMatchDto;
+import com.github.petrovyegor.tennisscoreboard.dto.PlayerScoreDto;
+import com.github.petrovyegor.tennisscoreboard.exception.NotFoundException;
+import com.github.petrovyegor.tennisscoreboard.model.MatchStatus;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
-import com.github.petrovyegor.tennisscoreboard.model.Player;
 import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
+import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class OngoingMatchesService {
-    private final JpaPlayerDao jpaPlayerDao = new JpaPlayerDao();
-    private final MemoryOngoingMatchDao memoryOngoingMatchDao = new MemoryOngoingMatchDao();
+    private final PlayerService playerService;
+    private final MemoryOngoingMatchDao memoryOngoingMatchDao;
 
-    public NewMatchResponseDto prepareNewMatch(NewMatchRequestDto newMatchRequestDto) {
-        OngoingMatch ongoingMatch = createOngoingMatch(newMatchRequestDto);
-        saveOngoingMatch(ongoingMatch);
+    public OngoingMatchesService() {
+        this.playerService = new PlayerService();
+        this.memoryOngoingMatchDao = new MemoryOngoingMatchDao();
+    }
+
+    public NewMatchResponseDto createOngoingMatch(NewMatchRequestDto newMatchRequestDto) {
+        UUID matchUuid = UUID.randomUUID();
+        Player firstPlayer = playerService.getOrCreatePlayer(newMatchRequestDto.getFirstPlayerName());
+        Player secondPlayer = playerService.getOrCreatePlayer(newMatchRequestDto.getSecondPlayerName());
+        OngoingMatch ongoingMatch = new OngoingMatch(matchUuid, firstPlayer, secondPlayer);
+        memoryOngoingMatchDao.save(ongoingMatch);
         return new NewMatchResponseDto(ongoingMatch.getUuid());
     }
 
-    private OngoingMatch createOngoingMatch(NewMatchRequestDto newMatchRequestDto) {
-        List<Player> players = getPlayers(newMatchRequestDto);
-        int firstPlayerId = players.get(0).getId();
-        int secondPlayerId = players.get(1).getId();
-        UUID matchUuid = UUID.randomUUID();
-        return new OngoingMatch(matchUuid, firstPlayerId, secondPlayerId);
-    }
-
-    private List<Player> getPlayers(NewMatchRequestDto newMatchRequestDto) {
-        List<Player> result = new ArrayList<>();
-        String firstPlayerName = newMatchRequestDto.getFirstPlayerName();
-        String secondPlayerName = newMatchRequestDto.getSecondPlayerName();
-        result.add(getOrCreateIfNotExists(firstPlayerName));
-        result.add(getOrCreateIfNotExists(secondPlayerName));
-        return result;
-    }
-
-    private Player getOrCreateIfNotExists(String playerName) {//Протестировать
-        Optional<Player> player = jpaPlayerDao.findByName(playerName);
-        if (player.isEmpty()) {
-            return savePlayer(new Player(playerName));
-        }
-        return player.get();
-    }
-
-    private Player savePlayer(Player player) {
-        return jpaPlayerDao.save(player);
-    }
-
-    private OngoingMatch saveOngoingMatch(OngoingMatch ongoingMatch) {
-        return memoryOngoingMatchDao.save(ongoingMatch);
-    }
-
-    public OngoingMatchDto getGameState(UUID matchUuid) {//перенести в сервис Ongoin match
+    public OngoingMatchDto getMatchState(UUID matchUuid) {
         OngoingMatch ongoingMatch = memoryOngoingMatchDao.findById(matchUuid)
-                .orElseThrow(() -> new RestErrorException(ErrorMessage.ONGOING_MATCH_NOT_FOUND_BY_UUID.formatted(matchUuid)));
-        Player firstPlayer = jpaPlayerDao.findById(ongoingMatch.getFirstPlayerId()).get();//переписать. Если продолжающийся матч создан, то и игроки должны быть уже созданы
-        Player secondPlayer = jpaPlayerDao.findById(ongoingMatch.getSecondPlayerId()).get();
-        PlayerScore firstPlayerScore = ongoingMatch.getMatchScore().getPlayersScore().get(firstPlayer.getId());
-        PlayerScore secondPlayerScore = ongoingMatch.getMatchScore().getPlayersScore().get(secondPlayer.getId());
-        OngoingMatchDto ongoingMatchDto = new OngoingMatchDto(
-                firstPlayer.getId()
-                ,secondPlayer.getId()
-                ,firstPlayer.getName()
-                , secondPlayer.getName()
-                , firstPlayerScore.getSets()
-                , secondPlayerScore.getSets()
-                , firstPlayerScore.getGames()
-                , secondPlayerScore.getGames()
-                , firstPlayerScore.getPoint()
-                , secondPlayerScore.getPoint()
-                , firstPlayerScore.isAdvantage()
-                , secondPlayerScore.isAdvantage()
-                , firstPlayerScore.getTieBreakPoints()
-                , secondPlayerScore.getTieBreakPoints()
+                .orElseThrow(() -> new NotFoundException("Match not found"));
+        return convertToDto(ongoingMatch);
+    }
+
+    public MatchStatus getMatchStatus(UUID matchUuid){
+        OngoingMatch ongoingMatch = memoryOngoingMatchDao.findById(matchUuid)
+                .orElseThrow(() -> new NotFoundException("Match not found"));
+        return ongoingMatch.getMatchStatus();
+    }
+
+    private OngoingMatchDto convertToDto(OngoingMatch ongoingMatch) {
+        PlayerScore firstPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getFirstPlayer());
+        PlayerScore secondPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getSecondPlayer());
+
+        return new OngoingMatchDto(
+                ongoingMatch.getUuid(),//возможно uuid не нужен в этом дто
+                createPlayerScoreDto(ongoingMatch.getFirstPlayer(), firstPlayerScore),
+                createPlayerScoreDto(ongoingMatch.getSecondPlayer(), secondPlayerScore),
+                ongoingMatch.getMatchStatus()
         );
 
-        return ongoingMatchDto;
+    }
+
+    private PlayerScoreDto createPlayerScoreDto(Player player, PlayerScore playerScore) {
+        return new PlayerScoreDto(
+                player.getId(),
+                player.getName(),
+                playerScore.getSets(),
+                playerScore.getGames(),
+                playerScore.getPoint(),
+                playerScore.isAdvantage(),
+                playerScore.getTieBreakPoints()
+        );
     }
 }

@@ -2,7 +2,7 @@ package com.github.petrovyegor.tennisscoreboard.dao;
 
 import com.github.petrovyegor.tennisscoreboard.JpaUtil;
 import com.github.petrovyegor.tennisscoreboard.exception.DBException;
-import com.github.petrovyegor.tennisscoreboard.model.Match;
+import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;

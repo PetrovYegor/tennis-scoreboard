@@ -1,42 +1,22 @@
 package com.github.petrovyegor.tennisscoreboard.dto;
 
-import com.github.petrovyegor.tennisscoreboard.model.Point;
+import com.github.petrovyegor.tennisscoreboard.model.MatchStatus;
 import lombok.Data;
+
+import java.util.UUID;
 
 @Data
 public class OngoingMatchDto {
-    private int firstPlayerId;
-    private int secondPlayerId;
-    private String firstPlayerName;
-    private String secondPlayerName;
-    private int firstPlayerSets;
-    private int secondPlayerSets;
-    private int firstPlayerGames;
-    private int secondPlayerGames;
-    private Point firstPlayerPoint;
-    private Point secondPlayerPoint;
-    private boolean hasAdvantageFirstPlayer;
-    private boolean hasAdvantageSecondPlayer;
-    private int firstPlayerTieBreakPoints;
-    private int secondPlayerTieBreakPoints;
+    private UUID matchUuid;
+    private PlayerScoreDto firstPlayerScore;
+    private PlayerScoreDto secondPlayerScore;
+    private MatchStatus matchStatus;
 
-    public OngoingMatchDto(int firstPlayerId, int secondPlayerId, String firstPlayerName, String secondPlayerName, int firstPlayerSets
-            , int secondPlayerSets, int firstPlayerGames, int secondPlayerGames
-            , Point firstPlayerPoint, Point secondPlayerPoint, boolean hasAdvantageFirstPlayer, boolean hasAdvantageSecondPlayer
-            , int firstPlayerTieBreakPoints, int secondPlayerTieBreakPoints) {
-        this.firstPlayerId = firstPlayerId;
-        this.secondPlayerId = secondPlayerId;
-        this.firstPlayerName = firstPlayerName;
-        this.secondPlayerName = secondPlayerName;
-        this.firstPlayerSets = firstPlayerSets;
-        this.secondPlayerSets = secondPlayerSets;
-        this.firstPlayerGames = firstPlayerGames;
-        this.secondPlayerGames = secondPlayerGames;
-        this.firstPlayerPoint = firstPlayerPoint;
-        this.secondPlayerPoint = secondPlayerPoint;
-        this.hasAdvantageFirstPlayer = hasAdvantageFirstPlayer;
-        this.hasAdvantageSecondPlayer = hasAdvantageSecondPlayer;
-        this.firstPlayerTieBreakPoints = firstPlayerTieBreakPoints;
-        this.secondPlayerTieBreakPoints = secondPlayerTieBreakPoints;
+    public OngoingMatchDto(UUID matchUuid, PlayerScoreDto firstPlayerScore, PlayerScoreDto secondPlayerScore, MatchStatus matchStatus) {
+        this.matchUuid = matchUuid;
+        this.firstPlayerScore = firstPlayerScore;
+        this.secondPlayerScore = secondPlayerScore;
+        this.matchStatus = matchStatus;
     }
 }
+

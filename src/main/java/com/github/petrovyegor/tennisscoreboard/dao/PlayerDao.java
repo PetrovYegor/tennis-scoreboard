@@ -1,6 +1,6 @@
 package com.github.petrovyegor.tennisscoreboard.dao;
 
-import com.github.petrovyegor.tennisscoreboard.model.Player;
+import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
 
 import java.util.Optional;
 

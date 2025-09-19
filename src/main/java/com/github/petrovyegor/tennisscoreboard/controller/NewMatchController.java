@@ -1,6 +1,7 @@
 package com.github.petrovyegor.tennisscoreboard.controller;
 
 import com.github.petrovyegor.tennisscoreboard.dto.NewMatchRequestDto;
+import com.github.petrovyegor.tennisscoreboard.dto.NewMatchResponseDto;
 import com.github.petrovyegor.tennisscoreboard.exception.InvalidParamException;
 import com.github.petrovyegor.tennisscoreboard.service.OngoingMatchesService;
 import jakarta.servlet.ServletException;
@@ -14,7 +15,6 @@ import jakarta.validation.Validator;
 
 import java.io.IOException;
 import java.util.Set;
-import java.util.UUID;
 
 @WebServlet(name = "NewMatchController", urlPatterns = "/new-match")
 public class NewMatchController extends HttpServlet {
@@ -40,7 +40,7 @@ public class NewMatchController extends HttpServlet {
         NewMatchRequestDto newMatchRequestDto = new NewMatchRequestDto(firstPlayerName, secondPlayerName);
         vaidateRequestDto(newMatchRequestDto);
 
-        UUID matchUuid = ongoingMatchesService.prepareNewMatch(newMatchRequestDto).matchUuid();
+        NewMatchResponseDto newMatchResponseDto = ongoingMatchesService.createOngoingMatch(newMatchRequestDto);
         //Match newMatch = newMatchService.getNewMatch(newMatchRequestDto);
         //ongoingMatchesService.addNewOngoingMatch(newMatch);
 //        if (isNullOrEmpty(firstPlayerName) || isNullOrEmpty(secondPlayerName)) {
@@ -48,7 +48,7 @@ public class NewMatchController extends HttpServlet {
 //            doGet(request, response);
 //        }
 
-        response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));
+        response.sendRedirect("/match-score?uuid=%s".formatted(newMatchResponseDto.matchUuid()));
     }
 
     private boolean isNullOrEmpty(String source) {

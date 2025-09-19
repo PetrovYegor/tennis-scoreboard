@@ -1,10 +1,6 @@
-package com.github.petrovyegor.tennisscoreboard.model;
+package com.github.petrovyegor.tennisscoreboard.model.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

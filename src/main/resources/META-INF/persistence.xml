@@ -6,8 +6,8 @@
         <description>H2 Database Persistence Unit</description>
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <class>com.github.petrovyegor.tennisscoreboard.model.Player</class>
-        <class>com.github.petrovyegor.tennisscoreboard.model.Match</class>
+        <class>com.github.petrovyegor.tennisscoreboard.model.entity.Player</class>
+        <class>com.github.petrovyegor.tennisscoreboard.model.entity.Match</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>

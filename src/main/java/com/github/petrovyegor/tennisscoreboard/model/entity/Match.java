@@ -1,4 +1,4 @@
-package com.github.petrovyegor.tennisscoreboard.model;
+package com.github.petrovyegor.tennisscoreboard.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

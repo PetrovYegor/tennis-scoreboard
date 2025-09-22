@@ -12,36 +12,26 @@
 <%@ page import="com.github.petrovyegor.tennisscoreboard.model.Point" %>
 <%@ page import="com.github.petrovyegor.tennisscoreboard.model.MatchStatus" %>
 
-<% OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();%>
-<% UUID matchUuid = UUID.fromString(((String) request.getAttribute("matchUuid"))); %>
-<% OngoingMatchDto ongoingMatchDto = ongoingMatchesService.getMatchState(matchUuid); %>
-<p>Player1: <%= ongoingMatchDto.getFirstPlayerScore().getPlayerName()%>
-</p>
-<p>Sets: <%=ongoingMatchDto.getFirstPlayerScore().getSets()%>
-</p>
-<p>Games:<%=ongoingMatchDto.getFirstPlayerScore().getGames()%>
-</p>
-<% String firstPlayerCurrentPoint;
-    MatchStatus matchStatus = ongoingMatchesService.getMatchStatus(matchUuid);
-    if (matchStatus == MatchStatus.DEUCE) {
-        firstPlayerCurrentPoint = Point.ADVANTAGE.getValue();
-    } else if (isTieBreak) {
-        firstPlayerCurrentPoint = String.valueOf(ongoingMatchDto.getFirstPlayerTieBreakPoints());
+<%
+    OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();
+    UUID matchUuid = UUID.fromString(((String) request.getAttribute("matchUuid")));
+    OngoingMatchDto ongoingMatchDto = ongoingMatchesService.getMatchState(matchUuid);
+    String firstPlayerName = ongoingMatchDto.getFirstPlayerScore().getPlayerName();
+    int firstPlayerSets = ongoingMatchDto.getFirstPlayerScore().getSets();
+    int firstPlayerGames = ongoingMatchDto.getFirstPlayerScore().getGames();
+
+    String firstPlayerCurrentPoint;//ОСТАНОВИЛСЯ ТУТ. ПОПРОБОВАТЬ ВЕСЬ ДЖАВА КОД ВЫНЕСТИ НАВЕРХ И НОРМ ОТФОРМАТИРОВАТЬ, ПОКА БЕЗ ЕНУМА НА ОТДЕЛЬНЫЙ deuceScore и TIEBREAKSCORE. ЕСЛИ БУДЕТ ПРЯМ ЯВНАЯ НЕОБХОДИМОСТЬ, ТО СДЕЛАТЬ ЕНУМЫ, НО ощущение, ЧТО ЛУЧШЕ НЕ УСЛОЖНЯТЬ
+    if (ongoingMatchDto.getMatchStatus() == MatchStatus.TIE_BREAK) {
+        firstPlayerCurrentPoint = String.valueOf(ongoingMatchDto.getFirstPlayerScore().getTieBreakPoints());
     } else {
         firstPlayerCurrentPoint = ongoingMatchDto.getFirstPlayerPoint().getValue();
     }
-%>
-<p>Point:<%= firstPlayerCurrentPoint%>
-</p>
-<br>
-<br>
-<p>Player2: <%= ongoingMatchDto.getSecondPlayerName()%>
-</p>
-<p>Sets: <%=ongoingMatchDto.getSecondPlayerSets()%>
-</p>
-<p>Games:<%=ongoingMatchDto.getSecondPlayerGames()%>
-</p>
-<% String secondPlayerCurrentPoint;
+
+    String secondPlayerName = ongoingMatchDto.getSecondPlayerScore().getPlayerName();
+    int secondPlayerSets = ongoingMatchDto.getSecondPlayerScore().getSets();
+    int secondPlayerGames = ongoingMatchDto.getSecondPlayerScore().getGames();
+
+    String secondPlayerCurrentPoint;
     if (ongoingMatchDto.isHasAdvantageSecondPlayer()) {
         secondPlayerCurrentPoint = Point.ADVANTAGE.getValue();
     } else if (isTieBreak) {
@@ -49,7 +39,26 @@
     } else {
         secondPlayerCurrentPoint = ongoingMatchDto.getSecondPlayerPoint().getValue();
     }
+
 %>
+<p>Player1: <%= firstPlayerName%>
+</p>
+<p>Sets: <%= firstPlayerSets%>
+</p>
+<p>Games:<%=firstPlayerGames%>
+</p>
+
+<p>Point:<%= firstPlayerCurrentPoint%>
+</p>
+<br>
+<br>
+<p>Player2: <%= secondPlayerName%>
+</p>
+<p>Sets: <%=secondPlayerSets%>
+</p>
+<p>Games:<%=secondPlayerGames%>
+</p>
+
 <p>Point:<%=secondPlayerCurrentPoint%>
 </p>
 

@@ -25,7 +25,7 @@ public class PlayerScore {
     }
 
     public void addPoint() {
-        point = getNextPoint();
+        point = getNextRegularPoint();
     }
 
     public void setAdvantage() {
@@ -34,9 +34,10 @@ public class PlayerScore {
 
     public void loseAdvantage() {
         advantage = false;
+        this.point = Point.FORTY;
     }
 
-    private Point getNextPoint() {
+    private Point getNextRegularPoint() {
         Point nextValue = switch (point) {
             case LOVE -> Point.FIFTEEN;
             case FIFTEEN -> Point.THIRTY;
@@ -81,5 +82,12 @@ public class PlayerScore {
 
     public void resetTieBreakPoint(){
         tieBreakPoints = 0;
+    }
+
+    public String getFormattedRegularOrTieBreakPoint(boolean isTieBreak){
+        if (isTieBreak){
+            return String.valueOf(tieBreakPoints);
+        }
+        return point.getValue();
     }
 }

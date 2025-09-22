@@ -53,7 +53,6 @@ public class OngoingMatchesService {
                 createPlayerScoreDto(ongoingMatch.getSecondPlayer(), secondPlayerScore),
                 ongoingMatch.getMatchStatus()
         );
-
     }
 
     private PlayerScoreDto createPlayerScoreDto(Player player, PlayerScore playerScore) {

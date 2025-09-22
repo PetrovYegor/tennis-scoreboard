@@ -13,7 +13,7 @@ public class PlayerService {
         this.jpaPlayerDao = new JpaPlayerDao();
     }
 
-    public Player getOrCreatePlayer(String playerName) {//Протестировать
+    public Player getOrCreatePlayer(String playerName) {
         Optional<Player> player = jpaPlayerDao.findByName(playerName);
         if (player.isEmpty()) {
             return savePlayer(new Player(playerName));

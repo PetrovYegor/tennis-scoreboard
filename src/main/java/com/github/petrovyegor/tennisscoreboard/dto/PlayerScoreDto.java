@@ -12,4 +12,5 @@ public class PlayerScoreDto {
     private final Point point;
     private final boolean advantage;
     private final int tieBreakPoints;
+    private final String displayPoint;
 }

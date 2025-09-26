@@ -1,6 +1,7 @@
 package com.github.petrovyegor.tennisscoreboard.controller;
 
 import com.github.petrovyegor.tennisscoreboard.dto.MatchScoreRequestDto;
+import com.github.petrovyegor.tennisscoreboard.dto.OngoingMatchDto;
 import com.github.petrovyegor.tennisscoreboard.service.MatchScoreCalculationService;
 import com.github.petrovyegor.tennisscoreboard.service.OngoingMatchesService;
 import jakarta.servlet.ServletException;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @WebServlet(name = "MatchScoreController", urlPatterns = "/match-score")
 public class MatchScoreController extends HttpServlet {
     private final MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
+    private final OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -26,14 +28,12 @@ public class MatchScoreController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("Post method received in MatchScoreController");
+        UUID matchUuid = UUID.fromString(request.getParameter("matchUuid"));
         int roundWinnerId = Integer.parseInt(request.getParameter("winnerId"));//сюда по идее валидацию, чтобы с постмана шлак не слать
-        int firstPlayerId = Integer.parseInt(request.getParameter("firstPlayerId"));
-        int secondPlayerId = Integer.parseInt(request.getParameter("secondPlayerId"));
-        String stringMatchId = request.getParameter("matchUuid");
-        UUID matchUuidId = UUID.fromString(stringMatchId);
-        MatchScoreRequestDto matchScoreRequestDto = new MatchScoreRequestDto(matchUuidId, firstPlayerId, secondPlayerId, roundWinnerId);
+        //OngoingMatchDto ongoingMatchDto = ongoingMatchesService.getMatchState(matchUuid);
+
+        MatchScoreRequestDto matchScoreRequestDto = new MatchScoreRequestDto(matchUuid, roundWinnerId);
         matchScoreCalculationService.processAction(matchScoreRequestDto);
-        response.sendRedirect("/match-score?uuid=%s".formatted(matchUuidId));
+        response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));
     }
 }

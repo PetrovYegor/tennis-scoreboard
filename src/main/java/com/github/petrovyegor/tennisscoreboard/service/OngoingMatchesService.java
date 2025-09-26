@@ -5,8 +5,9 @@ import com.github.petrovyegor.tennisscoreboard.dto.NewMatchRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.NewMatchResponseDto;
 import com.github.petrovyegor.tennisscoreboard.dto.OngoingMatchDto;
 import com.github.petrovyegor.tennisscoreboard.dto.PlayerScoreDto;
+import com.github.petrovyegor.tennisscoreboard.exception.ErrorMessage;
 import com.github.petrovyegor.tennisscoreboard.exception.NotFoundException;
-import com.github.petrovyegor.tennisscoreboard.model.MatchStatus;
+import com.github.petrovyegor.tennisscoreboard.exception.RestErrorException;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
@@ -37,12 +38,6 @@ public class OngoingMatchesService {
         return convertToDto(ongoingMatch);
     }
 
-    public MatchStatus getMatchStatus(UUID matchUuid){
-        OngoingMatch ongoingMatch = memoryOngoingMatchDao.findById(matchUuid)
-                .orElseThrow(() -> new NotFoundException("Match not found"));
-        return ongoingMatch.getMatchStatus();
-    }
-
     private OngoingMatchDto convertToDto(OngoingMatch ongoingMatch) {
         PlayerScore firstPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getFirstPlayer());
         PlayerScore secondPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getSecondPlayer());
@@ -50,8 +45,7 @@ public class OngoingMatchesService {
         return new OngoingMatchDto(
                 ongoingMatch.getUuid(),//возможно uuid не нужен в этом дто
                 createPlayerScoreDto(ongoingMatch.getFirstPlayer(), firstPlayerScore),
-                createPlayerScoreDto(ongoingMatch.getSecondPlayer(), secondPlayerScore),
-                ongoingMatch.getMatchStatus()
+                createPlayerScoreDto(ongoingMatch.getSecondPlayer(), secondPlayerScore)
         );
     }
 
@@ -63,7 +57,14 @@ public class OngoingMatchesService {
                 playerScore.getGames(),
                 playerScore.getPoint(),
                 playerScore.isAdvantage(),
-                playerScore.getTieBreakPoints()
+                playerScore.getTieBreakPoints(),
+                playerScore.getFormattedRegularOrTieBreakPoint()
         );
+    }
+
+    public OngoingMatch findByUuid(UUID matchUuid) {
+        OngoingMatch ongoingMatch = memoryOngoingMatchDao.findById(matchUuid)
+                .orElseThrow(() -> new RestErrorException(ErrorMessage.ONGOING_MATCH_NOT_FOUND_BY_UUID.formatted(matchUuid)));
+        return ongoingMatch;
     }
 }

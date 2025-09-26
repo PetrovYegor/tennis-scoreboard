@@ -9,7 +9,7 @@ import java.util.Optional;
 public class PlayerService {
     private final PlayerDao jpaPlayerDao;
 
-    public PlayerService(){
+    public PlayerService() {
         this.jpaPlayerDao = new JpaPlayerDao();
     }
 

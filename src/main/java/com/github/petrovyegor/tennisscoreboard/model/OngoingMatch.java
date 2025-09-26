@@ -11,14 +11,13 @@ public class OngoingMatch {
     private Player firstPlayer;
     private Player secondPlayer;
     private MatchScore matchScore;
-    private MatchStatus matchStatus;
+
 
     public OngoingMatch(UUID uuid, Player firstPlayer, Player secondPlayer) {
         this.uuid = uuid;
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         this.matchScore = new MatchScore(firstPlayer.getId(), secondPlayer.getId());
-        this.matchStatus = MatchStatus.IN_PROGRESS;
     }
 
     public PlayerScore getPlayerScore(Player player) {

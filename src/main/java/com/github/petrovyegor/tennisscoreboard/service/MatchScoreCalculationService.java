@@ -117,6 +117,3 @@ public class MatchScoreCalculationService {
         return firstPlayerScore.getSets() == 2 || secondPlayerScore.getSets() == 2;
     }
 }
-
-
-

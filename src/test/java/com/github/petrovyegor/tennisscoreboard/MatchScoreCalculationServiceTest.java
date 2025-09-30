@@ -20,20 +20,22 @@ public class MatchScoreCalculationServiceTest {
 
     // When the match starts, there is no winners
     @Test
-    public void testNewGameHasNotWinners() {
+    public void testNewMatchHasNotWinners() {
         PlayerScore firstPlayerScore = new PlayerScore(0);
         PlayerScore secondPlayerScore = new PlayerScore(1);
-        assertFalse(matchScoreCalculationService.isWinnerExists(firstPlayerScore,secondPlayerScore));
+        assertFalse(matchScoreCalculationService.isWinnerExists(firstPlayerScore, secondPlayerScore));
     }
 
     // if player1 got 2 sets, player1 becomes a winner
     @Test
-    public void testNewGameHasWinner() {
+    public void testFinishedMatchHasWinner() {
         PlayerScore firstPlayerScore = new PlayerScore(0);
         PlayerScore secondPlayerScore = new PlayerScore(1);
-        firstPlayerScore.winSet();
-        firstPlayerScore.winSet();
-        assertTrue(matchScoreCalculationService.isWinnerExists(firstPlayerScore,secondPlayerScore));
+        // win 2 sets for player1
+        for (int i = 0; i < 48; i++) {
+            matchScoreCalculationService.handleWonPoint(firstPlayerScore, secondPlayerScore, 0);
+        }
+        assertTrue(matchScoreCalculationService.isWinnerExists(firstPlayerScore, secondPlayerScore));
     }
 
     // If player 1 wins a point at 0-0, score becomes 15-0
@@ -166,13 +168,13 @@ public class MatchScoreCalculationServiceTest {
         PlayerScore secondPlayerScore = new PlayerScore(1);
 
         // win 5 games for player1
-        for (int i = 0; i < 5; i++) {
-            firstPlayerScore.winGame();
+        for (int i = 0; i < 20; i++) {
+            matchScoreCalculationService.handleWonPoint(firstPlayerScore, secondPlayerScore, 0);
         }
 
         // win 5 games for player2
-        for (int i = 0; i < 5; i++) {
-            secondPlayerScore.winGame();
+        for (int i = 0; i < 20; i++) {
+            matchScoreCalculationService.handleWonPoint(firstPlayerScore, secondPlayerScore, 1);
         }
         // win one more game for each player to make game score 6-6
         for (int i = 0; i < 4; i++) {
@@ -348,11 +350,3 @@ public class MatchScoreCalculationServiceTest {
         assertEquals(0, firstPlayerScore.getSets());
     }
 }
-//    private MatchManager matchManager;
-//
-//    @BeforeEach
-//    void setUp() {
-//        PlayerScore firstPlayerScore = new PlayerScore(1);
-//        PlayerScore secondPlayerScore = new PlayerScore(2);
-//        matchManager = new MatchManager(firstPlayerScore, secondPlayerScore, 6);
-//    }

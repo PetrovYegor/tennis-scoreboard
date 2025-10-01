@@ -1,7 +1,7 @@
 package com.github.petrovyegor.tennisscoreboard.controller;
 
 import com.github.petrovyegor.tennisscoreboard.dto.MatchScoreRequestDto;
-import com.github.petrovyegor.tennisscoreboard.dto.OngoingMatchDto;
+import com.github.petrovyegor.tennisscoreboard.service.FinishedMatchesPersistenceService;
 import com.github.petrovyegor.tennisscoreboard.service.MatchScoreCalculationService;
 import com.github.petrovyegor.tennisscoreboard.service.OngoingMatchesService;
 import jakarta.servlet.ServletException;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @WebServlet(name = "MatchScoreController", urlPatterns = "/match-score")
 public class MatchScoreController extends HttpServlet {
     private final MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
-    private final OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();
+    private final FinishedMatchesPersistenceService finishedMatchesPersistenceService = new FinishedMatchesPersistenceService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -33,7 +33,17 @@ public class MatchScoreController extends HttpServlet {
         //OngoingMatchDto ongoingMatchDto = ongoingMatchesService.getMatchState(matchUuid);
 
         MatchScoreRequestDto matchScoreRequestDto = new MatchScoreRequestDto(matchUuid, roundWinnerId);
-        matchScoreCalculationService.processAction(matchScoreRequestDto);
-        response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));
+        boolean isMatchFinished = matchScoreCalculationService.handlePointAndCheckIfWinnerExists(matchScoreRequestDto);
+        if (!isMatchFinished){
+            response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));//мб это в серви запихнуть?
+            return;
+        }
+        finishedMatchesPersistenceService.saveMatch(matchUuid);
+        //дописать код по сохранению матча в БД после окончания матча (проверить через UI h2, что сохраняется)
+        //передать в сервис экземпляр оноинг матч, там создать объект матча и сохранить его через дао
+        //Удаляем онгоингматч из коллекции текущих матчей
+        //редиректим на страницу с результирующим счётом
+
+
     }
 }

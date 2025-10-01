@@ -13,19 +13,14 @@ public class MatchScoreCalculationService {
         this.ongoingMatchesService = new OngoingMatchesService();
     }
 
-    public void processAction(MatchScoreRequestDto matchScoreRequestDto) {
+    public boolean handlePointAndCheckIfWinnerExists(MatchScoreRequestDto matchScoreRequestDto) {
         UUID matchUuid = matchScoreRequestDto.getMatchUuid();
         int roundWinnerId = matchScoreRequestDto.getRoundWinnerId();
         OngoingMatch ongoingMatch = ongoingMatchesService.findByUuid(matchUuid);
         PlayerScore firstPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getFirstPlayer());
         PlayerScore secondPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getSecondPlayer());
         handleWonPoint(firstPlayerScore, secondPlayerScore, roundWinnerId);
-        if (isWinnerExists(firstPlayerScore, secondPlayerScore)) {
-            //сохранение матча
-            //редирект на странрицу с результатами матча
-        } else {//мб не через else, мб выше будет ретурн
-            //редирект опять на страницу с матчем
-        }
+        return isWinnerExists(firstPlayerScore, secondPlayerScore);
     }
 
     public void handleWonPoint(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore, int pointWinnerId) {//булеан временно

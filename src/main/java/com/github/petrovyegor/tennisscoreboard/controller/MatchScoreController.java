@@ -33,7 +33,7 @@ public class MatchScoreController extends HttpServlet {
         //OngoingMatchDto ongoingMatchDto = ongoingMatchesService.getMatchState(matchUuid);
 
         MatchScoreRequestDto matchScoreRequestDto = new MatchScoreRequestDto(matchUuid, roundWinnerId);
-        boolean isMatchFinished = matchScoreCalculationService.handlePointAndCheckIfWinnerExists(matchScoreRequestDto);
+        boolean isMatchFinished = matchScoreCalculationService.processAction(matchScoreRequestDto);
         if (!isMatchFinished){
             response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));//мб это в серви запихнуть?
             return;

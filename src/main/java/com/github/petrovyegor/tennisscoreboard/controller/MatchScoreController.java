@@ -1,9 +1,9 @@
 package com.github.petrovyegor.tennisscoreboard.controller;
 
 import com.github.petrovyegor.tennisscoreboard.dto.MatchScoreRequestDto;
+import com.github.petrovyegor.tennisscoreboard.dto.RoundResultDto;
 import com.github.petrovyegor.tennisscoreboard.service.FinishedMatchesPersistenceService;
 import com.github.petrovyegor.tennisscoreboard.service.MatchScoreCalculationService;
-import com.github.petrovyegor.tennisscoreboard.service.OngoingMatchesService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -33,17 +33,17 @@ public class MatchScoreController extends HttpServlet {
         //OngoingMatchDto ongoingMatchDto = ongoingMatchesService.getMatchState(matchUuid);
 
         MatchScoreRequestDto matchScoreRequestDto = new MatchScoreRequestDto(matchUuid, roundWinnerId);
-        boolean isMatchFinished = matchScoreCalculationService.processAction(matchScoreRequestDto);
-        if (!isMatchFinished){
+        RoundResultDto roundResultDto = matchScoreCalculationService.processAction(matchScoreRequestDto);
+        if (!roundResultDto.isMatchFinished()) {
             response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));//мб это в серви запихнуть?
             return;
         }
-        finishedMatchesPersistenceService.saveMatch(matchUuid);
+        finishedMatchesPersistenceService.processFinishedMatch(roundResultDto);
+        response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid))
         //дописать код по сохранению матча в БД после окончания матча (проверить через UI h2, что сохраняется)
         //передать в сервис экземпляр оноинг матч, там создать объект матча и сохранить его через дао
         //Удаляем онгоингматч из коллекции текущих матчей
         //редиректим на страницу с результирующим счётом
-
 
     }
 }

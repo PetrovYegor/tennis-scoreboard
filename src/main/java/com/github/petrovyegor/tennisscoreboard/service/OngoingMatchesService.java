@@ -38,7 +38,7 @@ public class OngoingMatchesService {
         return convertToDto(ongoingMatch);
     }
 
-    private OngoingMatchDto convertToDto(OngoingMatch ongoingMatch) {
+    public OngoingMatchDto convertToDto(OngoingMatch ongoingMatch) {
         PlayerScore firstPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getFirstPlayer());
         PlayerScore secondPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getSecondPlayer());
 
@@ -67,4 +67,6 @@ public class OngoingMatchesService {
                 .orElseThrow(() -> new RestErrorException(ErrorMessage.ONGOING_MATCH_NOT_FOUND_BY_UUID.formatted(matchUuid)));
         return ongoingMatch;
     }
+
+    public v
 }

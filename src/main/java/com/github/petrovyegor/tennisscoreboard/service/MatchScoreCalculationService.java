@@ -1,8 +1,7 @@
 package com.github.petrovyegor.tennisscoreboard.service;
 
-import com.github.petrovyegor.tennisscoreboard.dto.PlayerScoreDto;
-import com.github.petrovyegor.tennisscoreboard.dto.ScoreCalculationResultDto;
 import com.github.petrovyegor.tennisscoreboard.dto.MatchScoreRequestDto;
+import com.github.petrovyegor.tennisscoreboard.dto.RoundResultDto;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
 
@@ -15,15 +14,19 @@ public class MatchScoreCalculationService {
         this.ongoingMatchesService = new OngoingMatchesService();
     }
 
-    public ScoreCalculationResultDto processAction (MatchScoreRequestDto matchScoreRequestDto) {
+    public RoundResultDto processAction(MatchScoreRequestDto matchScoreRequestDto) {
         UUID matchUuid = matchScoreRequestDto.getMatchUuid();
         int roundWinnerId = matchScoreRequestDto.getRoundWinnerId();
         OngoingMatch ongoingMatch = ongoingMatchesService.findByUuid(matchUuid);
         PlayerScore firstPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getFirstPlayer());
         PlayerScore secondPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getSecondPlayer());
         handleWonPoint(firstPlayerScore, secondPlayerScore, roundWinnerId);
-        //return isWinnerExists(firstPlayerScore, secondPlayerScore);
-        return
+
+        boolean isMatchFinished = isWinnerExists(firstPlayerScore, secondPlayerScore);
+        int firstPlayerId = firstPlayerScore.getPlayerId();
+        int secondPlayerId = secondPlayerScore.getPlayerId();
+
+        return getRoundResult(matchUuid, isMatchFinished, firstPlayerId, secondPlayerId, roundWinnerId);
     }
 
     public void handleWonPoint(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore, int pointWinnerId) {//булеан временно
@@ -115,7 +118,13 @@ public class MatchScoreCalculationService {
         return firstPlayerScore.getSets() == 2 || secondPlayerScore.getSets() == 2;
     }
 
-    private ScoreCalculationResultDto getRoundResult(UUID matchUuid, PlayerScoreDto firstPlayerScore){
-
+    private RoundResultDto getRoundResult(UUID matchUuid, boolean isMatchFinished, int firstPlayerId, int secondPlayerId, int winnerId) {
+        return new RoundResultDto(
+                matchUuid,
+                isMatchFinished,
+                firstPlayerId,
+                secondPlayerId,
+                winnerId
+        );
     }
 }

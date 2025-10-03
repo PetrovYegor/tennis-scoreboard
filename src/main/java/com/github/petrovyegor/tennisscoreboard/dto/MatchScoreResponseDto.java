@@ -6,5 +6,5 @@ import lombok.Data;
 public class MatchScoreResponseDto {
     private final OngoingMatchDto ongoingMatchDto;
     private final boolean isMatchFinished;
-    private final int winnerId;
+    private final String winnerName;
 }

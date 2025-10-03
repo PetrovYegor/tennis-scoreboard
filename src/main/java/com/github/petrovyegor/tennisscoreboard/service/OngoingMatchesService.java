@@ -34,7 +34,7 @@ public class OngoingMatchesService {
 
     public OngoingMatchDto getMatchState(UUID matchUuid) {
         OngoingMatch ongoingMatch = memoryOngoingMatchDao.findById(matchUuid)
-                .orElseThrow(() -> new NotFoundException("Match not found"));
+                .orElseThrow(() -> new NotFoundException("Match not found"));//дописать ид в сообщение
         return convertToDto(ongoingMatch);
     }
 

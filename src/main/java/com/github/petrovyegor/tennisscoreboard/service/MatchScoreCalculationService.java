@@ -10,10 +10,11 @@ import java.util.UUID;
 
 public class MatchScoreCalculationService {
     private final OngoingMatchesService ongoingMatchesService;
-    private final FinishedMatchesPersistenceService finishedMatchesPersistenceService = new FinishedMatchesPersistenceService();
+    private final PlayerService playerService;
 
     public MatchScoreCalculationService() {
-        this.ongoingMatchesService = new OngoingMatchesService();
+        ongoingMatchesService = new OngoingMatchesService();
+        playerService = new PlayerService();
     }
 
     public MatchScoreResponseDto processAction(MatchScoreRequestDto matchScoreRequestDto) {
@@ -26,12 +27,11 @@ public class MatchScoreCalculationService {
         handleWonPoint(firstPlayerScore, secondPlayerScore, roundWinnerId);
 
         OngoingMatchDto ongoingMatchDto = ongoingMatchesService.convertToDto(ongoingMatch);
+
         boolean isMatchFinished = isWinnerExists(firstPlayerScore, secondPlayerScore);
-        MatchScoreResponseDto matchScoreResponseDto = getMatchState(ongoingMatchDto, isMatchFinished, roundWinnerId);
-        if (isMatchFinished) {
-            finishedMatchesPersistenceService.processFinishedMatch(matchScoreResponseDto);
-        }
-        return matchScoreResponseDto;
+        String winnerName = playerService.getPlayerName(roundWinnerId);
+
+        return getMatchState(ongoingMatchDto, isMatchFinished, winnerName);
     }
 
     public void handleWonPoint(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore, int pointWinnerId) {//булеан временно
@@ -123,11 +123,11 @@ public class MatchScoreCalculationService {
         return firstPlayerScore.getSets() == 2 || secondPlayerScore.getSets() == 2;
     }
 
-    public MatchScoreResponseDto getMatchState(OngoingMatchDto ongoingMatchDto, boolean isMatchFinished, int winnerId) {
+    public MatchScoreResponseDto getMatchState(OngoingMatchDto ongoingMatchDto, boolean isMatchFinished, String winnerName) {
         return new MatchScoreResponseDto(
                 ongoingMatchDto,
                 isMatchFinished,
-                winnerId
+                winnerName
         );
     }
 }

@@ -8,21 +8,45 @@
 <%@ page import="com.github.petrovyegor.tennisscoreboard.dto.OngoingMatchDto" %>
 <%@ page import="java.util.UUID" %>
 <%@ page import="com.github.petrovyegor.tennisscoreboard.service.OngoingMatchesService" %>
+<%@ page import="com.github.petrovyegor.tennisscoreboard.dto.MatchScoreResponseDto" %>
+
+<%boolean isMatchFinished = request.getAttribute("matchScoreDisplayData")%>
+
+
+
+<% MatchScoreResponseDto matchScoreDisplayData = (MatchScoreResponseDto) request.getAttribute("matchScoreDisplayData");
+    ;%>
+<c:set var="isMatchFinished" value="<%= isMatchFinished%>"/>
+
+<c:if test="${isMatchFinished == true}">
+    <p>КОНЕЦ МАТЧА ёПТА</p>
+</c:if>
+
+<c:if test="${isMatchFinished == false}">
+    String firstPlayerName = matchScoreDisplayData.getOngoingMatchDto().getFirstPlayerScore().getPlayerName();
+    int firstPlayerSets = matchScoreDisplayData.getOngoingMatchDto().getFirstPlayerScore().getSets();
+    <br>
+    <br>
+    String secondPlayerName = matchScoreDisplayData.getOngoingMatchDto().getSecondPlayerScore().getPlayerName();
+    int secondPlayerSets = matchScoreDisplayData.getOngoingMatchDto().getSecondPlayerScore().getSets();
+
+
+</c:if>
 
 <%
-    UUID matchUuid = UUID.fromString(((String) request.getAttribute("matchUuid")));
-    OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();
-    OngoingMatchDto ongoingMatchDto = ongoingMatchesService.getMatchState(matchUuid);
+    UUID matchUuid = matchScoreDisplayData.getOngoingMatchDto().getMatchUuid();
 
-    String firstPlayerName = ongoingMatchDto.getFirstPlayerScore().getPlayerName();
-    int firstPlayerSets = ongoingMatchDto.getFirstPlayerScore().getSets();
-    int firstPlayerGames = ongoingMatchDto.getFirstPlayerScore().getGames();
-    String firstPlayerCurrentPoint = ongoingMatchDto.getFirstPlayerScore().getDisplayPoint();
+    int firstPlayerId = matchScoreDisplayData.getOngoingMatchDto().getFirstPlayerScore().getPlayerId();
+    String firstPlayerName = matchScoreDisplayData.getOngoingMatchDto().getFirstPlayerScore().getPlayerName();
+    int firstPlayerSets = matchScoreDisplayData.getOngoingMatchDto().getFirstPlayerScore().getSets();
+    int firstPlayerGames = matchScoreDisplayData.getOngoingMatchDto().getFirstPlayerScore().getGames();
+    String firstPlayerCurrentPoint = matchScoreDisplayData.getOngoingMatchDto().getFirstPlayerScore().getDisplayPoint();
 
-    String secondPlayerName = ongoingMatchDto.getSecondPlayerScore().getPlayerName();
-    int secondPlayerSets = ongoingMatchDto.getSecondPlayerScore().getSets();
-    int secondPlayerGames = ongoingMatchDto.getSecondPlayerScore().getGames();
-    String secondPlayerCurrentPoint = ongoingMatchDto.getSecondPlayerScore().getDisplayPoint();
+    int secondPlayerId = matchScoreDisplayData.getOngoingMatchDto().getSecondPlayerScore().getPlayerId();
+    String secondPlayerName = matchScoreDisplayData.getOngoingMatchDto().getSecondPlayerScore().getPlayerName();
+    int secondPlayerSets = matchScoreDisplayData.getOngoingMatchDto().getSecondPlayerScore().getSets();
+    int secondPlayerGames = matchScoreDisplayData.getOngoingMatchDto().getSecondPlayerScore().getGames();
+    String secondPlayerCurrentPoint = matchScoreDisplayData.getOngoingMatchDto().getSecondPlayerScore().getDisplayPoint();
 %>
 <p>Player1: <%= firstPlayerName%>
 </p>
@@ -47,13 +71,13 @@
 
 <form method="post" action="/match-score">
     <input type="hidden" name="matchUuid" value=<%= matchUuid%>>
-    <input type="hidden" name="winnerId" value=<%= ongoingMatchDto.getFirstPlayerScore().getPlayerId()%>>
+    <input type="hidden" name="winnerId" value=<%= firstPlayerId%>>
     <button type="submit">Score</button>
 </form>
 
 <form method="post" action="/match-score">
     <input type="hidden" name="matchUuid" value=<%= matchUuid%>>
-    <input type="hidden" name="winnerId" value=<%= ongoingMatchDto.getSecondPlayerScore().getPlayerId()%>>
+    <input type="hidden" name="winnerId" value=<%= secondPlayerId%>>
     <button type="submit">Score</button>
 </form>
 

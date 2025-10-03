@@ -67,6 +67,4 @@ public class OngoingMatchesService {
                 .orElseThrow(() -> new RestErrorException(ErrorMessage.ONGOING_MATCH_NOT_FOUND_BY_UUID.formatted(matchUuid)));
         return ongoingMatch;
     }
-
-    public v
 }

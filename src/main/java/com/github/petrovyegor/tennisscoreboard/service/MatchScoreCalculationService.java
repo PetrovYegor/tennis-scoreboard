@@ -1,7 +1,8 @@
 package com.github.petrovyegor.tennisscoreboard.service;
 
 import com.github.petrovyegor.tennisscoreboard.dto.MatchScoreRequestDto;
-import com.github.petrovyegor.tennisscoreboard.dto.RoundResultDto;
+import com.github.petrovyegor.tennisscoreboard.dto.MatchScoreResponseDto;
+import com.github.petrovyegor.tennisscoreboard.dto.OngoingMatchDto;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
 
@@ -9,24 +10,28 @@ import java.util.UUID;
 
 public class MatchScoreCalculationService {
     private final OngoingMatchesService ongoingMatchesService;
+    private final FinishedMatchesPersistenceService finishedMatchesPersistenceService = new FinishedMatchesPersistenceService();
 
     public MatchScoreCalculationService() {
         this.ongoingMatchesService = new OngoingMatchesService();
     }
 
-    public RoundResultDto processAction(MatchScoreRequestDto matchScoreRequestDto) {
+    public MatchScoreResponseDto processAction(MatchScoreRequestDto matchScoreRequestDto) {
         UUID matchUuid = matchScoreRequestDto.getMatchUuid();
         int roundWinnerId = matchScoreRequestDto.getRoundWinnerId();
         OngoingMatch ongoingMatch = ongoingMatchesService.findByUuid(matchUuid);
         PlayerScore firstPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getFirstPlayer());
         PlayerScore secondPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getSecondPlayer());
+
         handleWonPoint(firstPlayerScore, secondPlayerScore, roundWinnerId);
 
+        OngoingMatchDto ongoingMatchDto = ongoingMatchesService.convertToDto(ongoingMatch);
         boolean isMatchFinished = isWinnerExists(firstPlayerScore, secondPlayerScore);
-        int firstPlayerId = firstPlayerScore.getPlayerId();
-        int secondPlayerId = secondPlayerScore.getPlayerId();
-
-        return getRoundResult(matchUuid, isMatchFinished, firstPlayerId, secondPlayerId, roundWinnerId);
+        MatchScoreResponseDto matchScoreResponseDto = getMatchState(ongoingMatchDto, isMatchFinished, roundWinnerId);
+        if (isMatchFinished) {
+            finishedMatchesPersistenceService.processFinishedMatch(matchScoreResponseDto);
+        }
+        return matchScoreResponseDto;
     }
 
     public void handleWonPoint(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore, int pointWinnerId) {//булеан временно
@@ -118,12 +123,10 @@ public class MatchScoreCalculationService {
         return firstPlayerScore.getSets() == 2 || secondPlayerScore.getSets() == 2;
     }
 
-    private RoundResultDto getRoundResult(UUID matchUuid, boolean isMatchFinished, int firstPlayerId, int secondPlayerId, int winnerId) {
-        return new RoundResultDto(
-                matchUuid,
+    public MatchScoreResponseDto getMatchState(OngoingMatchDto ongoingMatchDto, boolean isMatchFinished, int winnerId) {
+        return new MatchScoreResponseDto(
+                ongoingMatchDto,
                 isMatchFinished,
-                firstPlayerId,
-                secondPlayerId,
                 winnerId
         );
     }

@@ -7,9 +7,12 @@
 <br>
 <%@ page import="com.github.petrovyegor.tennisscoreboard.dto.OngoingMatchDto" %>
 <%@ page import="java.util.UUID" %>
+<%@ page import="com.github.petrovyegor.tennisscoreboard.dto.MatchScoreResponseDto" %>
 
 <%
-    OngoingMatchDto ongoingMatchDto = (OngoingMatchDto) request.getAttribute("matchDisplayData");
+    var test = request.getAttribute("matchState");
+    OngoingMatchDto ongoingMatchDto = (OngoingMatchDto) test;
+    //OngoingMatchDto ongoingMatchDto = ((MatchScoreResponseDto) request.getAttribute("matchState")).getOngoingMatchDto();
     UUID matchUuid = ongoingMatchDto.getMatchUuid();
 
     int firstPlayerId = ongoingMatchDto.getFirstPlayerScore().getPlayerId();

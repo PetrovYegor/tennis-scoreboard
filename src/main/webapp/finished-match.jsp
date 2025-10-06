@@ -12,7 +12,7 @@
 </head>
 <body>
 <%
-    MatchScoreResponseDto matchScoreResponseDto = (MatchScoreResponseDto) request.getAttribute("finishedMatchData");
+    MatchScoreResponseDto matchScoreResponseDto = (MatchScoreResponseDto) request.getAttribute("matchState");
 
     String firstPlayerName = matchScoreResponseDto.getOngoingMatchDto().getFirstPlayerScore().getPlayerName();
     String secondPlayerName = matchScoreResponseDto.getOngoingMatchDto().getSecondPlayerScore().getPlayerName();

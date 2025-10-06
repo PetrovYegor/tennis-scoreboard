@@ -25,7 +25,9 @@ public class MatchScoreController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UUID matchUuid = UUID.fromString(request.getParameter("uuid"));
         OngoingMatchDto ongoingMatchDto = ongoingMatchesService.getMatchState(matchUuid);
-        request.setAttribute("matchDisplayData", ongoingMatchDto);
+        boolean isMatchFinished = (boolean) request.getAttribute("isFinished");
+        if (isMatchFinished)
+        request.setAttribute("matchState", ongoingMatchDto);
         getServletContext().getRequestDispatcher("/match-score.jsp").forward(request, response);
     }
 
@@ -36,13 +38,19 @@ public class MatchScoreController extends HttpServlet {
 
         MatchScoreRequestDto matchScoreRequestDto = new MatchScoreRequestDto(matchUuid, roundWinnerId);
         MatchScoreResponseDto matchScoreResponseDto = matchScoreCalculationService.processAction(matchScoreRequestDto);
-        if (!matchScoreResponseDto.isMatchFinished()){
+        boolean isMatchFinished = matchScoreResponseDto.isMatchFinished();
+        if (isMatchFinished) {
             finishedMatchesPersistenceService.processFinishedMatch(matchScoreRequestDto);
+            //request.setAttribute("matchState", matchScoreResponseDto);
             //response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));
-            request.setAttribute("finishedMatchData", matchScoreResponseDto);
-            getServletContext().getRequestDispatcher("/finished-match.jsp").forward(request, response);
+            //getServletContext().getRequestDispatcher("/finished-match.jsp").forward(request, response);
+            //return;
+            //getServletContext().getRequestDispatcher("/finished-match?uuid=%s".formatted(matchUuid)).forward(request, response);
         }
-        //response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));
-        getServletContext().getRequestDispatcher("/match-score.jsp").forward(request, response);
+        request.setAttribute("isFinished", isMatchFinished);
+        request.setAttribute("matchState", matchScoreResponseDto);
+        response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));
+
+        //getServletContext().getRequestDispatcher("/match-score.jsp").forward(request, response);
     }
 }

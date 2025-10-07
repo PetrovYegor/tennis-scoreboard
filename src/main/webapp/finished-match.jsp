@@ -1,4 +1,5 @@
-<%@ page import="com.github.petrovyegor.tennisscoreboard.dto.MatchScoreResponseDto" %><%--
+<%@ page import="com.github.petrovyegor.tennisscoreboard.dto.MatchScoreResponseDto" %>
+<%@ page import="com.github.petrovyegor.tennisscoreboard.dto.OngoingMatchDto" %><%--
   Created by IntelliJ IDEA.
   User: Yegor
   Date: 03.10.2025
@@ -12,14 +13,14 @@
 </head>
 <body>
 <%
-    MatchScoreResponseDto matchScoreResponseDto = (MatchScoreResponseDto) request.getAttribute("matchState");
+    String winnerName = (String) request.getAttribute("winnerName");
+    OngoingMatchDto ongoingMatchDto = (OngoingMatchDto) request.getAttribute("matchState");
 
-    String firstPlayerName = matchScoreResponseDto.getOngoingMatchDto().getFirstPlayerScore().getPlayerName();
-    String secondPlayerName = matchScoreResponseDto.getOngoingMatchDto().getSecondPlayerScore().getPlayerName();
-    String winnerName = matchScoreResponseDto.getWinnerName();
+    String firstPlayerName = ongoingMatchDto.getFirstPlayerScore().getPlayerName();
+    String secondPlayerName = ongoingMatchDto.getSecondPlayerScore().getPlayerName();
 
-    int firstPlayerSets = matchScoreResponseDto.getOngoingMatchDto().getFirstPlayerScore().getSets();
-    int secondPlayerSets = matchScoreResponseDto.getOngoingMatchDto().getSecondPlayerScore().getSets();
+    int firstPlayerSets = ongoingMatchDto.getFirstPlayerScore().getSets();
+    int secondPlayerSets = ongoingMatchDto.getSecondPlayerScore().getSets();
 %>
 
 <p>winner: <%= winnerName%></p>

@@ -26,12 +26,12 @@ public class MatchScoreCalculationService {
 
         handleWonPoint(firstPlayerScore, secondPlayerScore, roundWinnerId);
 
-        OngoingMatchDto ongoingMatchDto = ongoingMatchesService.convertToDto(ongoingMatch);
+        //OngoingMatchDto ongoingMatchDto = ongoingMatchesService.convertToDto(ongoingMatch);
 
-        boolean isMatchFinished = isWinnerExists(firstPlayerScore, secondPlayerScore);
+        //boolean isMatchFinished = isWinnerExists(firstPlayerScore, secondPlayerScore);
         String winnerName = playerService.getPlayerName(roundWinnerId);
 
-        return getMatchState(ongoingMatchDto, isMatchFinished, winnerName);
+        return getMatchState( winnerName);
     }
 
     public void handleWonPoint(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore, int pointWinnerId) {//булеан временно
@@ -119,14 +119,14 @@ public class MatchScoreCalculationService {
         return firstPlayerScore;
     }
 
-    public boolean isWinnerExists(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore) {
-        return firstPlayerScore.getSets() == 2 || secondPlayerScore.getSets() == 2;
-    }
+//    public boolean isWinnerExists(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore) {
+//        return firstPlayerScore.getSets() == 2 || secondPlayerScore.getSets() == 2;
+//    }
 
-    public MatchScoreResponseDto getMatchState(OngoingMatchDto ongoingMatchDto, boolean isMatchFinished, String winnerName) {
+    public MatchScoreResponseDto getMatchState( String winnerName) {
         return new MatchScoreResponseDto(
-                ongoingMatchDto,
-                isMatchFinished,
+                //ongoingMatchDto,
+                //isMatchFinished,
                 winnerName
         );
     }

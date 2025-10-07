@@ -19,24 +19,24 @@ public class MatchScoreCalculationServiceTest {
     }
 
     // When the match starts, there is no winners
-    @Test
-    public void testNewMatchHasNotWinners() {
-        PlayerScore firstPlayerScore = new PlayerScore(0);
-        PlayerScore secondPlayerScore = new PlayerScore(1);
-        assertFalse(matchScoreCalculationService.isWinnerExists(firstPlayerScore, secondPlayerScore));
-    }
+//    @Test
+//    public void testNewMatchHasNotWinners() {
+//        PlayerScore firstPlayerScore = new PlayerScore(0);
+//        PlayerScore secondPlayerScore = new PlayerScore(1);
+//        assertFalse(matchScoreCalculationService.isWinnerExists(firstPlayerScore, secondPlayerScore));
+//    }
 
     // if player1 got 2 sets, player1 becomes a winner
-    @Test
-    public void testFinishedMatchHasWinner() {
-        PlayerScore firstPlayerScore = new PlayerScore(0);
-        PlayerScore secondPlayerScore = new PlayerScore(1);
-        // win 2 sets for player1
-        for (int i = 0; i < 48; i++) {
-            matchScoreCalculationService.handleWonPoint(firstPlayerScore, secondPlayerScore, 0);
-        }
-        assertTrue(matchScoreCalculationService.isWinnerExists(firstPlayerScore, secondPlayerScore));
-    }
+//    @Test
+//    public void testFinishedMatchHasWinner() {
+//        PlayerScore firstPlayerScore = new PlayerScore(0);
+//        PlayerScore secondPlayerScore = new PlayerScore(1);
+//        // win 2 sets for player1
+//        for (int i = 0; i < 48; i++) {
+//            matchScoreCalculationService.handleWonPoint(firstPlayerScore, secondPlayerScore, 0);
+//        }
+//        assertTrue(matchScoreCalculationService.isWinnerExists(firstPlayerScore, secondPlayerScore));
+//    }
 
     // If player 1 wins a point at 0-0, score becomes 15-0
     @Test

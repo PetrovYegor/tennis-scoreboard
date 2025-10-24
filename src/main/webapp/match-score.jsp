@@ -5,51 +5,29 @@
 </head>
 <body>
 <br>
-<%@ page import="com.github.petrovyegor.tennisscoreboard.dto.OngoingMatchDto" %>
-<%@ page import="java.util.UUID" %>
-<%@ page import="com.github.petrovyegor.tennisscoreboard.dto.MatchScoreResponseDto" %>
 
-<%
-    var test = request.getAttribute("matchState");
-    OngoingMatchDto ongoingMatchDto = (OngoingMatchDto) test;
-    //OngoingMatchDto ongoingMatchDto = ((MatchScoreResponseDto) request.getAttribute("matchState")).getOngoingMatchDto();
-    UUID matchUuid = ongoingMatchDto.getMatchUuid();
-
-    int firstPlayerId = ongoingMatchDto.getFirstPlayerScore().getPlayerId();
-    String firstPlayerName = ongoingMatchDto.getFirstPlayerScore().getPlayerName();
-    int firstPlayerSets = ongoingMatchDto.getFirstPlayerScore().getSets();
-    int firstPlayerGames = ongoingMatchDto.getFirstPlayerScore().getGames();
-    String firstPlayerCurrentPoint = ongoingMatchDto.getFirstPlayerScore().getDisplayPoint();
-
-    int secondPlayerId = ongoingMatchDto.getSecondPlayerScore().getPlayerId();
-    String secondPlayerName = ongoingMatchDto.getSecondPlayerScore().getPlayerName();
-    int secondPlayerSets = ongoingMatchDto.getSecondPlayerScore().getSets();
-    int secondPlayerGames = ongoingMatchDto.getSecondPlayerScore().getGames();
-    String secondPlayerCurrentPoint = ongoingMatchDto.getSecondPlayerScore().getDisplayPoint();
-%>
-
-<p>Player1: <%= firstPlayerName%></p>
-<p>Sets: <%= firstPlayerSets%></p>
-<p>Games:<%= firstPlayerGames%></p>
-<p>Point:<%= firstPlayerCurrentPoint%></p>
+<p>Player1: ${matchState.firstPlayerScore.playerName}</p>
+<p>Sets: ${matchState.firstPlayerScore.sets}</p>
+<p>Games: ${matchState.firstPlayerScore.games}</p>
+<p>Point: ${matchState.firstPlayerScore.displayPoint}</p>
 
 <br>
 <br>
 
-<p>Player2: <%= secondPlayerName%></p>
-<p>Sets: <%= secondPlayerSets%></p>
-<p>Games:<%= secondPlayerGames%></p>
-<p>Point:<%= secondPlayerCurrentPoint%></p>
+<p>Player2: ${matchState.secondPlayerScore.playerName}</p>
+<p>Sets: ${matchState.secondPlayerScore.sets}</p>
+<p>Games: ${matchState.secondPlayerScore.games}</p>
+<p>Point: ${matchState.secondPlayerScore.displayPoint}</p>
 
 <form method="post" action="/match-score">
-    <input type="hidden" name="matchUuid" value=<%= matchUuid%>>
-    <input type="hidden" name="winnerId" value=<%= firstPlayerId%>>
+    <input type="hidden" name="matchUuid" value="${matchState.matchUuid}">
+    <input type="hidden" name="winnerId" value="${matchState.firstPlayerScore.playerId}">
     <button type="submit">Score</button>
 </form>
 
 <form method="post" action="/match-score">
-    <input type="hidden" name="matchUuid" value=<%= matchUuid%>>
-    <input type="hidden" name="winnerId" value=<%= secondPlayerId%>>
+    <input type="hidden" name="matchUuid" value="${matchState.matchUuid}">
+    <input type="hidden" name="winnerId" value="${matchState.secondPlayerScore.playerId}">
     <button type="submit">Score</button>
 </form>
 </body>

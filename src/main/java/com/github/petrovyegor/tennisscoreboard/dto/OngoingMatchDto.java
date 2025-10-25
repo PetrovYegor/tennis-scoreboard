@@ -10,12 +10,12 @@ public class OngoingMatchDto {
     private PlayerScoreDto firstPlayerScore;
     private PlayerScoreDto secondPlayerScore;
     private boolean isMatchFinished;
+    private String winnerName;
 
-    public OngoingMatchDto(UUID matchUuid, PlayerScoreDto firstPlayerScore, PlayerScoreDto secondPlayerScore, boolean isMatchFinished) {
+    public OngoingMatchDto(UUID matchUuid, PlayerScoreDto firstPlayerScore, PlayerScoreDto secondPlayerScore) {
         this.matchUuid = matchUuid;
         this.firstPlayerScore = firstPlayerScore;
         this.secondPlayerScore = secondPlayerScore;
-        this.isMatchFinished = isMatchFinished;
     }
 }
 

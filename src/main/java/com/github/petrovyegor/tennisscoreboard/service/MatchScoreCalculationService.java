@@ -1,7 +1,6 @@
 package com.github.petrovyegor.tennisscoreboard.service;
 
 import com.github.petrovyegor.tennisscoreboard.dto.MatchScoreRequestDto;
-import com.github.petrovyegor.tennisscoreboard.dto.MatchScoreResponseDto;
 import com.github.petrovyegor.tennisscoreboard.dto.OngoingMatchDto;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
@@ -17,7 +16,7 @@ public class MatchScoreCalculationService {
         playerService = new PlayerService();
     }
 
-    public MatchScoreResponseDto processAction(MatchScoreRequestDto matchScoreRequestDto) {
+    public OngoingMatchDto processAction(MatchScoreRequestDto matchScoreRequestDto) {
         UUID matchUuid = matchScoreRequestDto.getMatchUuid();
         int roundWinnerId = matchScoreRequestDto.getRoundWinnerId();
         OngoingMatch ongoingMatch = ongoingMatchesService.findByUuid(matchUuid);
@@ -26,12 +25,11 @@ public class MatchScoreCalculationService {
 
         handleWonPoint(firstPlayerScore, secondPlayerScore, roundWinnerId);
 
-        //OngoingMatchDto ongoingMatchDto = ongoingMatchesService.convertToDto(ongoingMatch);
+        OngoingMatchDto matchState = ongoingMatchesService.getMatchState(matchUuid);
+        matchState.setMatchFinished(isWinnerExists(firstPlayerScore, secondPlayerScore));
+        matchState.setWinnerName(playerService.getPlayerName(roundWinnerId));
 
-        //boolean isMatchFinished = isWinnerExists(firstPlayerScore, secondPlayerScore);
-        String winnerName = playerService.getPlayerName(roundWinnerId);
-
-        return getMatchState( winnerName);
+        return matchState;
     }
 
     public void handleWonPoint(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore, int pointWinnerId) {//булеан временно
@@ -119,15 +117,7 @@ public class MatchScoreCalculationService {
         return firstPlayerScore;
     }
 
-//    public boolean isWinnerExists(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore) {
-//        return firstPlayerScore.getSets() == 2 || secondPlayerScore.getSets() == 2;
-//    }
-
-    public MatchScoreResponseDto getMatchState( String winnerName) {
-        return new MatchScoreResponseDto(
-                //ongoingMatchDto,
-                //isMatchFinished,
-                winnerName
-        );
+    private boolean isWinnerExists(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore) {
+        return firstPlayerScore.getSets() == 2 || secondPlayerScore.getSets() == 2;
     }
 }

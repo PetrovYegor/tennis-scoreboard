@@ -41,18 +41,12 @@ public class OngoingMatchesService {
     public OngoingMatchDto convertToDto(OngoingMatch ongoingMatch) {
         PlayerScore firstPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getFirstPlayer());
         PlayerScore secondPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getSecondPlayer());
-        boolean isMatchFinished = isWinnerExists(firstPlayerScore,secondPlayerScore);
 
         return new OngoingMatchDto(
                 ongoingMatch.getUuid(),//возможно uuid не нужен в этом дто
                 createPlayerScoreDto(ongoingMatch.getFirstPlayer(), firstPlayerScore),
-                createPlayerScoreDto(ongoingMatch.getSecondPlayer(), secondPlayerScore),
-                isMatchFinished
+                createPlayerScoreDto(ongoingMatch.getSecondPlayer(), secondPlayerScore)
         );
-    }
-
-    public boolean isWinnerExists(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore) {
-        return firstPlayerScore.getSets() == 2 || secondPlayerScore.getSets() == 2;
     }
 
     private PlayerScoreDto createPlayerScoreDto(Player player, PlayerScore playerScore) {

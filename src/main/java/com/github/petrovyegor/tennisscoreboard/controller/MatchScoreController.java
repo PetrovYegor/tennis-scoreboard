@@ -26,32 +26,31 @@ public class MatchScoreController extends HttpServlet {
         HttpSession httpSession = request.getSession();
         OngoingMatchDto ongoingMatchDto = (OngoingMatchDto) httpSession.getAttribute("matchState");
 
-        if (ongoingMatchDto == null){
+        if (ongoingMatchDto == null) {
             UUID matchUuid = UUID.fromString(request.getParameter("uuid"));
             ongoingMatchDto = ongoingMatchesService.getMatchState(matchUuid);
             request.setAttribute("matchState", ongoingMatchDto);
         }
 
-        if (ongoingMatchDto.isMatchFinished()) {
-            //не уверен, что при форварде всё ещё сохранится атрибут с именем победителя, мб нужно буднт повторно засунуть его
-            getServletContext().getRequestDispatcher("/finished-match.jsp").forward(request, response);
+        if (!ongoingMatchDto.isMatchFinished()) {
+            getServletContext().getRequestDispatcher("/match-score.jsp").forward(request, response);
         }
-        getServletContext().getRequestDispatcher("/match-score.jsp").forward(request, response);
+        getServletContext().getRequestDispatcher("/finished-match.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         UUID matchUuid = UUID.fromString(request.getParameter("matchUuid"));
-        int roundWinnerId = Integer.parseInt(request.getParameter("winnerId"));//сюда по идее валидацию, чтобы с постмана шлак не слать
+        int roundWinnerId = Integer.parseInt(request.getParameter("winnerId"));//сюда по идее валидацию, чтобы с постмана шлак не слать. В другие места тоже
 
         MatchScoreRequestDto matchScoreRequestDto = new MatchScoreRequestDto(matchUuid, roundWinnerId);
         OngoingMatchDto ongoingMatchDto = matchScoreCalculationService.processAction(matchScoreRequestDto);
         HttpSession session = request.getSession();
         session.setAttribute("matchState", ongoingMatchDto);
-//сохранение матча пока выключил
-//        if (matchScoreResponseDto.isMatchFinished()){
-//            finishedMatchesPersistenceService.processFinishedMatch(matchScoreRequestDto);
-//        }
+
+        if (ongoingMatchDto.isMatchFinished()) {
+            finishedMatchesPersistenceService.processFinishedMatch(matchScoreRequestDto);
+        }
 
         response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));
     }

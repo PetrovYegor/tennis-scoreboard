@@ -18,7 +18,7 @@ public class MatchScoreCalculationServiceTest {
         assertEquals(Point.LOVE, secondPlayerScore.getPoint());
     }
 
-    // When the match starts, there is no winners
+    //When the match starts, there is no winners
 //    @Test
 //    public void testNewMatchHasNotWinners() {
 //        PlayerScore firstPlayerScore = new PlayerScore(0);

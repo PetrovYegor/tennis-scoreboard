@@ -1,6 +1,7 @@
 package com.github.petrovyegor.tennisscoreboard.dto;
 
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.UUID;
 

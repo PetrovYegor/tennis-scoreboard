@@ -37,6 +37,8 @@ public class NewMatchController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String firstPlayerName = request.getParameter("player1_name");
         String secondPlayerName = request.getParameter("player2_name");
+        //ПО ТЗ должна быть проверка, что игрок не может играть сам с собой
+        //исходить из того, что имена уникальны. Сейчас у меня этого нет
         NewMatchRequestDto newMatchRequestDto = new NewMatchRequestDto(firstPlayerName, secondPlayerName);
         vaidateRequestDto(newMatchRequestDto);
 

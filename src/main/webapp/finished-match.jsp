@@ -12,14 +12,9 @@
 </head>
 <body>
 <p>Match finished!: ${matchState.winnerName} wins!</p>
-<br>
 <p>Player1: ${matchState.firstPlayerScore.playerName}</p>
 <p>Sets: ${matchState.firstPlayerScore.sets}</p>
 <p>Games: ${matchState.firstPlayerScore.games}</p>
-
-<br>
-<br>
-
 <p>Player2: ${matchState.secondPlayerScore.playerName}</p>
 <p>Sets: ${matchState.secondPlayerScore.sets}</p>
 <p>Games: ${matchState.secondPlayerScore.games}</p>

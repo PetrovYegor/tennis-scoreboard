@@ -10,7 +10,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -23,19 +22,11 @@ public class MatchScoreController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession httpSession = request.getSession();
-        OngoingMatchDto ongoingMatchDto = (OngoingMatchDto) httpSession.getAttribute("matchState");
+        UUID matchUuid = UUID.fromString(request.getParameter("uuid"));
+        OngoingMatchDto ongoingMatchDto = ongoingMatchesService.getMatchState(matchUuid);
+        request.setAttribute("matchState", ongoingMatchDto);
 
-        if (ongoingMatchDto == null) {
-            UUID matchUuid = UUID.fromString(request.getParameter("uuid"));
-            ongoingMatchDto = ongoingMatchesService.getMatchState(matchUuid);
-            request.setAttribute("matchState", ongoingMatchDto);
-        }
-
-        if (!ongoingMatchDto.isMatchFinished()) {
-            getServletContext().getRequestDispatcher("/match-score.jsp").forward(request, response);
-        }
-        getServletContext().getRequestDispatcher("/finished-match.jsp").forward(request, response);
+        getServletContext().getRequestDispatcher("/match-score.jsp").forward(request, response);
     }
 
     @Override
@@ -45,13 +36,13 @@ public class MatchScoreController extends HttpServlet {
 
         MatchScoreRequestDto matchScoreRequestDto = new MatchScoreRequestDto(matchUuid, roundWinnerId);
         OngoingMatchDto ongoingMatchDto = matchScoreCalculationService.processAction(matchScoreRequestDto);
-        HttpSession session = request.getSession();
-        session.setAttribute("matchState", ongoingMatchDto);
 
         if (ongoingMatchDto.isMatchFinished()) {
             finishedMatchesPersistenceService.processFinishedMatch(matchScoreRequestDto);
+            request.setAttribute("matchUuid", matchUuid.toString());
+            request.setAttribute("matchState", ongoingMatchDto);
+            request.getRequestDispatcher("/finished-match.jsp").forward(request,response);
         }
-
         response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));
     }
 }

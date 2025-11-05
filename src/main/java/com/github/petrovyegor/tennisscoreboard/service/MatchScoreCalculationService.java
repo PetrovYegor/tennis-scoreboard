@@ -1,7 +1,7 @@
 package com.github.petrovyegor.tennisscoreboard.service;
 
-import com.github.petrovyegor.tennisscoreboard.dto.MatchScoreRequestDto;
-import com.github.petrovyegor.tennisscoreboard.dto.OngoingMatchDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreRequestDto;
+import com.github.petrovyegor.tennisscoreboard.dto.ongoing_match.OngoingMatchDto;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
 

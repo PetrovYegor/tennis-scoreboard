@@ -1,10 +1,10 @@
-package com.github.petrovyegor.tennisscoreboard.dto;
+package com.github.petrovyegor.tennisscoreboard.dto.match_score;
 
 import com.github.petrovyegor.tennisscoreboard.model.Point;
 import lombok.Data;
 
 @Data
-public class PlayerScoreDto {
+public class PlayerScoreDto {//TODO определиться с необходимостью этого класса, мб вместо него использовать модель PlayerScore
     private final int playerId;
     private final String playerName;
     private final int sets;

@@ -1,10 +1,10 @@
 package com.github.petrovyegor.tennisscoreboard.service;
 
 import com.github.petrovyegor.tennisscoreboard.dao.MemoryOngoingMatchDao;
-import com.github.petrovyegor.tennisscoreboard.dto.NewMatchRequestDto;
-import com.github.petrovyegor.tennisscoreboard.dto.NewMatchResponseDto;
-import com.github.petrovyegor.tennisscoreboard.dto.OngoingMatchDto;
-import com.github.petrovyegor.tennisscoreboard.dto.PlayerScoreDto;
+import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchRequestDto;
+import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchResponseDto;
+import com.github.petrovyegor.tennisscoreboard.dto.ongoing_match.OngoingMatchDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match_score.PlayerScoreDto;
 import com.github.petrovyegor.tennisscoreboard.exception.ErrorMessage;
 import com.github.petrovyegor.tennisscoreboard.exception.NotFoundException;
 import com.github.petrovyegor.tennisscoreboard.exception.RestErrorException;

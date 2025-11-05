@@ -19,7 +19,7 @@
 //    @Override
 //    public void init(FilterConfig filterConfig) throws ServletException {
 //    }
-//
+//    TODO мб сделать валидацию параметров тут и отсюда пулять уже в jsp атрибут error в реквесте
 //    @Override
 //    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 //        HttpServletResponse response = (HttpServletResponse) servletResponse;

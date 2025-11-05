@@ -6,6 +6,8 @@
 </head>
 <body>
 
+<%--TODO добавить вывод в виде таблицы--%>
+<%--TODO добавить сообщение ругающейся валидации--%>
 
 <c:if test="${matchState.matchFinished}">
         <p>Match finished!: ${matchState.winnerName} wins!</p>
@@ -28,7 +30,6 @@
         <p>Games: ${matchState.secondPlayerScore.games}</p>
         <p>Point: ${matchState.secondPlayerScore.displayPoint}</p>
 
-<%--        <form method="post" action="/match-score">--%>
         <form method="post" action="/match-score?uuid=${matchState.matchUuid}">
             <input type="hidden" name="matchUuid" value="${matchState.matchUuid}">
             <input type="hidden" name="winnerId" value="${matchState.firstPlayerScore.playerId}">

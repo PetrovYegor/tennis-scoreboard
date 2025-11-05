@@ -5,7 +5,8 @@
 </head>
 <body>
 <h1>New Match</h1>
-<p>${error}</p>
+<%--<p>${error}</p>--%>
+<%--TODO добавить вывод ошибки в jsp, если валидация ругается--%>
 <form method="post" action="/new-match">
     <label for="player1_name1">Player 1</label>
     <input type="text" id="player1_name1" name="player1_name"><br>

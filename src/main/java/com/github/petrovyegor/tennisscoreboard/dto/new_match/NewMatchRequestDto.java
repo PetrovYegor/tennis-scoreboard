@@ -1,4 +1,4 @@
-package com.github.petrovyegor.tennisscoreboard.dto;
+package com.github.petrovyegor.tennisscoreboard.dto.new_match;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

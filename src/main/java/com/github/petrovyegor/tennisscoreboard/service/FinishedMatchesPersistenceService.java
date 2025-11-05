@@ -2,8 +2,9 @@ package com.github.petrovyegor.tennisscoreboard.service;
 
 import com.github.petrovyegor.tennisscoreboard.dao.JpaMatchDao;
 import com.github.petrovyegor.tennisscoreboard.dao.MemoryOngoingMatchDao;
-import com.github.petrovyegor.tennisscoreboard.dto.MatchScoreRequestDto;
-import com.github.petrovyegor.tennisscoreboard.dto.OngoingMatchDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match.MatchRequestDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match.PageResultDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreRequestDto;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
 
@@ -30,5 +31,10 @@ public class FinishedMatchesPersistenceService {
 
     public void saveMatch(Match match) {
         jpaMatchDao.save(match);
+    }
+
+    public PageResultDto findMatches(MatchRequestDto matchRequestDto) {
+        //проверить, если имя null(или ещё page), то выводим всё сплошняком, иначе фильтруем
+        jpaMatchDao.findByCriteria(matchRequestDto);
     }
 }

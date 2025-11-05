@@ -1,7 +1,7 @@
 package com.github.petrovyegor.tennisscoreboard.controller;
 
-import com.github.petrovyegor.tennisscoreboard.dto.NewMatchRequestDto;
-import com.github.petrovyegor.tennisscoreboard.dto.NewMatchResponseDto;
+import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchRequestDto;
+import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchResponseDto;
 import com.github.petrovyegor.tennisscoreboard.exception.InvalidParamException;
 import com.github.petrovyegor.tennisscoreboard.service.OngoingMatchesService;
 import jakarta.servlet.ServletException;
@@ -37,12 +37,13 @@ public class NewMatchController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String firstPlayerName = request.getParameter("player1_name");
         String secondPlayerName = request.getParameter("player2_name");
-        //ПО ТЗ должна быть проверка, что игрок не может играть сам с собой
+        //TODO ПО ТЗ должна быть проверка, что игрок не может играть сам с собой
         //исходить из того, что имена уникальны. Сейчас у меня этого нет
         NewMatchRequestDto newMatchRequestDto = new NewMatchRequestDto(firstPlayerName, secondPlayerName);
         vaidateRequestDto(newMatchRequestDto);
 
         NewMatchResponseDto newMatchResponseDto = ongoingMatchesService.createOngoingMatch(newMatchRequestDto);
+        //TODO если валидация ругается, то отдать атрибут в реквест, который в jsp выведет ошибку
         //Match newMatch = newMatchService.getNewMatch(newMatchRequestDto);
         //ongoingMatchesService.addNewOngoingMatch(newMatch);
 //        if (isNullOrEmpty(firstPlayerName) || isNullOrEmpty(secondPlayerName)) {

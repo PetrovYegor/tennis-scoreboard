@@ -1,7 +1,7 @@
-package com.github.petrovyegor.tennisscoreboard.dto;
+package com.github.petrovyegor.tennisscoreboard.dto.ongoing_match;
 
+import com.github.petrovyegor.tennisscoreboard.dto.match_score.PlayerScoreDto;
 import lombok.Data;
-import lombok.Getter;
 
 import java.util.UUID;
 

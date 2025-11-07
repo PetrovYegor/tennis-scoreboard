@@ -25,8 +25,10 @@ public class OngoingMatchesService {
 
     public NewMatchResponseDto createOngoingMatch(NewMatchRequestDto newMatchRequestDto) {
         UUID matchUuid = UUID.randomUUID();
-        Player firstPlayer = playerService.getOrCreatePlayer(newMatchRequestDto.getFirstPlayerName());
-        Player secondPlayer = playerService.getOrCreatePlayer(newMatchRequestDto.getSecondPlayerName());
+        String firstPlayerName = newMatchRequestDto.getFirstPlayerName();
+        String secondPlayerName = newMatchRequestDto.getSecondPlayerName();
+        Player firstPlayer = playerService.getOrCreatePlayer(firstPlayerName);
+        Player secondPlayer = playerService.getOrCreatePlayer(secondPlayerName);
         OngoingMatch ongoingMatch = new OngoingMatch(matchUuid, firstPlayer, secondPlayer);
         memoryOngoingMatchDao.save(ongoingMatch);
         return new NewMatchResponseDto(ongoingMatch.getUuid());

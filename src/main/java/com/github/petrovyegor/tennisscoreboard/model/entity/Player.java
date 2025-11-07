@@ -17,7 +17,7 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "\"Id\"")
     @EqualsAndHashCode.Include
-    private int id;
+    private long id;
 
     @Column(name = "\"Name\"", unique = true, nullable = false)
     private String name;

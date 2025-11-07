@@ -3,22 +3,18 @@ package com.github.petrovyegor.tennisscoreboard.controller;
 import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchResponseDto;
 import com.github.petrovyegor.tennisscoreboard.exception.InvalidParamException;
+import com.github.petrovyegor.tennisscoreboard.exception.RestErrorException;
 import com.github.petrovyegor.tennisscoreboard.service.OngoingMatchesService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
 
 import java.io.IOException;
-import java.util.Set;
 
 @WebServlet(name = "NewMatchController", urlPatterns = "/new-match")
 public class NewMatchController extends HttpServlet {
-
     private final OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();
 
     @Override
@@ -26,42 +22,37 @@ public class NewMatchController extends HttpServlet {
         getServletContext().getRequestDispatcher("/new-match.jsp").forward(request, response);
     }
 
-
-/*
-Проверяет существование игроков в таблице`Players`. Если игрока с таким именем не существует, создаём
-			- Создаём экземпляр класса, содержащего айди игроков и текущий счёт, и кладём в коллекцию текущих матчей (существующую только в памяти приложения, либо в key-value storage). Ключом коллекции является UUID, значением - счёт в матче
-			- Редирект на страницу`/match-score?uuid=$match_id`*
-* */
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String firstPlayerName = request.getParameter("player1_name");
         String secondPlayerName = request.getParameter("player2_name");
-        //TODO ПО ТЗ должна быть проверка, что игрок не может играть сам с собой
-        //исходить из того, что имена уникальны. Сейчас у меня этого нет
-        NewMatchRequestDto newMatchRequestDto = new NewMatchRequestDto(firstPlayerName, secondPlayerName);
-        vaidateRequestDto(newMatchRequestDto);
+        validateGetRequestParameters(firstPlayerName, secondPlayerName);
 
+        NewMatchRequestDto newMatchRequestDto = new NewMatchRequestDto(firstPlayerName, secondPlayerName);
         NewMatchResponseDto newMatchResponseDto = ongoingMatchesService.createOngoingMatch(newMatchRequestDto);
-        //TODO если валидация ругается, то отдать атрибут в реквест, который в jsp выведет ошибку
-        //Match newMatch = newMatchService.getNewMatch(newMatchRequestDto);
-        //ongoingMatchesService.addNewOngoingMatch(newMatch);
-//        if (isNullOrEmpty(firstPlayerName) || isNullOrEmpty(secondPlayerName)) {
-//            request.setAttribute("error", "One or both names are empty");
-//            doGet(request, response);
-//        }
         response.sendRedirect("/match-score?uuid=%s".formatted(newMatchResponseDto.matchUuid()));
+    }
+
+    private void ensureNamesNotNullAndNotEmpty(String firstPlayerName, String secondPlayerName) {
+        if (isNullOrEmpty(firstPlayerName) || isNullOrEmpty(secondPlayerName)) {
+            throw new InvalidParamException("Players names should not be null or empty");
+        }
+    }
+
+    private void ensureNamesAreDifferent(String firstPlayerName, String secondPlayerName) {
+        String name1 = firstPlayerName.trim();
+        String name2 = secondPlayerName.trim();
+        if (name1.equalsIgnoreCase(name2)) {
+            throw new RestErrorException("Players names should not be equals");
+        }
+    }
+
+    private void validateGetRequestParameters(String firstPlayerName, String secondPlayerName) {
+        ensureNamesNotNullAndNotEmpty(firstPlayerName, secondPlayerName);
+        ensureNamesAreDifferent(firstPlayerName, secondPlayerName);
     }
 
     private boolean isNullOrEmpty(String source) {
         return source == null || source.isEmpty();
-    }
-
-    private void vaidateRequestDto(NewMatchRequestDto newMatchRequestDto) {
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<NewMatchRequestDto>> violations = validator.validate(newMatchRequestDto);
-        if (!violations.isEmpty()) {
-            throw new InvalidParamException(violations.toString());
-        }
     }
 }

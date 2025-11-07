@@ -5,13 +5,11 @@ import com.github.petrovyegor.tennisscoreboard.dto.match.MatchRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.match.PageResultDto;
 import com.github.petrovyegor.tennisscoreboard.exception.DBException;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
+import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +20,13 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
         try (EntityManager em = JpaUtil.getEntityManager()) {
             Match result = em.find(Match.class, id);
             return Optional.ofNullable(result);
-        }
+        }//TODO в репах сделать Catch блоки, ведь можно постманом подавать невалидные идшники
     }
 
     @Override
-    public List<Match> findAll(){
+    public List<Match> findAll() {
         return null;
-    }
+    }//это либо убрать, либо переписать
 
 //    @Override
 //    public List<Match> findAll() {
@@ -44,33 +42,39 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
             CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
             // Определяем корневую сущность - откуда считаем (FROM Match)
             Root<Match> countRoot = countQuery.from(Match.class);
-
             countQuery.select(cb.count(countRoot));//хотим получить COUNT (подсчет количества)
 
             //Список стейтментов для Where
             List<Predicate> predicates = new ArrayList<>();//пока явно иницилазирую TODO переписать на отдельный метод получаения
             //Динамически добавляем условия фильтрации
-            if (matchRequestDto.getPlayerName() != null || !matchRequestDto.getPlayerName().isEmpty()) {
-                predicates.add(cb.like(countRoot.get("Name"), matchRequestDto.getPlayerName()));
+//            if (matchRequestDto.getPlayerName() != null ) {//TODO проверка на empty
+//                predicates.add(cb.like(countRoot.get("Name"), matchRequestDto.getPlayerName()));
+//            }
+
+//Создать запрос, который вернёт сущности Match //комментарии сохранить отдельным коммитом,
+            // чтобы к нему можно было возвращаться и легче понимать, что тут написано. А потом их можно почистить
+            CriteriaQuery<Match> dataQuery = cb.createQuery(Match.class);
+            Root<Match> dataRoot = dataQuery.from(Match.class);
+            // Делаем JOIN с сущностью Player и выбираем нужные поля
+            Join<Match, Player> firstPlayerJoin = dataRoot.join("firstPlayer");
+            Join<Match, Player> secondPlayerJoin = dataRoot.join("secondPlayer");
+            Join<Match, Player> winnerJoin = dataRoot.join("winner");
+            // Условие: имя первого ИЛИ второго игрока содержит строку
+            if (matchRequestDto.getPlayerName() != null) {
+                predicates.add(cb.like(firstPlayerJoin.get("Name"), "%" + matchRequestDto.getPlayerName() + "%"));//вытащить имя игрока в отдельное поле
+                predicates.add(cb.like(secondPlayerJoin.get("Name"), "%" + matchRequestDto.getPlayerName() + "%"));//вытащить имя игрока в отдельное поле
             }
 
             //если есть другие фильтры, то добавляем их в List
 
             //если список условий where не пустой, то добавляем их в запрос
-            if (!predicates.isEmpty()){
+            if (!predicates.isEmpty()) {
                 countQuery.where(cb.and(predicates.toArray(new Predicate[0])));
             }
 
             //Выполняем Count запрос
             Long totalElements = em.createQuery(countQuery).getSingleResult();
-
-            //Создать запрос, который вернёт сущности Match //комментарии сохранить отдельным коммитом,
-            // чтобы к нему можно было возвращаться и легче понимать, что тут написано. А потом их можно почистить
-            CriteriaQuery<Match> dataQuery = cb.createQuery(Match.class);
-
-            Root<Match> dataRoot = dataQuery.from(Match.class);
-
-            if (!predicates.isEmpty()){
+            if (!predicates.isEmpty()) {
                 dataQuery.where(cb.and(predicates.toArray(new Predicate[0])));
             }
 
@@ -80,10 +84,18 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
             //Создать и выполнить запрос
             TypedQuery<Match> typedQuery = em.createQuery(dataQuery);
 
-            int pageSize = 5;
+            // В SELECT можно выбрать как всю сущность Match, так и конкретные поля
+            dataQuery.multiselect(
+                    //dataRoot,                    // вся сущность Match
+                    firstPlayerJoin.get("Name"),   // имя игрока из JOIN
+                    secondPlayerJoin.get("Name"),   // имя игрока из JOIN
+                    winnerJoin.get("Name")   // имя игрока из JOIN
+            );
 
+            int pageSize = 5;
+            int pageNumber = matchRequestDto.getPageNumber();
             //Смещение
-            int offset = matchRequestDto.getPageNumber() * pageSize;
+            int offset = pageNumber * pageSize;
 
             //установка пагинации
             typedQuery.setFirstResult(offset);//смещение offset
@@ -94,18 +106,19 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
             //СБОРКА РЕЗУЛЬТАТА
 
             //Общее количество страниц
-            int totalPages = (int)  Math.ceil((double)totalElements / pageSize);
+            int totalPages = (int) Math.ceil((double) totalElements / pageSize);
 
             //Создать и вернуть объект пагинации
-            PageResultDto pageResultDto = new PageResultDto(
-                    totalElements
-                    ,totalPages
-                    ,pageSize
-                    , matchRequestDto.getPageNumber()
-            );
+            PageResultDto pageResultDto = null;
+//            PageResultDto pageResultDto = new PageResultDto(
+//
+//                    ,totalPages
+//                    ,pageSize
+//                    , matchRequestDto.getPageNumber()
+//            );
 
 
-            return Optional.ofNullable(pageResultDto);
+            return Optional.of(pageResultDto);
         }
     }
 
@@ -121,7 +134,7 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            throw new DBException("Failed to save Match with player1 id - '%s', player2 id - '%s', winner id - '%s'".formatted(entity.getFirstPlayerId(), entity.getSecondPlayerId(), entity.getWinnerId()));
+            throw new DBException("Failed to save Match with player1 id - '%s', player2 id - '%s', winner id - '%s'".formatted(entity.getFirstPlayer().getId(), entity.getSecondPlayer().getId(), entity.getWinner().getId()));
         } finally {
             em.close();
         }

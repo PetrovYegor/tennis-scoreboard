@@ -13,7 +13,12 @@
 <body>
 <%--TODO Форма с фильтром по имени игрока. Поле ввода для имени и кнопка “искать”.
 По нажатию формируется GET запрос вида /matches?filter_by_player_name=${NAME}--%>
-
+<p>Privet</p>
+//<p>Всего матчей ${matchesData.totalCount}</p>
+//<p>Всего матчей ${matchesData.firstPlayerName}</p>
+//<p>Всего матчей ${matchesData.secondPlayerName}</p>
+//<p>Всего матчей ${matchesData.winnerName}</p>
+<%--<p>Player1: ${matchState.firstPlayerScore.playerName}</p>--%>
 <%--TODO Список найденных матчей--%>
 <%--TODO Переключатель страниц, если матчей найдено больше, чем влезает на одну страницу--%>
 </body>

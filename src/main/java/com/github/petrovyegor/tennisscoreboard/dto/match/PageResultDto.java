@@ -3,13 +3,15 @@ package com.github.petrovyegor.tennisscoreboard.dto.match;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
 public class PageResultDto {
     //сами данные, например лист матчей -- в репозитории посчитается
-    private final List<Match> matches = new ArrayList<>();
+//    private final List<Match> content;
+    private String firstPlayerName;
+    private String secondPlayerName;
+    private String winnerName;
     //счётчик записей, удовлетворяющих условию -- в репозитории посчитается
     private final long totalCount;
     //общее количество страниц -- в репозитории посчитаетя

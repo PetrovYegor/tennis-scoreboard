@@ -5,7 +5,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 public class JpaUtil {
-    private static final EntityManagerFactory entityManagerFactory;
+    private static final EntityManagerFactory entityManagerFactory;//TODO вспомнить, что здесь происходит
 
     static {
         try {

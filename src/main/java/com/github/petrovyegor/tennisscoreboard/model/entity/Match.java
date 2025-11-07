@@ -15,23 +15,26 @@ public class Match {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "\"Id\"")
     @EqualsAndHashCode.Include
-    private int id;
+    private long id;
 
-    @Column(name = "\"Player1\"", nullable = false)
-    private int firstPlayerId;
-    @Column(name = "\"Player2\"", nullable = false)
-    private int secondPlayerId;
-    @Column(name = "\"Winner\"", nullable = false)
-    private int winnerId;
+    @ManyToOne
+    @JoinColumn(name = "\"Player1\"", nullable = false)
+    private Player firstPlayer;//TODO подумать нужно ли // При сохранении Match автоматически сохранится и Player @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "\"Player2\"", nullable = false)
+    private Player secondPlayer;
+    @ManyToOne
+    @JoinColumn(name = "\"Winner\"", nullable = false)
+    private Player winner;
 
-    public Match(int firstPlayerId, int secondPlayerId) {
-        this.firstPlayerId = firstPlayerId;
-        this.secondPlayerId = secondPlayerId;
+    public Match(Player firstPlayer, Player secondPlayer) {
+        this.firstPlayer = firstPlayer;
+        this.secondPlayer = secondPlayer;
     }
 
-    public Match(int firstPlayerId, int secondPlayerId, int winnerId) {
-        this.firstPlayerId = firstPlayerId;
-        this.secondPlayerId = secondPlayerId;
-        this.winnerId = winnerId;
+    public Match(Player firstPlayer, Player secondPlayer, Player winner) {
+        this.firstPlayer = firstPlayer;
+        this.secondPlayer = secondPlayer;
+        this.winner = winner;
     }
 }

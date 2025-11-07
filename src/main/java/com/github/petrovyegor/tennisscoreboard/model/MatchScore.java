@@ -7,9 +7,9 @@ import java.util.Map;
 
 @Getter
 public class MatchScore {
-    private Map<Integer, PlayerScore> playersScore;
+    private Map<Long, PlayerScore> playersScore;
 
-    public MatchScore(int firstPlayerId, int secondPlayerId) {
+    public MatchScore(long firstPlayerId, long secondPlayerId) {
         playersScore = new HashMap<>();
         playersScore.put(firstPlayerId, new PlayerScore(firstPlayerId));
         playersScore.put(secondPlayerId, new PlayerScore(secondPlayerId));

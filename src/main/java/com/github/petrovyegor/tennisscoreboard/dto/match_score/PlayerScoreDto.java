@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class PlayerScoreDto {//TODO определиться с необходимостью этого класса, мб вместо него использовать модель PlayerScore
-    private final int playerId;
+    private final long playerId;
     private final String playerName;
     private final int sets;
     private final int games;

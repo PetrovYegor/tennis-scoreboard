@@ -22,7 +22,7 @@ public class MatchScoreController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        UUID matchUuid = UUID.fromString(request.getParameter("uuid"));
+        UUID matchUuid = UUID.fromString(request.getParameter("matchUuid"));//тут вылезет эксепшн, если корявый ид
         OngoingMatchDto ongoingMatchDto = ongoingMatchesService.getMatchState(matchUuid);
         request.setAttribute("matchState", ongoingMatchDto);
 
@@ -31,7 +31,7 @@ public class MatchScoreController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        UUID matchUuid = UUID.fromString(request.getParameter("matchUuid"));
+        UUID matchUuid = UUID.fromString(request.getParameter("uuid"));
         int roundWinnerId = Integer.parseInt(request.getParameter("winnerId"));//сюда по идее валидацию, чтобы с постмана шлак не слать. В другие места тоже
 
         MatchScoreRequestDto matchScoreRequestDto = new MatchScoreRequestDto(matchUuid, roundWinnerId);
@@ -41,7 +41,7 @@ public class MatchScoreController extends HttpServlet {
             finishedMatchesPersistenceService.processFinishedMatch(matchScoreRequestDto);
             request.setAttribute("matchUuid", matchUuid.toString());
             request.setAttribute("matchState", ongoingMatchDto);
-            request.getRequestDispatcher("/finished-match.jsp").forward(request,response);
+            request.getRequestDispatcher("/finished-match.jsp").forward(request, response);
         }
         response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));
     }

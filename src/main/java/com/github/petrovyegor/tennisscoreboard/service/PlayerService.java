@@ -1,7 +1,6 @@
 package com.github.petrovyegor.tennisscoreboard.service;
 
 import com.github.petrovyegor.tennisscoreboard.dao.JpaPlayerDao;
-import com.github.petrovyegor.tennisscoreboard.exception.NotFoundException;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
 
 import java.util.Optional;
@@ -22,10 +21,4 @@ public class PlayerService {
             return jpaPlayerDao.save(newPlayer);
         }
     }
-
-//    public String getPlayerName(long id) { //мне не нравится этот метод, он используется только в одном месте и мб получится обойтись без него
-//        Player player = jpaPlayerDao.findById(id)
-//                .orElseThrow(() -> new NotFoundException("Player nor found"));
-//        return player.getName();
-//    }
 }

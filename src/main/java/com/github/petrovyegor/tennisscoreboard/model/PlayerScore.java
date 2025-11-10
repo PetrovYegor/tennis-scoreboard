@@ -4,15 +4,14 @@ import lombok.Getter;
 
 @Getter
 public class PlayerScore {
-    private long playerId;
+    private String playerName;
     private int sets;
     private int games;
     private Point point;
     private boolean advantage;
     private int tieBreakPoints;
 
-    public PlayerScore(long playerId) {
-        this.playerId = playerId;
+    public PlayerScore(String name) {
         this.sets = 0;
         this.games = 0;
         this.point = Point.LOVE;

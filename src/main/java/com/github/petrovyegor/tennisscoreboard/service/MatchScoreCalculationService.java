@@ -9,66 +9,64 @@ import java.util.UUID;
 
 public class MatchScoreCalculationService {
     private final OngoingMatchesService ongoingMatchesService;
-    private final PlayerService playerService;
 
     public MatchScoreCalculationService() {
         ongoingMatchesService = new OngoingMatchesService();
-        playerService = new PlayerService();
     }
 
     public OngoingMatchDto processAction(MatchScoreRequestDto matchScoreRequestDto) {
         UUID matchUuid = matchScoreRequestDto.getMatchUuid();
         int roundWinnerId = matchScoreRequestDto.getRoundWinnerId();
-        OngoingMatch ongoingMatch = ongoingMatchesService.findByUuid(matchUuid);
-        PlayerScore firstPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getFirstPlayer());
-        PlayerScore secondPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getSecondPlayer());
 
-        handleWonPoint(firstPlayerScore, secondPlayerScore, roundWinnerId);
+        OngoingMatch ongoingMatch = ongoingMatchesService.findByUuid(matchUuid);
+
+        PlayerScore roundWinnerScore = ongoingMatch.getWinnerScore(roundWinnerId);
+        PlayerScore opponentScore = ongoingMatch.getOpponentScore(roundWinnerId);
+
+        handleWonPoint(roundWinnerScore, opponentScore);
 
         OngoingMatchDto matchState = ongoingMatchesService.getMatchState(matchUuid);
-        matchState.setMatchFinished(isWinnerExists(firstPlayerScore, secondPlayerScore));
-        matchState.setWinnerName(playerService.getPlayerName(roundWinnerId));
+        matchState.setMatchFinished(isWinnerExists(roundWinnerScore, opponentScore));
+        matchState.setWinnerName(roundWinnerScore.getPlayerName());
 
         return matchState;
     }
 
-    public void handleWonPoint(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore, int pointWinnerId) {//булеан временно
-        PlayerScore winnerScore = getWinnerScore(pointWinnerId, firstPlayerScore, secondPlayerScore);
-        PlayerScore opponentScore = getOpponentScore(pointWinnerId, firstPlayerScore, secondPlayerScore);
-        if (isTieBreak(firstPlayerScore, secondPlayerScore)) {
-            handleTieBreakPoint(winnerScore, opponentScore);
+    public void handleWonPoint(PlayerScore roundWinnerScore, PlayerScore opponentScore) {
+        if (isTieBreak(roundWinnerScore, opponentScore)) {
+            handleTieBreakPoint(roundWinnerScore, opponentScore);
         } else {
-            handleRegularPoint(winnerScore, opponentScore);
+            handleRegularPoint(roundWinnerScore, opponentScore);
         }
-        handleSetVictory(winnerScore, opponentScore);
+        handleSetVictory(roundWinnerScore, opponentScore);
     }
 
-    private void handleTieBreakPoint(PlayerScore winnerScore, PlayerScore opponentScore) {
-        winnerScore.addTieBreakPoint();
-        if (winnerScore.getTieBreakPoints() >= 7
-                && winnerScore.getTieBreakPoints() - opponentScore.getTieBreakPoints() >= 2) {
-            winnerScore.winSet();
-            winnerScore.resetAfterSet();
+    private void handleTieBreakPoint(PlayerScore roundWinnerScore, PlayerScore opponentScore) {
+        roundWinnerScore.addTieBreakPoint();
+        if (roundWinnerScore.getTieBreakPoints() >= 7
+                && roundWinnerScore.getTieBreakPoints() - opponentScore.getTieBreakPoints() >= 2) {
+            roundWinnerScore.winSet();
+            roundWinnerScore.resetAfterSet();
             opponentScore.resetAfterSet();
         }
     }
 
-    private void handleSetVictory(PlayerScore winnerScore, PlayerScore opponentScore) {
-        if (winnerScore.getGames() == 6 && (winnerScore.getGames() - opponentScore.getGames() >= 2)) {
-            winnerScore.winSet();
-            winnerScore.resetAfterSet();
+    private void handleSetVictory(PlayerScore roundWinnerScore, PlayerScore opponentScore) {
+        if (roundWinnerScore.getGames() == 6 && (roundWinnerScore.getGames() - opponentScore.getGames() >= 2)) {
+            roundWinnerScore.winSet();
+            roundWinnerScore.resetAfterSet();
             opponentScore.resetAfterSet();
         }
     }
 
-    private void handleRegularPoint(PlayerScore winnerScore, PlayerScore opponentScore) {
-        if (isDeuce(winnerScore, opponentScore)) {
-            handleDeuce(winnerScore, opponentScore);
+    private void handleRegularPoint(PlayerScore roundWinnerScore, PlayerScore opponentScore) {
+        if (isDeuce(roundWinnerScore, opponentScore)) {
+            handleDeuce(roundWinnerScore, opponentScore);
         } else {
-            if (isEarlyGameVictory(winnerScore, opponentScore)) {
-                handleEarlyGameVictory(winnerScore, opponentScore);
+            if (isEarlyGameVictory(roundWinnerScore, opponentScore)) {
+                handleEarlyGameVictory(roundWinnerScore, opponentScore);
             } else {
-                winnerScore.addPoint();
+                roundWinnerScore.addPoint();
             }
         }
     }
@@ -101,20 +99,6 @@ public class MatchScoreCalculationService {
 
     private boolean isTieBreak(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore) {
         return firstPlayerScore.getGames() == 6 && secondPlayerScore.getGames() == 6;
-    }
-
-    private PlayerScore getWinnerScore(int pointWinnerId, PlayerScore firstPlayerScore, PlayerScore secondPlayerScore) {
-        if (pointWinnerId == firstPlayerScore.getPlayerId()) {
-            return firstPlayerScore;
-        }
-        return secondPlayerScore;
-    }
-
-    private PlayerScore getOpponentScore(int pointWinnerId, PlayerScore firstPlayerScore, PlayerScore secondPlayerScore) {
-        if (pointWinnerId == firstPlayerScore.getPlayerId()) {
-            return secondPlayerScore;
-        }
-        return firstPlayerScore;
     }
 
     private boolean isWinnerExists(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore) {

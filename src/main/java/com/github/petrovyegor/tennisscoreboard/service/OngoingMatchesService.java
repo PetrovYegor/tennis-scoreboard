@@ -1,10 +1,10 @@
 package com.github.petrovyegor.tennisscoreboard.service;
 
 import com.github.petrovyegor.tennisscoreboard.dao.MemoryOngoingMatchDao;
+import com.github.petrovyegor.tennisscoreboard.dto.match_score.PlayerScoreDto;
 import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchResponseDto;
 import com.github.petrovyegor.tennisscoreboard.dto.ongoing_match.OngoingMatchDto;
-import com.github.petrovyegor.tennisscoreboard.dto.match_score.PlayerScoreDto;
 import com.github.petrovyegor.tennisscoreboard.exception.ErrorMessage;
 import com.github.petrovyegor.tennisscoreboard.exception.NotFoundException;
 import com.github.petrovyegor.tennisscoreboard.exception.RestErrorException;
@@ -24,30 +24,33 @@ public class OngoingMatchesService {
     }
 
     public NewMatchResponseDto createOngoingMatch(NewMatchRequestDto newMatchRequestDto) {
-        UUID matchUuid = UUID.randomUUID();
+        UUID matchUuid = getNewUUID();
         String firstPlayerName = newMatchRequestDto.getFirstPlayerName();
         String secondPlayerName = newMatchRequestDto.getSecondPlayerName();
         Player firstPlayer = playerService.getOrCreatePlayer(firstPlayerName);
         Player secondPlayer = playerService.getOrCreatePlayer(secondPlayerName);
-        OngoingMatch ongoingMatch = new OngoingMatch(matchUuid, firstPlayer, secondPlayer);
-        memoryOngoingMatchDao.save(ongoingMatch);
-        return new NewMatchResponseDto(ongoingMatch.getUuid());
+        memoryOngoingMatchDao.save(new OngoingMatch(matchUuid, firstPlayer, secondPlayer));
+
+        return new NewMatchResponseDto(matchUuid);
     }
 
     public OngoingMatchDto getMatchState(UUID matchUuid) {
         OngoingMatch ongoingMatch = memoryOngoingMatchDao.findById(matchUuid)
-                .orElseThrow(() -> new NotFoundException("Match not found"));//дописать ид в сообщение
+                .orElseThrow(() -> new NotFoundException("Match with id '%s' not found".formatted(matchUuid)));//дописать ид в сообщение
         return convertToDto(ongoingMatch);
     }
 
     public OngoingMatchDto convertToDto(OngoingMatch ongoingMatch) {
-        PlayerScore firstPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getFirstPlayer());
-        PlayerScore secondPlayerScore = ongoingMatch.getPlayerScore(ongoingMatch.getSecondPlayer());
+        Player firstPlayer = ongoingMatch.getFirstPlayer();
+        Player secondPlayer = ongoingMatch.getSecondPlayer();
+
+        PlayerScore firstPlayerScore = ongoingMatch.getFirstPlayerScore();
+        PlayerScore secondPlayerScore = ongoingMatch.getSecondPlayerScore();
 
         return new OngoingMatchDto(
-                ongoingMatch.getUuid(),//возможно uuid не нужен в этом дто
-                createPlayerScoreDto(ongoingMatch.getFirstPlayer(), firstPlayerScore),
-                createPlayerScoreDto(ongoingMatch.getSecondPlayer(), secondPlayerScore)
+                ongoingMatch.getUuid(),
+                createPlayerScoreDto(firstPlayer, firstPlayerScore),
+                createPlayerScoreDto(secondPlayer, secondPlayerScore)
         );
     }
 
@@ -65,8 +68,11 @@ public class OngoingMatchesService {
     }
 
     public OngoingMatch findByUuid(UUID matchUuid) {
-        OngoingMatch ongoingMatch = memoryOngoingMatchDao.findById(matchUuid)
+        return memoryOngoingMatchDao.findById(matchUuid)
                 .orElseThrow(() -> new RestErrorException(ErrorMessage.ONGOING_MATCH_NOT_FOUND_BY_UUID.formatted(matchUuid)));
-        return ongoingMatch;
+    }
+
+    private UUID getNewUUID() {
+        return UUID.randomUUID();
     }
 }

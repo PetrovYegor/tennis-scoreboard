@@ -27,5 +27,9 @@ public class MemoryOngoingMatchDao implements CrudDao<OngoingMatch, UUID> {
     public void delete(UUID matchUuid){
         ongoingMatches.remove(matchUuid);
     }
+
+    public boolean isOngoingMatchExists(UUID matchUuid){
+        return ongoingMatches.containsKey(matchUuid);
+    }
 }
 

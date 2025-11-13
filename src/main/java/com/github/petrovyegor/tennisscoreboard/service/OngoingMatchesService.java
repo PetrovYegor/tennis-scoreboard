@@ -72,6 +72,10 @@ public class OngoingMatchesService {
                 .orElseThrow(() -> new RestErrorException(ErrorMessage.ONGOING_MATCH_NOT_FOUND_BY_UUID.formatted(matchUuid)));
     }
 
+    public boolean isOngoingMatchExists(UUID matchUuid){
+        return memoryOngoingMatchDao.isOngoingMatchExists(matchUuid);
+    }
+
     private UUID getNewUUID() {
         return UUID.randomUUID();
     }

@@ -4,6 +4,7 @@ import com.github.petrovyegor.tennisscoreboard.JpaUtil;
 import com.github.petrovyegor.tennisscoreboard.exception.DBException;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,10 +45,12 @@ public class JpaPlayerDao implements PlayerDao {
     @Override
     public Optional<Player> findByName(String name) {
         try (EntityManager em = JpaUtil.getEntityManager()) {
-            String findByNameQuery = "SELECT p FROM Player p WHERE p.name = :name";
+            String findByNameQuery = "SELECT p FROM Player p WHERE p.name = :name";//надо ли переписывать на Criteria Api? TODO
             Player result = em.createQuery(findByNameQuery, Player.class).setParameter("name", name).getSingleResult();
             return Optional.ofNullable(result);
-        } catch (Exception e) {
+        } catch (NoResultException e) {
+            return Optional.empty();
+        } catch (Throwable e) {
             throw new DBException("Failed to get player with name '%s'".formatted(name));
         }
     }

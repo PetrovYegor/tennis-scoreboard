@@ -6,6 +6,7 @@ import com.github.petrovyegor.tennisscoreboard.dao.MemoryOngoingMatchDao;
 import com.github.petrovyegor.tennisscoreboard.dto.match.MatchRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.match.PageResultDto;
 import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreRequestDto;
+import com.github.petrovyegor.tennisscoreboard.exception.NotFoundException;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
@@ -17,27 +18,21 @@ public class FinishedMatchesPersistenceService {
     private final OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();
     private final MemoryOngoingMatchDao memoryOngoingMatchDao = new MemoryOngoingMatchDao();
     private final JpaPlayerDao jpaPlayerDao = new JpaPlayerDao();
-    //Если матч закончился - через `FinishedMatchesPersistenceService` сохраняет
-    // законченный матч в базу данных. инкапсулирует чтение и запись законченных
-    // матчей в БД
 
     public void processFinishedMatch(MatchScoreRequestDto matchScoreRequestDto) {
         UUID matchId = matchScoreRequestDto.getMatchUuid();
         OngoingMatch ongoingMatch = ongoingMatchesService.findByUuid(matchId);
-        long winnerId = matchScoreRequestDto.getRoundWinnerId();
-        Player winner = jpaPlayerDao.findById(winnerId).get();//переписать, а то коряво
-        Match match = new Match(ongoingMatch.getFirstPlayer(), ongoingMatch.getSecondPlayer());
-        saveMatch(match);
-        memoryOngoingMatchDao.delete(matchId);
-    }
 
-    public void saveMatch(Match match) {
+        long winnerId = matchScoreRequestDto.getRoundWinnerId();
+        Player winner = jpaPlayerDao.findById(winnerId).orElseThrow(() -> new NotFoundException("Player with id '%s' does not exist"));
+        Match match = new Match(ongoingMatch.getFirstPlayer(), ongoingMatch.getSecondPlayer(), winner);
         jpaMatchDao.save(match);
+        memoryOngoingMatchDao.delete(matchId);
     }
 
     public PageResultDto findMatches(MatchRequestDto matchRequestDto) {
         //проверить, если имя null(или ещё page), то выводим всё сплошняком, иначе фильтруем
-        PageResultDto pageResultDto =  jpaMatchDao.findByCriteria(matchRequestDto).orElseThrow(() -> new RuntimeException("Exception while find all"));//переписать
+        PageResultDto pageResultDto = jpaMatchDao.findByCriteria(matchRequestDto).orElseThrow(() -> new RuntimeException("Exception while find all"));//переписать
         return pageResultDto;
     }
 }

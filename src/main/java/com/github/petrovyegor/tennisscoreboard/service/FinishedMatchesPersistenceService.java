@@ -31,8 +31,7 @@ public class FinishedMatchesPersistenceService {
     }
 
     public PageResultDto findMatches(MatchRequestDto matchRequestDto) {
-        //проверить, если имя null(или ещё page), то выводим всё сплошняком, иначе фильтруем
-        PageResultDto pageResultDto = jpaMatchDao.findByCriteria(matchRequestDto).orElseThrow(() -> new RuntimeException("Exception while find all"));//переписать
+        PageResultDto pageResultDto = jpaMatchDao.findByCriteria(matchRequestDto).orElseThrow(() -> new RuntimeException("Failed to retrieve list of finished matches"));
         return pageResultDto;
     }
 }

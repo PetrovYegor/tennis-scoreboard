@@ -12,7 +12,7 @@
     <title>privet, eto stranica s finalnim schetom</title>
 </head>
 <body>
-<p>Match finished!: ${matchState.winnerName} wins!</p>
+<p>Match finished: ${matchState.winnerName} wins!</p>
 <p>Player1: ${matchState.firstPlayerScore.playerName}</p>
 <p>Sets: ${matchState.firstPlayerScore.sets}</p>
 <p>Games: ${matchState.firstPlayerScore.games}</p>

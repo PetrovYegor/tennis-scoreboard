@@ -28,6 +28,10 @@ public class MatchScoreController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         validateMatchScoreGetRequest(request);
         UUID matchUuid = UUID.fromString(request.getParameter("uuid"));//TODO проверить постманом, что валится ошибка. При необходимости добавить валидацию
+        if (!ongoingMatchesService.isOngoingMatchExists(matchUuid)) {
+            response.sendRedirect("/matches?page=0");//TODO мб именно в гет методе сделать пересылку на страницу с ошибками, если что-то нет
+            return;
+        }
         OngoingMatchDto ongoingMatchDto = ongoingMatchesService.getMatchState(matchUuid);//Мб поменять всё-таки OngoingMatch Dto на MatchResponseDto
         request.setAttribute("matchState", ongoingMatchDto);
 

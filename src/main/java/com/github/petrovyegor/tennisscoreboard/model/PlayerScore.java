@@ -12,6 +12,7 @@ public class PlayerScore {
     private int tieBreakPoints;
 
     public PlayerScore(String name) {
+        this.playerName = name;
         this.sets = 0;
         this.games = 0;
         this.point = Point.LOVE;

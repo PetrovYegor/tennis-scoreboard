@@ -8,10 +8,10 @@ import java.util.List;
 @Data
 public class PageResultDto {
     //сами данные, например лист матчей -- в репозитории посчитается
-//    private final List<Match> content;
-    private String firstPlayerName;
-    private String secondPlayerName;
-    private String winnerName;
+    private final List<Match> content;
+//    private String firstPlayerName;
+//    private String secondPlayerName;
+//    private String winnerName;
     //счётчик записей, удовлетворяющих условию -- в репозитории посчитается
     private final long totalCount;
     //общее количество страниц -- в репозитории посчитаетя

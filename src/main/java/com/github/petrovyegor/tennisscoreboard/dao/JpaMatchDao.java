@@ -73,7 +73,7 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
             }
 
             //Выполняем Count запрос
-            Long totalElements = em.createQuery(countQuery).getSingleResult();
+            Long totalCount = em.createQuery(countQuery).getSingleResult();
             if (!predicates.isEmpty()) {
                 dataQuery.where(cb.and(predicates.toArray(new Predicate[0])));
             }
@@ -87,12 +87,12 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
             // В SELECT можно выбрать как всю сущность Match, так и конкретные поля
             dataQuery.multiselect(
                     //dataRoot,                    // вся сущность Match
-                    firstPlayerJoin.get("Name"),   // имя игрока из JOIN
-                    secondPlayerJoin.get("Name"),   // имя игрока из JOIN
-                    winnerJoin.get("Name")   // имя игрока из JOIN
+                    firstPlayerJoin.get("name"),   // имя игрока из JOIN
+                    secondPlayerJoin.get("name"),   // имя игрока из JOIN
+                    winnerJoin.get("name")   // имя игрока из JOIN
             );
 
-            int pageSize = 5;
+            int pageSize = 5;//захардкодил тут, мб перенести в другое место
             int pageNumber = matchRequestDto.getPageNumber();
             //Смещение
             int offset = pageNumber * pageSize;
@@ -106,19 +106,20 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
             //СБОРКА РЕЗУЛЬТАТА
 
             //Общее количество страниц
-            int totalPages = (int) Math.ceil((double) totalElements / pageSize);
+            int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 
             //Создать и вернуть объект пагинации
-            PageResultDto pageResultDto = null;
-//            PageResultDto pageResultDto = new PageResultDto(
-//
-//                    ,totalPages
-//                    ,pageSize
-//                    , matchRequestDto.getPageNumber()
-//            );
+            //PageResultDto pageResultDto = null;
+            PageResultDto pageResultDto = new PageResultDto(
+                    content
+                    ,totalCount
+                    ,totalPages
+                    ,pageSize
+                    , matchRequestDto.getPageNumber()
+            );
 
 
-            return Optional.of(pageResultDto);
+            return Optional.ofNullable(pageResultDto);
         }
     }
 

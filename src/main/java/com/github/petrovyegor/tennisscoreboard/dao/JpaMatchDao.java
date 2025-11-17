@@ -35,7 +35,7 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
 //        return temp;
 //    }
 
-    public Optional<PageResultDto> findByCriteria(MatchRequestDto matchRequestDto) {//мб создать под этот метод отделный интерфейс MatchDao
+    public Optional<PageResultDto> findByCriteria(int pageNumber, int pageSize, String playerName) {//мб создать под этот метод отделный интерфейс MatchDao
         try (EntityManager em = JpaUtil.getEntityManager()) {
             CriteriaBuilder cb = em.getCriteriaBuilder();
 
@@ -60,9 +60,9 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
             Join<Match, Player> secondPlayerJoin = dataRoot.join("secondPlayer");
             Join<Match, Player> winnerJoin = dataRoot.join("winner");
             // Условие: имя первого ИЛИ второго игрока содержит строку
-            if (matchRequestDto.getPlayerName() != null) {
-                predicates.add(cb.like(firstPlayerJoin.get("Name"), "%" + matchRequestDto.getPlayerName() + "%"));//вытащить имя игрока в отдельное поле
-                predicates.add(cb.like(secondPlayerJoin.get("Name"), "%" + matchRequestDto.getPlayerName() + "%"));//вытащить имя игрока в отдельное поле
+            if (playerName != null) {
+                predicates.add(cb.like(firstPlayerJoin.get("Name"), "%" + playerName + "%"));//вытащить имя игрока в отдельное поле
+                predicates.add(cb.like(secondPlayerJoin.get("Name"), "%" + playerName + "%"));//вытащить имя игрока в отдельное поле
             }
 
             //если есть другие фильтры, то добавляем их в List
@@ -92,10 +92,8 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
                     winnerJoin.get("name")   // имя игрока из JOIN
             );
 
-            int pageSize = 5;//захардкодил тут, мб перенести в другое место
-            int pageNumber = matchRequestDto.getPageNumber();
             //Смещение
-            int offset = pageNumber * pageSize;
+            int offset = (pageNumber - 1) * pageSize;
 
             //установка пагинации
             typedQuery.setFirstResult(offset);//смещение offset
@@ -115,7 +113,7 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
                     ,totalCount
                     ,totalPages
                     ,pageSize
-                    , matchRequestDto.getPageNumber()
+                    , pageNumber
             );
 
 

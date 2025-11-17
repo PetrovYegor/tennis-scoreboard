@@ -25,7 +25,7 @@
         <p>Всего матчей ${matchesData.totalCount}</p>
         <ul>
             <c:forEach var="match" items="${matchesData.content}">
-                <li><c:out value="${match.firstPlayer.name}"/></li>
+                <li><c:out value="${match.firstPlayer.name} ${match.secondPlayer.name} ${match.winner.name}"/></li>
 
             </c:forEach>
         </ul>

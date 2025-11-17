@@ -29,7 +29,7 @@ public class MatchScoreController extends HttpServlet {
         validateMatchScoreGetRequest(request);
         UUID matchUuid = UUID.fromString(request.getParameter("uuid"));//TODO проверить постманом, что валится ошибка. При необходимости добавить валидацию
         if (!ongoingMatchesService.isOngoingMatchExists(matchUuid)) {
-            response.sendRedirect("/matches?page=0");//TODO мб именно в гет методе сделать пересылку на страницу с ошибками, если что-то нет
+            response.sendRedirect("/matches?page=1");//TODO мб именно в гет методе сделать пересылку на страницу с ошибками, если что-то нет
             return;
         }
         OngoingMatchDto ongoingMatchDto = ongoingMatchesService.getMatchState(matchUuid);//Мб поменять всё-таки OngoingMatch Dto на MatchResponseDto
@@ -41,14 +41,14 @@ public class MatchScoreController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         validateMatchScorePostRequest(request);
-        UUID matchUuid = UUID.fromString(request.getParameter("uuid"));
+        UUID matchUuid = parseUuidParameter(request);
 
         if (!ongoingMatchesService.isOngoingMatchExists(matchUuid)) {
-            response.sendRedirect("/matches?page=0");
+            response.sendRedirect("/matches?page=1");
             return;
         }
 
-        int roundWinnerId = Integer.parseInt(request.getParameter("winnerId"));
+        int roundWinnerId = parseWinnerIdParameter(request);
         validateWinnerIdParameter(roundWinnerId);
 
         MatchScoreRequestDto matchScoreRequestDto = new MatchScoreRequestDto(matchUuid, roundWinnerId);
@@ -84,6 +84,24 @@ public class MatchScoreController extends HttpServlet {
     private void validateWinnerIdParameter(int roundWinnerId) {
         if (roundWinnerId <= 0) {
             throw new InvalidParamException("The round winner ID must be a positive number");
+        }
+    }
+
+    private int parseWinnerIdParameter(HttpServletRequest request) {
+        String value = request.getParameter("winnerId");
+            try {
+                return Integer.parseInt(value);
+            } catch (Exception e) {
+                throw new InvalidParamException("Failed to parse the numeric value %s".formatted(value));//TODO проверить
+            }
+    }
+
+    private UUID parseUuidParameter(HttpServletRequest request) {
+        String value = request.getParameter("uuid");
+        try {
+            return UUID.fromString(value);
+        } catch (Exception e) {
+            throw new InvalidParamException("Failed to parse the UUID value %s".formatted(value));//TODO проверить
         }
     }
 }

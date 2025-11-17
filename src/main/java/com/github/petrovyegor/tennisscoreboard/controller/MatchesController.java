@@ -17,6 +17,7 @@ import java.util.Set;
 
 @WebServlet(name = "MatchesController", urlPatterns = "/matches")
 public class MatchesController extends HttpServlet {
+    private static final int DEFAULT_PAGE_SIZE = 5;
     //TODO пробежаться по всем контроллерам и решить, как инициализировать сервисы (конструктор)?
     FinishedMatchesPersistenceService finishedMatchesPersistenceService = new FinishedMatchesPersistenceService();
 
@@ -26,19 +27,29 @@ public class MatchesController extends HttpServlet {
         String playerName = request.getParameter("filter_by_player_name");
 
         if (isNullOrEmpty(pageParameter)) {
-            response.sendRedirect("/matches?page=0");
+            response.sendRedirect("/matches?page=1");//этот и следующий блок иф можно вынести в метод
             return;
         }
 
-        int pageNumber = Integer.parseInt(pageParameter);//TODO проверить постманом
-        validatePageParameter(pageNumber);
+        int pageNumber = parsePageParameter(pageParameter);//TODO проверить постманом
+
+        if (pageNumber < 1) {
+            response.sendRedirect("/matches?page=1");
+            return;
+        }
 
         MatchRequestDto matchRequestDto = MatchRequestDto.builder()
                 .pageNumber(pageNumber)
+                .pageSize(DEFAULT_PAGE_SIZE)
                 .playerName(playerName)
                 .build();
 
         PageResultDto pageResultDto = finishedMatchesPersistenceService.findMatches(matchRequestDto);
+
+        if (pageNumber > pageResultDto.getTotalPages() && pageResultDto.getTotalPages() > 0) {
+            pageNumber = pageResultDto.getTotalPages();
+            // Можно сделать redirect на корректную страницу
+        }
         request.setAttribute("matchesData", pageResultDto);
         getServletContext().getRequestDispatcher("/matches.jsp").forward(request, response);
 //
@@ -50,22 +61,19 @@ public class MatchesController extends HttpServlet {
         getServletContext().getRequestDispatcher("/matches.jsp").forward(request, response);
     }
 
-    private void validateMatchesGetRequest(HttpServletRequest request) {//TODO проверить постманом
-        Map<String, String[]> parameters = request.getParameterMap();
-        Set<String> requiredParameters = Set.of("page");
-        boolean isValid = parameters.keySet().containsAll(requiredParameters);
-        if (!isValid) {
-            throw new InvalidRequestException("There is no match page parameter in the URL!");
+    private int parsePageParameter(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (Exception e) {
+            throw new InvalidParamException("Failed to parse the page number value %s".formatted(value));//TODO проверить
         }
     }
 
     private boolean isNullOrEmpty(String source) {
-        return source == null || source.isEmpty();
+        return source == null || source.trim().isEmpty();
     }
 
-    private void validatePageParameter(int pageNumber) {
-        if (pageNumber < 0) {
-            throw new InvalidParamException("The page number must be a positive number");
-        }
-    }
 }
+
+
+

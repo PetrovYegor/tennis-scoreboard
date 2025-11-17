@@ -10,6 +10,7 @@ public class JpaUtil {
     static {
         try {
             entityManagerFactory = Persistence.createEntityManagerFactory("h2-unit");
+            DataInitializer.initTestData();
         } catch (Throwable e) {
             throw new RuntimeException("Initialization of EntityManagerFactory was failed." + e);
         }

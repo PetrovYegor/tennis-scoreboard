@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 @WebServlet(name = "NewMatchController", urlPatterns = "/new-match")
 public class NewMatchController extends HttpServlet {
@@ -37,19 +38,19 @@ public class NewMatchController extends HttpServlet {
         response.sendRedirect("/match-score?uuid=%s".formatted(newMatchResponseDto.matchUuid()));
     }
 
+    private void validateNewMatchPostRequestParameters(String firstPlayerName, String secondPlayerName) {
+        ensureNamesNotNullAndNotEmpty(firstPlayerName, secondPlayerName);
+        ensureNamesAreDifferent(firstPlayerName, secondPlayerName);
+    }
+
     private void ensureNamesNotNullAndNotEmpty(String firstPlayerName, String secondPlayerName) {
         if (isNullOrEmpty(firstPlayerName) || isNullOrEmpty(secondPlayerName)) {
             throw new InvalidParamException("Player names must not be null or empty.");
         }
     }
 
-    private void validateNewMatchPostRequestParameters(String firstPlayerName, String secondPlayerName) {
-        ensureNamesNotNullAndNotEmpty(firstPlayerName, secondPlayerName);
-        ensureNamesAreDifferent(firstPlayerName, secondPlayerName);
-    }
-
     private boolean isNullOrEmpty(String source) {
-        return source == null || source.isEmpty();
+        return source == null || source.trim().isEmpty();
     }
 
     private void ensureNamesAreDifferent(String firstPlayerName, String secondPlayerName) {

@@ -18,46 +18,32 @@ import java.util.Set;
 @WebServlet(name = "MatchesController", urlPatterns = "/matches")
 public class MatchesController extends HttpServlet {
     private static final int DEFAULT_PAGE_SIZE = 5;
+    private static final int DEFAULT_MAX_PAGE_NUMBER = 100;
+    private static final String DEFAULT_FIRST_PAGE_URL = "/matches?page=1";
     //TODO пробежаться по всем контроллерам и решить, как инициализировать сервисы (конструктор)?
     FinishedMatchesPersistenceService finishedMatchesPersistenceService = new FinishedMatchesPersistenceService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String pageParameter = request.getParameter("page");
-        String playerName = request.getParameter("filter_by_player_name");
+        validateMatchesGetRequest(request);//TODO проверить
 
-        if (isNullOrEmpty(pageParameter)) {
-            response.sendRedirect("/matches?page=1");//этот и следующий блок иф можно вынести в метод
-            return;
-        }
+        String pageParameter = request.getParameter("page");//обязательно нужна валидация на значение странцы
+        String playerNameParameter = request.getParameter("filter_by_player_name");//TODO обязательно нужна валидация на длину имени
 
-        int pageNumber = parsePageParameter(pageParameter);//TODO проверить постманом
-
-        if (pageNumber < 1) {
-            response.sendRedirect("/matches?page=1");
-            return;
-        }
+        int pageNumber = parsePageParameter(pageParameter);//TODO проверить
+        validatePageNumber(pageNumber);//TODO проверить
+        //учитывая все проверки выше, у в url всегда будет параметр page
 
         MatchRequestDto matchRequestDto = MatchRequestDto.builder()
                 .pageNumber(pageNumber)
                 .pageSize(DEFAULT_PAGE_SIZE)
-                .playerName(playerName)
+                .playerName(playerNameParameter)
                 .build();
 
         PageResultDto pageResultDto = finishedMatchesPersistenceService.findMatches(matchRequestDto);
+        ensurePageParameterLessThenTotalPages(pageNumber, pageResultDto.getTotalPages());
 
-        if (pageNumber > pageResultDto.getTotalPages() && pageResultDto.getTotalPages() > 0) {
-            pageNumber = pageResultDto.getTotalPages();
-            // Можно сделать redirect на корректную страницу
-        }
         request.setAttribute("matchesData", pageResultDto);
-        getServletContext().getRequestDispatcher("/matches.jsp").forward(request, response);
-//
-//        //Адрес - /matches?page=$page_number&filter_by_player_name=$player_name
-//        //вероятно может быть без параметра фильтрации по имени, но номер страницы скорее всего есть всегда
-//        //доставать из ссылки через getParametr значения, как в третьем проекте
-//        //page - номер страницы. Если параметр не задан, подразумевается первая страница
-//        //filter_by_player_name - имя игрока, матчи которого ищем. Если параметр не задан, отображаются все матчи
         getServletContext().getRequestDispatcher("/matches.jsp").forward(request, response);
     }
 
@@ -69,10 +55,33 @@ public class MatchesController extends HttpServlet {
         }
     }
 
-    private boolean isNullOrEmpty(String source) {
-        return source == null || source.trim().isEmpty();
+//    private boolean isNullOrEmpty(String source) {
+//        return source == null || source.trim().isEmpty();
+//    }
+
+    private void validateMatchesGetRequest(HttpServletRequest request) {
+        Map<String, String[]> parameters = request.getParameterMap();
+        Set<String> requiredParameters = Set.of("page");
+        boolean isValid = parameters.keySet().containsAll(requiredParameters);
+        if (!isValid) {
+            throw new InvalidRequestException("There is no page parameter in the URL!");
+        }
     }
 
+    private void validatePageNumber(int pageNumber) {
+        if (pageNumber < 1) {
+            throw new InvalidParamException("The page number be a positive number");
+        }
+        if (pageNumber >= DEFAULT_MAX_PAGE_NUMBER) {
+            throw new InvalidParamException("The page number cannot exceed ".formatted(DEFAULT_MAX_PAGE_NUMBER));
+        }
+    }
+
+    private void ensurePageParameterLessThenTotalPages(int pageFromRequest, int totalPages) {
+        if (pageFromRequest > totalPages && totalPages > 0) {
+            throw new InvalidParamException("This page number does not exist.");
+        }
+    }
 }
 
 

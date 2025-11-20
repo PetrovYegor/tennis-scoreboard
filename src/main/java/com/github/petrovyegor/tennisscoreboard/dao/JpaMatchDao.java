@@ -1,15 +1,16 @@
 package com.github.petrovyegor.tennisscoreboard.dao;
 
 import com.github.petrovyegor.tennisscoreboard.JpaUtil;
-import com.github.petrovyegor.tennisscoreboard.dto.match.MatchRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.match.PageResultDto;
 import com.github.petrovyegor.tennisscoreboard.exception.DBException;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
-import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,22 +48,33 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
             //Список стейтментов для Where
             List<Predicate> predicates = new ArrayList<>();//пока явно иницилазирую TODO переписать на отдельный метод получаения
             //Динамически добавляем условия фильтрации
-//            if (matchRequestDto.getPlayerName() != null ) {//TODO проверка на empty
-//                predicates.add(cb.like(countRoot.get("Name"), matchRequestDto.getPlayerName()));
-//            }
+            if (playerName != null) {//TODO проверка на empty
+                predicates.add(cb.like(countRoot.get("firstPlayer").get("name"), "%" + playerName + "%"));
+                predicates.add(cb.like(countRoot.get("secondPlayer").get("name"), "%" + playerName + "%"));
+                predicates.add(cb.like(countRoot.get("winner").get("name"), "%" + playerName + "%"));
+
+//                predicates.add(cb.like(firstPlayerJoin.get("name"), "%" + playerName + "%"));//вытащить имя игрока в отдельное поле
+//                predicates.add(cb.like(secondPlayerJoin.get("name"), "%" + playerName + "%"));//вытащить имя игрока в отдельное поле
+//                predicates.add(cb.like(winnerJoin.get("name"), "%" + playerName + "%"));//вытащить имя игрока в отдельное поле
+            }
 
 //Создать запрос, который вернёт сущности Match //комментарии сохранить отдельным коммитом,
             // чтобы к нему можно было возвращаться и легче понимать, что тут написано. А потом их можно почистить
             CriteriaQuery<Match> dataQuery = cb.createQuery(Match.class);
             Root<Match> dataRoot = dataQuery.from(Match.class);
             // Делаем JOIN с сущностью Player и выбираем нужные поля
-            Join<Match, Player> firstPlayerJoin = dataRoot.join("firstPlayer");
-            Join<Match, Player> secondPlayerJoin = dataRoot.join("secondPlayer");
-            Join<Match, Player> winnerJoin = dataRoot.join("winner");
+//            Join<Match, Player> firstPlayerJoin = dataRoot.join("firstPlayer");
+//            Join<Match, Player> secondPlayerJoin = dataRoot.join("secondPlayer");
+//            Join<Match, Player> winnerJoin = dataRoot.join("winner");
             // Условие: имя первого ИЛИ второго игрока содержит строку
             if (playerName != null) {
-                predicates.add(cb.like(firstPlayerJoin.get("Name"), "%" + playerName + "%"));//вытащить имя игрока в отдельное поле
-                predicates.add(cb.like(secondPlayerJoin.get("Name"), "%" + playerName + "%"));//вытащить имя игрока в отдельное поле
+                predicates.add(cb.like(dataRoot.get("firstPlayer").get("name"), "%" + playerName + "%"));
+                predicates.add(cb.like(dataRoot.get("secondPlayer").get("name"), "%" + playerName + "%"));
+                predicates.add(cb.like(dataRoot.get("winner").get("name"), "%" + playerName + "%"));
+
+//                predicates.add(cb.like(firstPlayerJoin.get("name"), "%" + playerName + "%"));//вытащить имя игрока в отдельное поле
+//                predicates.add(cb.like(secondPlayerJoin.get("name"), "%" + playerName + "%"));//вытащить имя игрока в отдельное поле
+//                predicates.add(cb.like(winnerJoin.get("name"), "%" + playerName + "%"));//вытащить имя игрока в отдельное поле
             }
 
             //если есть другие фильтры, то добавляем их в List
@@ -87,9 +99,12 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
             // В SELECT можно выбрать как всю сущность Match, так и конкретные поля
             dataQuery.multiselect(
                     //dataRoot,                    // вся сущность Match
-                    firstPlayerJoin.get("name"),   // имя игрока из JOIN
-                    secondPlayerJoin.get("name"),   // имя игрока из JOIN
-                    winnerJoin.get("name")   // имя игрока из JOIN
+                    dataRoot.get("firstPlayer").get("name"),
+                    dataRoot.get("secondPlayer").get("name"),
+                    dataRoot.get("winner").get("name")
+//                    dataRoot.get("name"),   // имя игрока из JOIN
+//                    secondPlayerJoin.get("name"),   // имя игрока из JOIN
+//                    winnerJoin.get("name")   // имя игрока из JOIN
             );
 
             //Смещение
@@ -110,9 +125,9 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
             //PageResultDto pageResultDto = null;
             PageResultDto pageResultDto = new PageResultDto(
                     content
-                    ,totalCount
-                    ,totalPages
-                    ,pageSize
+                    , totalCount
+                    , totalPages
+                    , pageSize
                     , pageNumber
             );
 

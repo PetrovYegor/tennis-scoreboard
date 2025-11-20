@@ -2,6 +2,8 @@ package com.github.petrovyegor.tennisscoreboard.dto.match;
 
 import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 

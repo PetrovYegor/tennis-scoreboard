@@ -46,48 +46,32 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
             countQuery.select(cb.count(countRoot));//хотим получить COUNT (подсчет количества)
 
             //Список стейтментов для Where
-            List<Predicate> predicates = new ArrayList<>();//пока явно иницилазирую TODO переписать на отдельный метод получаения
-            //Динамически добавляем условия фильтрации
-            if (playerName != null) {//TODO проверка на empty
-                predicates.add(cb.like(countRoot.get("firstPlayer").get("name"), "%" + playerName + "%"));
-                predicates.add(cb.like(countRoot.get("secondPlayer").get("name"), "%" + playerName + "%"));
-                predicates.add(cb.like(countRoot.get("winner").get("name"), "%" + playerName + "%"));
+            List<Predicate> countPredicates = new ArrayList<>();
 
-//                predicates.add(cb.like(firstPlayerJoin.get("name"), "%" + playerName + "%"));//вытащить имя игрока в отдельное поле
-//                predicates.add(cb.like(secondPlayerJoin.get("name"), "%" + playerName + "%"));//вытащить имя игрока в отдельное поле
-//                predicates.add(cb.like(winnerJoin.get("name"), "%" + playerName + "%"));//вытащить имя игрока в отдельное поле
+            if (playerName != null && !playerName.trim().isEmpty()) {
+                countPredicates.add(cb.like(countRoot.get("firstPlayer").get("name"), "%" + playerName + "%"));
+                countPredicates.add(cb.like(countRoot.get("secondPlayer").get("name"), "%" + playerName + "%"));
+                countPredicates.add(cb.like(countRoot.get("winner").get("name"), "%" + playerName + "%"));
             }
 
-//Создать запрос, который вернёт сущности Match //комментарии сохранить отдельным коммитом,
-            // чтобы к нему можно было возвращаться и легче понимать, что тут написано. А потом их можно почистить
-            CriteriaQuery<Match> dataQuery = cb.createQuery(Match.class);
-            Root<Match> dataRoot = dataQuery.from(Match.class);
-            // Делаем JOIN с сущностью Player и выбираем нужные поля
-//            Join<Match, Player> firstPlayerJoin = dataRoot.join("firstPlayer");
-//            Join<Match, Player> secondPlayerJoin = dataRoot.join("secondPlayer");
-//            Join<Match, Player> winnerJoin = dataRoot.join("winner");
-            // Условие: имя первого ИЛИ второго игрока содержит строку
-            if (playerName != null) {
-                predicates.add(cb.like(dataRoot.get("firstPlayer").get("name"), "%" + playerName + "%"));
-                predicates.add(cb.like(dataRoot.get("secondPlayer").get("name"), "%" + playerName + "%"));
-                predicates.add(cb.like(dataRoot.get("winner").get("name"), "%" + playerName + "%"));
-
-//                predicates.add(cb.like(firstPlayerJoin.get("name"), "%" + playerName + "%"));//вытащить имя игрока в отдельное поле
-//                predicates.add(cb.like(secondPlayerJoin.get("name"), "%" + playerName + "%"));//вытащить имя игрока в отдельное поле
-//                predicates.add(cb.like(winnerJoin.get("name"), "%" + playerName + "%"));//вытащить имя игрока в отдельное поле
-            }
-
-            //если есть другие фильтры, то добавляем их в List
-
-            //если список условий where не пустой, то добавляем их в запрос
-            if (!predicates.isEmpty()) {
-                countQuery.where(cb.and(predicates.toArray(new Predicate[0])));
+            if (!countPredicates.isEmpty()) {
+                countQuery.where(cb.or(countPredicates.toArray(new Predicate[0])));
             }
 
             //Выполняем Count запрос
             Long totalCount = em.createQuery(countQuery).getSingleResult();
-            if (!predicates.isEmpty()) {
-                dataQuery.where(cb.and(predicates.toArray(new Predicate[0])));
+
+
+            CriteriaQuery<Match> dataQuery = cb.createQuery(Match.class);
+            Root<Match> dataRoot = dataQuery.from(Match.class);
+            List<Predicate> dataPredicates = new ArrayList<>();
+            if (playerName != null && !playerName.trim().isEmpty()) {
+                dataPredicates.add(cb.like(dataRoot.get("firstPlayer").get("name"), "%" + playerName + "%"));
+                dataPredicates.add(cb.like(dataRoot.get("secondPlayer").get("name"), "%" + playerName + "%"));
+                dataPredicates.add(cb.like(dataRoot.get("winner").get("name"), "%" + playerName + "%"));
+            }
+            if (!dataPredicates.isEmpty()) {
+                dataQuery.where(cb.or(dataPredicates.toArray(new Predicate[0])));
             }
 
             //Добавить сортировку (важно для пагинации)
@@ -95,17 +79,6 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
 
             //Создать и выполнить запрос
             TypedQuery<Match> typedQuery = em.createQuery(dataQuery);
-
-            // В SELECT можно выбрать как всю сущность Match, так и конкретные поля
-            dataQuery.multiselect(
-                    //dataRoot,                    // вся сущность Match
-                    dataRoot.get("firstPlayer").get("name"),
-                    dataRoot.get("secondPlayer").get("name"),
-                    dataRoot.get("winner").get("name")
-//                    dataRoot.get("name"),   // имя игрока из JOIN
-//                    secondPlayerJoin.get("name"),   // имя игрока из JOIN
-//                    winnerJoin.get("name")   // имя игрока из JOIN
-            );
 
             //Смещение
             int offset = (pageNumber - 1) * pageSize;

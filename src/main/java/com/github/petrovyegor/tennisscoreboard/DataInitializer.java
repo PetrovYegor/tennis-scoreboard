@@ -39,6 +39,14 @@ public class DataInitializer {
             Match match10 = new Match(player2, player1, player1);
             Match match11 = new Match(player6, player4, player6);
             Match match12 = new Match(player3, player5, player5);
+            Match match13 = new Match(player6, player4, player6);
+            Match match14 = new Match(player6, player4, player6);
+            Match match15 = new Match(player6, player4, player6);
+            Match match16 = new Match(player6, player4, player6);
+            Match match17 = new Match(player6, player4, player6);
+            Match match18 = new Match(player6, player4, player6);
+            Match match19 = new Match(player6, player4, player6);
+            Match match20 = new Match(player6, player4, player6);
 
             em.persist(match1);
             em.persist(match2);
@@ -52,6 +60,14 @@ public class DataInitializer {
             em.persist(match10);
             em.persist(match11);
             em.persist(match12);
+            em.persist(match13);
+            em.persist(match14);
+            em.persist(match15);
+            em.persist(match16);
+            em.persist(match17);
+            em.persist(match18);
+            em.persist(match19);
+            em.persist(match20);
 
             transaction.commit();
         } catch (Exception e) {

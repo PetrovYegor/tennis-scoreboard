@@ -1,0 +1,160 @@
+.search-section {
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    padding: 1.5rem;
+    background-color: #2c2c2c;
+    border-radius: 10px;
+    border: 1px solid #555;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-label {
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    min-width: 80px;
+}
+
+.search-input {
+    flex: 1;
+    background-color: #3a3a3a;
+    border: 2px solid #555;
+    border-radius: 5px;
+    padding: 0.8rem;
+    color: white;
+    font-size: 1rem;
+    min-width: 200px;
+    transition: all 0.3s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #1e90ff;
+    background-color: #444;
+    box-shadow: 0 0 8px rgba(30, 144, 255, 0.4);
+}
+
+.search-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.matches-table {
+    width: 100%;
+    margin: 2rem 0;
+    background-color: #2c2c2c;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+.matches-table th {
+    background: linear-gradient(135deg, #1e90ff, #63b3ff);
+    color: white;
+    padding: 1.2rem;
+    text-align: left;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.matches-table td {
+    padding: 1.2rem;
+    border-bottom: 1px solid #555;
+    color: white;
+    font-size: 1rem;
+}
+
+.matches-table tr:last-child td {
+    border-bottom: none;
+}
+
+.matches-table tr:hover {
+    background-color: #444;
+}
+
+.winner-cell {
+    color: #1e90ff;
+    font-weight: bold;
+}
+
+.id-cell {
+    font-weight: bold;
+    color: #ccc;
+    text-align: center;
+}
+
+.pagination-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #555;
+}
+
+.pagination-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.no-matches {
+    text-align: center;
+    color: #ccc;
+    padding: 3rem;
+    font-size: 1.1rem;
+    background-color: #2c2c2c;
+    border-radius: 8px;
+    margin: 2rem 0;
+}
+
+.no-matches i {
+    color: #1e90ff;
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .search-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-buttons {
+        justify-content: center;
+    }
+
+    .search-input {
+        min-width: auto;
+    }
+
+    .pagination-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .matches-table {
+        font-size: 0.9rem;
+    }
+
+    .matches-table th,
+    .matches-table td {
+        padding: 0.8rem 0.5rem;
+    }
+
+    .matches-table th:nth-child(1),
+    .matches-table td:nth-child(1) {
+        display: none;
+    }
+}

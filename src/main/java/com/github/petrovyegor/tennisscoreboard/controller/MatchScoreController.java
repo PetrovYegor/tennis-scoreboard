@@ -3,7 +3,6 @@ package com.github.petrovyegor.tennisscoreboard.controller;
 import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.ongoing_match.OngoingMatchDto;
 import com.github.petrovyegor.tennisscoreboard.exception.InvalidParamException;
-import com.github.petrovyegor.tennisscoreboard.exception.InvalidRequestException;
 import com.github.petrovyegor.tennisscoreboard.service.FinishedMatchesPersistenceService;
 import com.github.petrovyegor.tennisscoreboard.service.MatchScoreCalculationService;
 import com.github.petrovyegor.tennisscoreboard.service.OngoingMatchesService;
@@ -14,9 +13,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
+
+import static com.github.petrovyegor.tennisscoreboard.util.RequestAndParameterValidator.*;
 
 @WebServlet(name = "MatchScoreController", urlPatterns = "/match-score")
 public class MatchScoreController extends HttpServlet {
@@ -63,37 +62,13 @@ public class MatchScoreController extends HttpServlet {
         response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));
     }
 
-    private void validateMatchScoreGetRequest(HttpServletRequest request) {
-        Map<String, String[]> parameters = request.getParameterMap();
-        Set<String> requiredParameters = Set.of("uuid");
-        boolean isValid = parameters.keySet().containsAll(requiredParameters);
-        if (!isValid) {
-            throw new InvalidRequestException("There is no match uuid parameter in the URL!");
-        }
-    }
-
-    private void validateMatchScorePostRequest(HttpServletRequest request) {
-        Map<String, String[]> parameters = request.getParameterMap();
-        Set<String> requiredParameters = Set.of("uuid", "winnerId");
-        boolean isValid = parameters.keySet().containsAll(requiredParameters);
-        if (!isValid) {
-            throw new InvalidRequestException("Missing Match UUID or Winner ID or both");
-        }
-    }
-
-    private void validateWinnerIdParameter(int roundWinnerId) {
-        if (roundWinnerId <= 0) {
-            throw new InvalidParamException("The round winner ID must be a positive number");
-        }
-    }
-
     private int parseWinnerIdParameter(HttpServletRequest request) {
         String value = request.getParameter("winnerId");
-            try {
-                return Integer.parseInt(value);
-            } catch (Exception e) {
-                throw new InvalidParamException("Failed to parse the numeric value %s".formatted(value));//TODO проверить
-            }
+        try {
+            return Integer.parseInt(value);
+        } catch (Exception e) {
+            throw new InvalidParamException("Failed to parse the numeric value %s".formatted(value));//TODO проверить
+        }
     }
 
     private UUID parseUuidParameter(HttpServletRequest request) {
@@ -103,5 +78,14 @@ public class MatchScoreController extends HttpServlet {
         } catch (Exception e) {
             throw new InvalidParamException("Failed to parse the UUID value %s".formatted(value));//TODO проверить
         }
+    }
+
+    private void forwardToErrorPage(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    String message,
+                                    String details) throws ServletException, IOException {
+        request.setAttribute("errorMessage", message);
+        request.setAttribute("errorDetails", details);
+        request.getRequestDispatcher("/error.jsp").forward(request, response);
     }
 }

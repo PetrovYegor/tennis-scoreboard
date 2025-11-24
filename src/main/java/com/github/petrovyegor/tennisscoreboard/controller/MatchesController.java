@@ -29,9 +29,11 @@ public class MatchesController extends HttpServlet {
             return;
         }
 
-        if (!isNameValid(playerNameParameter)) {
-            response.sendRedirect("/matches?page=1");
-            return;
+        if (!isNullOrEmpty(playerNameParameter)){
+            if (!isNameValid(playerNameParameter)) {
+                response.sendRedirect("/matches?page=1");
+                return;
+            }
         }
 
         int pageNumber = Integer.parseInt(pageParameter);

@@ -1,0 +1,142 @@
+.score-table {
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    background-color: #2c2c2c;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+.score-table th {
+    background: linear-gradient(135deg, #1e90ff, #63b3ff);
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.score-table td {
+    padding: 1.5rem;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-bottom: 1px solid #555;
+}
+
+.player-name {
+    font-weight: bold;
+    color: #1e90ff;
+    text-align: left;
+}
+
+.score-value {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: white;
+}
+
+.current-server {
+    background-color: rgba(30, 144, 255, 0.2);
+    position: relative;
+}
+
+.current-server::before {
+    content: "●";
+    color: #1e90ff;
+    position: absolute;
+    left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+}
+
+.score-buttons-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.score-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.score-form {
+    flex: 0 0 auto;
+}
+
+.player-btn {
+    background: linear-gradient(135deg, #1e90ff, #63b3ff);
+    color: white;
+    border: none;
+    padding: 1.2rem 2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    min-width: 200px;
+    white-space: nowrap;
+}
+
+.player-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+    background: linear-gradient(135deg, #63b3ff, #1e90ff);
+}
+
+.player-btn:active {
+    transform: translateY(-1px);
+}
+
+.player1-btn {
+    /* Левая кнопка - выравнивание по левому краю */
+    align-self: flex-start;
+}
+
+.player2-btn {
+    /* Правая кнопка - выравнивание по правому краю */
+    align-self: flex-end;
+}
+
+.match-info {
+    text-align: center;
+    color: #ccc;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: #2c2c2c;
+    border-radius: 8px;
+    border-left: 4px solid #1e90ff;
+}
+
+@media (max-width: 768px) {
+    .score-buttons {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .player1-btn,
+    .player2-btn {
+        align-self: stretch;
+        text-align: center;
+    }
+
+    .score-table th,
+    .score-table td {
+        padding: 1rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .player-btn {
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+        min-width: 150px;
+    }
+}

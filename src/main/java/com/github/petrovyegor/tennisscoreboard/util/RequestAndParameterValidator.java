@@ -38,7 +38,7 @@ public class RequestAndParameterValidator {
         }
     }
 
-    private static boolean isNullOrEmpty(String source) {
+    public static boolean isNullOrEmpty(String source) {
         return source == null || source.trim().isEmpty();
     }
 

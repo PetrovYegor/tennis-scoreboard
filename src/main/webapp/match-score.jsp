@@ -1,35 +1,75 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Match-score</title>
+    <title>Match Score</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/match-score.css">
 </head>
 <body>
+<header class="header">
+    <nav class="nav-container">
+        <a href="index.jsp" class="nav-link">Home</a>
+        <a href="http://localhost:8080/new-match" class="nav-link">New</a>
+        <a href="http://localhost:8080/matches?page=1" class="nav-link">Matches</a>
+    </nav>
+</header>
 
-<%--TODO добавить вывод в виде таблицы--%>
-<%--TODO добавить сообщение ругающейся валидации--%>
-<p>Player1: ${matchState.firstPlayerScore.playerName}</p>
-<p>Sets: ${matchState.firstPlayerScore.sets}</p>
-<p>Games: ${matchState.firstPlayerScore.games}</p>
-<p>Point: ${matchState.firstPlayerScore.displayPoint}</p>
+<div class="container">
+    <div class="content-box">
+        <h1 class="page-title">Match Score</h1>
 
-<p>Player2: ${matchState.secondPlayerScore.playerName}</p>
-<p>Sets: ${matchState.secondPlayerScore.sets}</p>
-<p>Games: ${matchState.secondPlayerScore.games}</p>
-<p>Point: ${matchState.secondPlayerScore.displayPoint}</p>
+        <!-- Error message placeholder -->
+        <c:if test="${not empty error}">
+            <div class="error-message">
+                    ${error}
+            </div>
+        </c:if>
 
-<form method="post" action="/match-score?uuid=${matchState.matchUuid}">
-<%--    TODO проверить, что можно удалить строку ниже--%>
-<%--    <input type="hidden" name="matchUuid" value="${matchState.matchUuid}">--%>
-    <input type="hidden" name="winnerId" value="${matchState.firstPlayerScore.playerId}">
-    <button type="submit">Score</button>
-</form>
+        <div class="match-info">
+            Match in progress: ${matchState.firstPlayerScore.playerName} vs ${matchState.secondPlayerScore.playerName}
+        </div>
 
-<form method="post" action="/match-score?uuid=${matchState.matchUuid}">
-<%--    <input type="hidden" name="matchUuid" value="${matchState.matchUuid}">--%>
-    <input type="hidden" name="winnerId" value="${matchState.secondPlayerScore.playerId}">
-    <button type="submit">Score</button>
-</form>
+        <table class="table score-table">
+            <thead>
+            <tr>
+                <th>PLAYER</th>
+                <th>SETS</th>
+                <th>GAMES</th>
+                <th>POINTS</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="player-name">${matchState.firstPlayerScore.playerName}</td>
+                <td class="score-value">${matchState.firstPlayerScore.sets}</td>
+                <td class="score-value">${matchState.firstPlayerScore.games}</td>
+                <td class="score-value">${matchState.firstPlayerScore.displayPoint}</td>
+            </tr>
+            <tr>
+                <td class="player-name">${matchState.secondPlayerScore.playerName}</td>
+                <td class="score-value">${matchState.secondPlayerScore.sets}</td>
+                <td class="score-value">${matchState.secondPlayerScore.games}</td>
+                <td class="score-value">${matchState.secondPlayerScore.displayPoint}</td>
+            </tr>
+            </tbody>
+        </table>
 
+        <div class="score-buttons-container">
+            <div class="score-buttons">
+                <form method="post" action="/match-score?uuid=${matchState.matchUuid}" class="score-form">
+                    <input type="hidden" name="winnerId" value="${matchState.firstPlayerScore.playerId}">
+                    <button type="submit" class="player-btn player1-btn">Player 1 Won Point</button>
+                </form>
+
+                <form method="post" action="/match-score?uuid=${matchState.matchUuid}" class="score-form">
+                    <input type="hidden" name="winnerId" value="${matchState.secondPlayerScore.playerId}">
+                    <button type="submit" class="player-btn player2-btn">Player 2 Won Point</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -1,0 +1,52 @@
+.links-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.feature-link {
+    color: #1e90ff;
+    text-decoration: none;
+    padding: 1.5rem;
+    border: 2px solid #1e90ff;
+    border-radius: 10px;
+    transition: all 0.3s;
+    display: block;
+    background-color: rgba(30, 144, 255, 0.1);
+}
+
+.feature-link:hover {
+    background-color: #1e90ff;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.link-title {
+    display: block;
+    font-weight: bold;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.link-description {
+    display: block;
+    color: #ccc;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.feature-link:hover .link-description {
+    color: white;
+}
+
+.welcome-message {
+    text-align: center;
+    color: #ccc;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}

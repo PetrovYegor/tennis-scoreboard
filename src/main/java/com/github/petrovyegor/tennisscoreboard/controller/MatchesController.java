@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-import static com.github.petrovyegor.tennisscoreboard.util.RequestAndParameterValidator.*;
+import static com.github.petrovyegor.tennisscoreboard.util.RequestAndParameterValidation.*;
 
 @WebServlet(name = "MatchesController", urlPatterns = "/matches")
 public class MatchesController extends HttpServlet {
@@ -29,9 +29,11 @@ public class MatchesController extends HttpServlet {
             return;
         }
 
-        if (!isNameValid(playerNameParameter)) {
-            response.sendRedirect("/matches?page=1");
-            return;
+        if (!isNullOrEmpty(playerNameParameter)) {//TODO проверить валидность этой строки, внёс чугунной головй. Без неё не пятисостит т.к. имя пустое
+            if (!isNameValid(playerNameParameter)) {
+                response.sendRedirect("/matches?page=1");
+                return;
+            }
         }
 
         int pageNumber = Integer.parseInt(pageParameter);

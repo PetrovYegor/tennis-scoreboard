@@ -26,7 +26,7 @@ public class MatchScoreCalculationService {
         handleWonPoint(roundWinnerScore, opponentScore);
 
         OngoingMatchDto matchState = ongoingMatchesService.getMatchState(matchUuid);
-        matchState.setMatchFinished(isWinnerExists(roundWinnerScore, opponentScore));
+        matchState.setMatchFinished(isWinnerExist(roundWinnerScore, opponentScore));
         matchState.setWinnerName(roundWinnerScore.getPlayerName());
 
         return matchState;
@@ -101,7 +101,7 @@ public class MatchScoreCalculationService {
         return firstPlayerScore.getGames() == 6 && secondPlayerScore.getGames() == 6;
     }
 
-    private boolean isWinnerExists(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore) {
+    private boolean isWinnerExist(PlayerScore firstPlayerScore, PlayerScore secondPlayerScore) {
         return firstPlayerScore.getSets() == 2 || secondPlayerScore.getSets() == 2;
     }
 }

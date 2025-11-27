@@ -11,8 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-import static com.github.petrovyegor.tennisscoreboard.util.RequestAndParameterValidator.validateNewMatchPostRequest;
-import static com.github.petrovyegor.tennisscoreboard.util.RequestAndParameterValidator.validateNewMatchPostRequestParameters;
+import static com.github.petrovyegor.tennisscoreboard.util.RequestAndParameterValidation.validateNewMatchPostRequest;
+import static com.github.petrovyegor.tennisscoreboard.util.RequestAndParameterValidation.validateNewMatchPostRequestParameters;
 
 @WebServlet(name = "NewMatchController", urlPatterns = "/new-match")
 public class NewMatchController extends HttpServlet {

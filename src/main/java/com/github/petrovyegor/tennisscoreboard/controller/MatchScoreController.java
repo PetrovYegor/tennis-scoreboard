@@ -2,10 +2,10 @@ package com.github.petrovyegor.tennisscoreboard.controller;
 
 import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.ongoing_match.OngoingMatchDto;
-import com.github.petrovyegor.tennisscoreboard.exception.InvalidParamException;
 import com.github.petrovyegor.tennisscoreboard.service.FinishedMatchesPersistenceService;
 import com.github.petrovyegor.tennisscoreboard.service.MatchScoreCalculationService;
 import com.github.petrovyegor.tennisscoreboard.service.OngoingMatchesService;
+import com.github.petrovyegor.tennisscoreboard.service.PlayerService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,22 +15,25 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
-import static com.github.petrovyegor.tennisscoreboard.util.RequestAndParameterValidator.*;
+import static com.github.petrovyegor.tennisscoreboard.util.RequestAndParameterValidation.*;
 
 @WebServlet(name = "MatchScoreController", urlPatterns = "/match-score")
 public class MatchScoreController extends HttpServlet {
     private final MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
     private final OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();
     private final FinishedMatchesPersistenceService finishedMatchesPersistenceService = new FinishedMatchesPersistenceService();
+    private final PlayerService playerService = new PlayerService();
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        validateMatchScoreGetRequest(request);
-        UUID matchUuid = UUID.fromString(request.getParameter("uuid"));//TODO проверить постманом, что валится ошибка. При необходимости добавить валидацию
-        if (!ongoingMatchesService.isOngoingMatchExists(matchUuid)) {
-            response.sendRedirect("/matches?page=1");//TODO мб именно в гет методе сделать пересылку на страницу с ошибками, если что-то нет
+        if (!validateMatchScoreGetRequest(request, response)) {
             return;
         }
+
+        String uuidParameter = request.getParameter("uuid");
+        UUID matchUuid = UUID.fromString(uuidParameter);
+
         OngoingMatchDto ongoingMatchDto = ongoingMatchesService.getMatchState(matchUuid);//Мб поменять всё-таки OngoingMatch Dto на MatchResponseDto
         request.setAttribute("matchState", ongoingMatchDto);
 
@@ -39,16 +42,13 @@ public class MatchScoreController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        validateMatchScorePostRequest(request);
-        UUID matchUuid = parseUuidParameter(request);
+        validateMatchScorePostRequest(request, response);
 
-        if (!ongoingMatchesService.isOngoingMatchExists(matchUuid)) {
-            response.sendRedirect("/matches?page=1");
-            return;
-        }
+        String uuidParameter = request.getParameter("uuid");
+        String matchWinnerIdParameter = request.getParameter("winnerId");
 
-        int roundWinnerId = parseWinnerIdParameter(request);
-        validateWinnerIdParameter(roundWinnerId);
+        UUID matchUuid = UUID.fromString(uuidParameter);
+        int roundWinnerId = Integer.parseInt(matchWinnerIdParameter);
 
         MatchScoreRequestDto matchScoreRequestDto = new MatchScoreRequestDto(matchUuid, roundWinnerId);
         OngoingMatchDto ongoingMatchDto = matchScoreCalculationService.processAction(matchScoreRequestDto);
@@ -62,22 +62,79 @@ public class MatchScoreController extends HttpServlet {
         response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));
     }
 
-    private int parseWinnerIdParameter(HttpServletRequest request) {
-        String value = request.getParameter("winnerId");
-        try {
-            return Integer.parseInt(value);
-        } catch (Exception e) {
-            throw new InvalidParamException("Failed to parse the numeric value %s".formatted(value));//TODO проверить
+    private boolean validateMatchScoreGetRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String uuidParameter = request.getParameter("uuid");
+        UUID matchUuid = UUID.fromString(uuidParameter);
+        if (isNullOrEmpty(uuidParameter)) {//TODO проверить постманом
+            forwardToErrorPage(request, response,
+                    "Match ID is missing",
+                    "Please provide a valid match ID in the URL");
+            return false;
         }
+
+        if (!isUUIDValid(uuidParameter)) {//TODO проверить постманом
+            forwardToErrorPage(request, response,
+                    "Invalid Match ID format",
+                    "The provided match ID has incorrect format");
+            return false;
+        }
+        if (!ongoingMatchesService.isOngoingMatchExist(matchUuid)) {//TODO проверить постманом
+            forwardToErrorPage(request, response,
+                    "Ongoing match not found",
+                    "The ongoing match with ID '" + matchUuid + "' was not found");
+            return false;
+        }
+        return true;
     }
 
-    private UUID parseUuidParameter(HttpServletRequest request) {
-        String value = request.getParameter("uuid");
-        try {
-            return UUID.fromString(value);
-        } catch (Exception e) {
-            throw new InvalidParamException("Failed to parse the UUID value %s".formatted(value));//TODO проверить
+    private boolean validateMatchScorePostRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String uuidParameter = request.getParameter("uuid");
+        String matchWinnerIdParameter = request.getParameter("winnerId");
+        if (isNullOrEmpty(uuidParameter)) {//TODO проверить постманом
+            forwardToErrorPage(request, response,
+                    "Match ID is missing",
+                    "Please provide a valid match ID in the URL");
+            return false;
         }
+
+        if (!isUUIDValid(uuidParameter)) {//TODO проверить постманом
+            forwardToErrorPage(request, response,
+                    "Invalid Match ID format",
+                    "The provided match ID has incorrect format");
+            return false;
+        }
+
+        if (isNullOrEmpty(matchWinnerIdParameter)) {//TODO проверить постманом
+            forwardToErrorPage(request, response,
+                    "Winner ID is missing",
+                    "Please provide a valid winner ID in the request payload");
+            return false;
+        }
+
+        if (!isRoundWinnerIdValid(matchWinnerIdParameter)) {
+            forwardToErrorPage(request, response,
+                    "Invalid winner ID format",
+                    "The provided winner ID has incorrect format");
+            return false;
+        }
+        int roundWinnerId = Integer.parseInt(matchWinnerIdParameter);
+
+        if (!playerService.isPlayerExist(roundWinnerId)) {//TODO проверить постманом
+            forwardToErrorPage(request, response,
+                    "Player with ID does not exist",
+                    "Please provide a valid winner ID in the request payload");
+            return false;
+        }
+
+        UUID matchUuid = UUID.fromString(uuidParameter);
+
+        if (!ongoingMatchesService.isOngoingMatchExist(matchUuid)) {
+            forwardToErrorPage(request, response,
+                    "Ongoing match not found",
+                    "The ongoing match with ID '" + matchUuid + "' was not found");
+            return false;
+        }
+        return true;
     }
 
     private void forwardToErrorPage(HttpServletRequest request,

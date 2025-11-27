@@ -21,4 +21,9 @@ public class PlayerService {
             return jpaPlayerDao.save(newPlayer);
         }
     }
+
+    public boolean isPlayerExist(long playerId) {
+        Optional<Player> player = jpaPlayerDao.findById(playerId);
+        return player.isPresent();
+    }
 }

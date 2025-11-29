@@ -99,7 +99,14 @@
                 </c:if>
 
                 <!-- Current Page Info -->
-                <span class="page-info">Page ${currentPage} of ${totalPages}</span>
+                <c:choose>
+                    <c:when test="${totalPages == 0}">
+                        <span class="page-info">Page ${currentPage}</span>
+                    </c:when>
+                    <c:otherwise>
+                        <span class="page-info">Page ${currentPage} of ${totalPages}</span>
+                    </c:otherwise>
+                </c:choose>
 
                 <!-- Next Page -->
                 <c:if test="${currentPage < totalPages}">

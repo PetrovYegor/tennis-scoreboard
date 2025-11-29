@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,12 +20,17 @@
     <div class="content-box">
         <h1 class="page-title">New Match</h1>
 
-        <!-- Error message placeholder -->
-        <c:if test="${not empty error}">
+        <c:if test="${not empty errorMessage}">
             <div class="error-message">
-                    ${error}
+                    ${errorMessage}
             </div>
         </c:if>
+
+        <div class="error-details">
+            <c:if test="${not empty errorDetails}">
+                <strong>Details:</strong> ${errorDetails}
+            </c:if>
+        </div>
 
         <p class="form-instruction">
             Enter the names of both players to start a new tennis match

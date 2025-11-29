@@ -20,13 +20,6 @@
     <div class="content-box">
         <h1 class="page-title">Match Score</h1>
 
-        <!-- Error message placeholder -->
-        <c:if test="${not empty error}">
-            <div class="error-message">
-                    ${error}
-            </div>
-        </c:if>
-
         <div class="match-info">
             Match in progress: ${matchState.firstPlayerScore.playerName} vs ${matchState.secondPlayerScore.playerName}
         </div>

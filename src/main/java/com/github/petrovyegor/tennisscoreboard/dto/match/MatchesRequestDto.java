@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class MatchRequestDto {
+public class MatchesRequestDto {
     private final int pageNumber;
     private final int pageSize;
     private final String playerName;

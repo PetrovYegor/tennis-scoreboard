@@ -42,7 +42,9 @@ public class MatchScoreController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        validateMatchScorePostRequest(request, response);
+        if (!validateMatchScorePostRequest(request, response)){
+            return;
+        }
 
         String uuidParameter = request.getParameter("uuid");
         String matchWinnerIdParameter = request.getParameter("winnerId");
@@ -64,20 +66,20 @@ public class MatchScoreController extends HttpServlet {
 
     private boolean validateMatchScoreGetRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uuidParameter = request.getParameter("uuid");
-        UUID matchUuid = UUID.fromString(uuidParameter);
         if (isNullOrEmpty(uuidParameter)) {//TODO проверить постманом
             forwardToErrorPage(request, response,
                     "Match ID is missing",
                     "Please provide a valid match ID in the URL");
             return false;
         }
-
         if (!isUUIDValid(uuidParameter)) {//TODO проверить постманом
             forwardToErrorPage(request, response,
                     "Invalid Match ID format",
                     "The provided match ID has incorrect format");
             return false;
         }
+
+        UUID matchUuid = UUID.fromString(uuidParameter);
         if (!ongoingMatchesService.isOngoingMatchExist(matchUuid)) {//TODO проверить постманом
             forwardToErrorPage(request, response,
                     "Ongoing match not found",
@@ -104,6 +106,14 @@ public class MatchScoreController extends HttpServlet {
             return false;
         }
 
+        UUID matchUuid = UUID.fromString(uuidParameter);
+        if (!ongoingMatchesService.isOngoingMatchExist(matchUuid)) {//TODO проверить постманом
+            forwardToErrorPage(request, response,
+                    "Ongoing match not found",
+                    "The ongoing match with ID '" + matchUuid + "' was not found");
+            return false;
+        }
+
         if (isNullOrEmpty(matchWinnerIdParameter)) {//TODO проверить постманом
             forwardToErrorPage(request, response,
                     "Winner ID is missing",
@@ -123,15 +133,6 @@ public class MatchScoreController extends HttpServlet {
             forwardToErrorPage(request, response,
                     "Player with ID does not exist",
                     "Please provide a valid winner ID in the request payload");
-            return false;
-        }
-
-        UUID matchUuid = UUID.fromString(uuidParameter);
-
-        if (!ongoingMatchesService.isOngoingMatchExist(matchUuid)) {
-            forwardToErrorPage(request, response,
-                    "Ongoing match not found",
-                    "The ongoing match with ID '" + matchUuid + "' was not found");
             return false;
         }
         return true;

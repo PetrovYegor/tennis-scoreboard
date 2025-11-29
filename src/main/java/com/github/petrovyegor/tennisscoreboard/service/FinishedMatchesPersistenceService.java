@@ -3,7 +3,7 @@ package com.github.petrovyegor.tennisscoreboard.service;
 import com.github.petrovyegor.tennisscoreboard.dao.JpaMatchDao;
 import com.github.petrovyegor.tennisscoreboard.dao.JpaPlayerDao;
 import com.github.petrovyegor.tennisscoreboard.dao.MemoryOngoingMatchDao;
-import com.github.petrovyegor.tennisscoreboard.dto.match.MatchRequestDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match.MatchesRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.match.PageResultDto;
 import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreRequestDto;
 import com.github.petrovyegor.tennisscoreboard.exception.NotFoundException;
@@ -30,10 +30,10 @@ public class FinishedMatchesPersistenceService {
         memoryOngoingMatchDao.delete(matchId);
     }
 
-    public PageResultDto findMatches(MatchRequestDto matchRequestDto) {
-        int pageNumber = matchRequestDto.getPageNumber();
-        int pageSize = matchRequestDto.getPageSize();
-        String filterByName = matchRequestDto.getPlayerName();
+    public PageResultDto findMatches(MatchesRequestDto matchesRequestDto) {
+        int pageNumber = matchesRequestDto.getPageNumber();
+        int pageSize = matchesRequestDto.getPageSize();
+        String filterByName = matchesRequestDto.getPlayerName();
         PageResultDto pageResultDto = jpaMatchDao.findByCriteria(pageNumber, pageSize, filterByName).orElseThrow(() -> new RuntimeException("Failed to retrieve list of finished matches"));
         return pageResultDto;
     }

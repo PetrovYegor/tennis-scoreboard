@@ -1,12 +1,5 @@
 package com.github.petrovyegor.tennisscoreboard.util;
 
-import com.github.petrovyegor.tennisscoreboard.exception.InvalidParamException;
-import com.github.petrovyegor.tennisscoreboard.exception.InvalidRequestException;
-import com.github.petrovyegor.tennisscoreboard.exception.RestErrorException;
-import jakarta.servlet.http.HttpServletRequest;
-
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 public class RequestAndParameterValidation {
@@ -37,7 +30,7 @@ public class RequestAndParameterValidation {
         }
     }
 
-    public static boolean isRoundWinnerIdValid(String winnerIdParameter){
+    public static boolean isRoundWinnerIdValid(String winnerIdParameter) {
         try {
             Integer.parseInt(winnerIdParameter);
             return true;
@@ -46,40 +39,10 @@ public class RequestAndParameterValidation {
         }
     }
 
-    public static void validateNewMatchPostRequestParameters(String firstPlayerName, String secondPlayerName) {
-        ensureNamesNotNullAndNotEmpty(firstPlayerName, secondPlayerName);
-        ensureNamesAreDifferent(firstPlayerName, secondPlayerName);
-        validatePlayerNameLength(firstPlayerName);
-        validatePlayerNameLength(secondPlayerName);
-    }
-
-    public static void validateNewMatchPostRequest(HttpServletRequest request) {
-        Map<String, String[]> parameters = request.getParameterMap();
-        Set<String> requiredParameters = Set.of("player1_name", "player2_name");
-        boolean isValid = parameters.keySet().containsAll(requiredParameters);
-        if (!isValid) {
-            throw new InvalidRequestException("First player name or second player name are missing");
-        }
-    }
-
-    private static void ensureNamesNotNullAndNotEmpty(String firstPlayerName, String secondPlayerName) {
-        if (isNullOrEmpty(firstPlayerName) || isNullOrEmpty(secondPlayerName)) {
-            throw new InvalidParamException("Player names must not be null or empty.");
-        }
-    }
-
-    private static void ensureNamesAreDifferent(String firstPlayerName, String secondPlayerName) {
+    public static boolean areNamesEquals(String firstPlayerName, String secondPlayerName) {
         String name1 = firstPlayerName.trim();
         String name2 = secondPlayerName.trim();
-        if (name1.equalsIgnoreCase(name2)) {
-            throw new RestErrorException("Players' names must not be the same.");
-        }
-    }
-
-    private static void validatePlayerNameLength(String name) {
-        if (!isNameValid(name)) {
-            throw new InvalidParamException("The name length must not exceed 50 characters");
-        }
+        return name1.equalsIgnoreCase(name2);
     }
 
     private static boolean isPageParameterValid(String value) {

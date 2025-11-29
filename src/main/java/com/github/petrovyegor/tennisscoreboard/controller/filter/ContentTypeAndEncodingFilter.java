@@ -11,7 +11,6 @@ import java.io.IOException;
         dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ERROR},
         initParams = {
                 @WebInitParam(name = "encoding", value = "UTF-8"),
-                //@WebInitParam(name = "contentType", value = "application/json")
         }
 )
 public class ContentTypeAndEncodingFilter implements Filter {

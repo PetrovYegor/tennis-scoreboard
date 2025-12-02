@@ -22,15 +22,9 @@
 
         <c:if test="${not empty errorMessage}">
             <div class="error-message">
-                    ${errorMessage}
+                    ${errorMessage} ${errorDetails}
             </div>
         </c:if>
-
-        <div class="error-details">
-            <c:if test="${not empty errorDetails}">
-                <strong>Details:</strong> ${errorDetails}
-            </c:if>
-        </div>
 
         <p class="form-instruction">
             Enter the names of both players to start a new tennis match

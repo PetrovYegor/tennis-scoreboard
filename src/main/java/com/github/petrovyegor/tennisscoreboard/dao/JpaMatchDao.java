@@ -41,7 +41,6 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
     public Optional<PageResultDto> findByCriteria(int pageNumber, int pageSize, String playerName) {//мб создать под этот метод отделный интерфейс MatchDao
         try (EntityManager em = JpaUtil.getEntityManager()) {
             CriteriaBuilder cb = em.getCriteriaBuilder();
-            String nameInLowerCase = playerName.toLowerCase();
 
             CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
             // Определяем корневую сущность - откуда считаем (FROM Match)
@@ -52,6 +51,7 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
             List<Predicate> countPredicates = new ArrayList<>();
 
             if (playerName != null && !playerName.trim().isEmpty()) {
+                String nameInLowerCase = playerName.toLowerCase();
                 countPredicates.add(cb.like(cb.lower(countRoot.get("firstPlayer").get("name")), "%" + nameInLowerCase + "%"));
                 countPredicates.add(cb.like(cb.lower(countRoot.get("secondPlayer").get("name")), "%" + nameInLowerCase + "%"));
                 countPredicates.add(cb.like(cb.lower(countRoot.get("winner").get("name")), "%" + nameInLowerCase + "%"));
@@ -68,6 +68,7 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
             Root<Match> dataRoot = dataQuery.from(Match.class);
             List<Predicate> dataPredicates = new ArrayList<>();
             if (playerName != null && !playerName.trim().isEmpty()) {
+                String nameInLowerCase = playerName.toLowerCase();
                 dataPredicates.add(cb.like(cb.lower(dataRoot.get("firstPlayer").get("name")), "%" + nameInLowerCase + "%"));
                 dataPredicates.add(cb.like(cb.lower(dataRoot.get("secondPlayer").get("name")), "%" + nameInLowerCase + "%"));
                 dataPredicates.add(cb.like(cb.lower(dataRoot.get("winner").get("name")), "%" + nameInLowerCase + "%"));
@@ -108,7 +109,8 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
 
             return Optional.ofNullable(pageResultDto);
         } catch (Exception e) {
-            throw new DBException("Failed to get matches by parameters: page - '%s', page size - '%s', player name - '%s'".formatted(pageNumber, pageSize, playerName));
+            throw new DBException(e.getMessage());
+            //throw new DBException("Failed to get matches by parameters: page - '%s', page size - '%s', player name - '%s'".formatted(pageNumber, pageSize, playerName));
         }
     }
 

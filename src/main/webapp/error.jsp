@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,11 +33,11 @@
             </c:choose>
         </div>
 
-        <div class="error-details">
-            <c:if test="${not empty errorDetails}">
+        <c:if test="${not empty errorDetails}">
+            <div class="error-details">
                 <strong>Details:</strong> ${errorDetails}
-            </c:if>
-        </div>
+            </div>
+        </c:if>
 
         <div class="action-buttons">
             <a href="index.jsp" class="btn btn-primary">Go Home</a>

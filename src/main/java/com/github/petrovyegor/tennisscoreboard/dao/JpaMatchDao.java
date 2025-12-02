@@ -41,6 +41,7 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
     public Optional<PageResultDto> findByCriteria(int pageNumber, int pageSize, String playerName) {//мб создать под этот метод отделный интерфейс MatchDao
         try (EntityManager em = JpaUtil.getEntityManager()) {
             CriteriaBuilder cb = em.getCriteriaBuilder();
+            String nameInLowerCase = playerName.toLowerCase();
 
             CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
             // Определяем корневую сущность - откуда считаем (FROM Match)
@@ -51,9 +52,9 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
             List<Predicate> countPredicates = new ArrayList<>();
 
             if (playerName != null && !playerName.trim().isEmpty()) {
-                countPredicates.add(cb.like(countRoot.get("firstPlayer").get("name"), "%" + playerName + "%"));
-                countPredicates.add(cb.like(countRoot.get("secondPlayer").get("name"), "%" + playerName + "%"));
-                countPredicates.add(cb.like(countRoot.get("winner").get("name"), "%" + playerName + "%"));
+                countPredicates.add(cb.like(cb.lower(countRoot.get("firstPlayer").get("name")), "%" + nameInLowerCase + "%"));
+                countPredicates.add(cb.like(cb.lower(countRoot.get("secondPlayer").get("name")), "%" + nameInLowerCase + "%"));
+                countPredicates.add(cb.like(cb.lower(countRoot.get("winner").get("name")), "%" + nameInLowerCase + "%"));
             }
 
             if (!countPredicates.isEmpty()) {
@@ -67,9 +68,9 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
             Root<Match> dataRoot = dataQuery.from(Match.class);
             List<Predicate> dataPredicates = new ArrayList<>();
             if (playerName != null && !playerName.trim().isEmpty()) {
-                dataPredicates.add(cb.like(dataRoot.get("firstPlayer").get("name"), "%" + playerName + "%"));
-                dataPredicates.add(cb.like(dataRoot.get("secondPlayer").get("name"), "%" + playerName + "%"));
-                dataPredicates.add(cb.like(dataRoot.get("winner").get("name"), "%" + playerName + "%"));
+                dataPredicates.add(cb.like(cb.lower(dataRoot.get("firstPlayer").get("name")), "%" + nameInLowerCase + "%"));
+                dataPredicates.add(cb.like(cb.lower(dataRoot.get("secondPlayer").get("name")), "%" + nameInLowerCase + "%"));
+                dataPredicates.add(cb.like(cb.lower(dataRoot.get("winner").get("name")), "%" + nameInLowerCase + "%"));
             }
             if (!dataPredicates.isEmpty()) {
                 dataQuery.where(cb.or(dataPredicates.toArray(new Predicate[0])));

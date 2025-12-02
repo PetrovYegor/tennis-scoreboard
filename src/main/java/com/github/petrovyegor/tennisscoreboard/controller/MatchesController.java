@@ -61,6 +61,3 @@ public class MatchesController extends HttpServlet {
         return true;
     }
 }
-
-
-

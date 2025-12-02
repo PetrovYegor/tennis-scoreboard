@@ -2,39 +2,29 @@ package com.github.petrovyegor.tennisscoreboard.controller.filter;
 
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.annotation.WebInitParam;
 
 import java.io.IOException;
 
 @WebFilter(
-        urlPatterns = "/*",
-        dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ERROR},
-        initParams = {
-                @WebInitParam(name = "encoding", value = "UTF-8"),
-        }
+        filterName = "01_ContentTypeAndEncodingFilter",
+        urlPatterns = "/*"
 )
 public class ContentTypeAndEncodingFilter implements Filter {
-    private String encoding;
-    //private String contentType;
+    private static final String ENCODING = "UTF-8";
 
     @Override
     public void init(FilterConfig filterConfig) {
-        this.encoding = filterConfig.getInitParameter("encoding");
-        //this.contentType = filterConfig.getInitParameter("contentType");
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        servletRequest.setCharacterEncoding(encoding);
-        servletResponse.setCharacterEncoding(encoding);
-        //servletResponse.setContentType(contentType);
+        servletRequest.setCharacterEncoding(ENCODING);
+        servletResponse.setCharacterEncoding(ENCODING);
 
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
     @Override
     public void destroy() {
-        Filter.super.destroy();
     }
 }
-

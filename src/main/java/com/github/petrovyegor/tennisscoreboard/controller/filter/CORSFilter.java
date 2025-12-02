@@ -7,10 +7,12 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebFilter("/*")
+@WebFilter(
+        filterName = "02_CORSFilter",
+        urlPatterns = "/*"
+)
 public class CORSFilter implements Filter {
     private static final String ALLOWED_ORIGINS = "*";
-    //private static final String ALLOWED_METHODS = "GET, POST, PATCH, OPTIONS";
     private static final String ALLOWED_METHODS = "GET, POST, OPTIONS";
     private static final String ALLOWED_HEADERS = "Content-Type";
 
@@ -26,11 +28,6 @@ public class CORSFilter implements Filter {
         response.setHeader("Access-Control-Allow-Origin", ALLOWED_ORIGINS);
         response.setHeader("Access-Control-Allow-Methods", ALLOWED_METHODS);
         response.setHeader("Access-Control-Allow-Headers", ALLOWED_HEADERS);
-
-//        if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
-//            response.setStatus(HttpServletResponse.SC_OK);
-//            return;
-//        }
 
         filterChain.doFilter(servletRequest, servletResponse);
     }

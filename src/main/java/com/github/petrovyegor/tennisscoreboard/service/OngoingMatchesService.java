@@ -5,7 +5,6 @@ import com.github.petrovyegor.tennisscoreboard.dto.match_score.PlayerScoreDto;
 import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchResponseDto;
 import com.github.petrovyegor.tennisscoreboard.dto.ongoing_match.OngoingMatchDto;
-import com.github.petrovyegor.tennisscoreboard.exception.ErrorMessage;
 import com.github.petrovyegor.tennisscoreboard.exception.NotFoundException;
 import com.github.petrovyegor.tennisscoreboard.exception.RestErrorException;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
@@ -69,7 +68,7 @@ public class OngoingMatchesService {
 
     public OngoingMatch findByUuid(UUID matchUuid) {
         return memoryOngoingMatchDao.findById(matchUuid)
-                .orElseThrow(() -> new RestErrorException(ErrorMessage.ONGOING_MATCH_NOT_FOUND_BY_UUID.formatted(matchUuid)));
+                .orElseThrow(() -> new RestErrorException("Ongoing match with uuid '%s' does not exist!".formatted(matchUuid)));
     }
 
     public boolean isOngoingMatchExist(UUID matchUuid){

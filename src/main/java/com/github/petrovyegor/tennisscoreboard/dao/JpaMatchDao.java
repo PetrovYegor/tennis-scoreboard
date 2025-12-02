@@ -18,16 +18,18 @@ import java.util.Optional;
 
 public class JpaMatchDao implements CrudDao<Match, Integer> {
     public Optional<Match> findById(Integer id) {
-        try (EntityManager em = JpaUtil.getEntityManager()) {
+        try (EntityManager em = JpaUtil.getEntityManager()) {//TODO неужели нигде не используется?
             Match result = em.find(Match.class, id);
             return Optional.ofNullable(result);
-        }//TODO в репах сделать Catch блоки, ведь можно постманом подавать невалидные идшники
+        } catch (Exception e) {
+            throw new DBException("Failed to get match by id '%s'".formatted(id));
+        }
     }
 
     @Override
     public List<Match> findAll() {
         return null;
-    }//это либо убрать, либо переписать
+    }//TODO это либо убрать, либо переписать
 
 //    @Override
 //    public List<Match> findAll() {
@@ -60,7 +62,6 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
 
             //Выполняем Count запрос
             Long totalCount = em.createQuery(countQuery).getSingleResult();
-
 
             CriteriaQuery<Match> dataQuery = cb.createQuery(Match.class);
             Root<Match> dataRoot = dataQuery.from(Match.class);
@@ -104,8 +105,9 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
                     , pageNumber
             );
 
-
             return Optional.ofNullable(pageResultDto);
+        } catch (Exception e) {
+            throw new DBException("Failed to get matches by parameters: page - '%s', page size - '%s', player name - '%s'".formatted(pageNumber, pageSize, playerName));
         }
     }
 

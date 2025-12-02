@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MemoryOngoingMatchDao implements CrudDao<OngoingMatch, UUID> {
     private static final ConcurrentHashMap<UUID, OngoingMatch> ongoingMatches = new ConcurrentHashMap<>();
 
-    public Optional<OngoingMatch> findById(UUID matchUuid) {//подумать, может ли прилелеть запрос на поиск ид, которого не сущесвтует. Как реагировать? Исключение?
+    public Optional<OngoingMatch> findById(UUID matchUuid) {
         OngoingMatch ongoingMatch = ongoingMatches.get(matchUuid);
         return Optional.ofNullable(ongoingMatch);
     }
@@ -24,11 +24,11 @@ public class MemoryOngoingMatchDao implements CrudDao<OngoingMatch, UUID> {
         return ongoingMatches.values().stream().toList();
     }
 
-    public void delete(UUID matchUuid){
+    public void delete(UUID matchUuid) {
         ongoingMatches.remove(matchUuid);
     }
 
-    public boolean isOngoingMatchExist(UUID matchUuid){
+    public boolean isOngoingMatchExist(UUID matchUuid) {
         return ongoingMatches.containsKey(matchUuid);
     }
 }

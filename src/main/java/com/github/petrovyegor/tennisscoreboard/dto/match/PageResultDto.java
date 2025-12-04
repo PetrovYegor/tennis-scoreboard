@@ -2,8 +2,6 @@ package com.github.petrovyegor.tennisscoreboard.dto.match;
 
 import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
@@ -11,7 +9,7 @@ import java.util.List;
 public class PageResultDto {
     //сами данные, например лист матчей -- в репозитории посчитается
     private final List<Match> content;
-//    private String firstPlayerName;
+    //    private String firstPlayerName;
 //    private String secondPlayerName;
 //    private String winnerName;
     //счётчик записей, удовлетворяющих условию -- в репозитории посчитается

@@ -45,16 +45,16 @@ public class ErrorHandlerFilter implements Filter {
         }
     }
 
+    @Override
+    public void destroy() {
+    }
+
     private void forwardToErrorPage(HttpServletRequest request,
                                     HttpServletResponse response,
                                     String message) throws ServletException, IOException {
         request.setAttribute("errorMessage", message);
         //request.setAttribute("errorDetails", details);
         request.getRequestDispatcher("/error.jsp").forward(request, response);
-    }
-
-    @Override
-    public void destroy() {
     }
 
     private boolean isValidPath(String path) {

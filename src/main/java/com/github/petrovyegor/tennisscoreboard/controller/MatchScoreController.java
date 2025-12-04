@@ -1,6 +1,5 @@
 package com.github.petrovyegor.tennisscoreboard.controller;
 
-import com.github.petrovyegor.tennisscoreboard.dto.match.MatchesRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.ongoing_match.OngoingMatchDto;
 import com.github.petrovyegor.tennisscoreboard.service.FinishedMatchesPersistenceService;
@@ -43,7 +42,7 @@ public class MatchScoreController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        if (!validateMatchScorePostRequest(request, response)){
+        if (!validateMatchScorePostRequest(request, response)) {
             return;
         }
 

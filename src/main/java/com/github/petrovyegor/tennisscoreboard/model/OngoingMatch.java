@@ -30,11 +30,6 @@ public class OngoingMatch {
         return playersScore.get(secondPlayer.getId());
     }
 
-    private void initializePlayersScore(Player firstPlayer, Player secondPlayer) {
-        playersScore.put(firstPlayer.getId(), new PlayerScore(firstPlayer.getName()));
-        playersScore.put(secondPlayer.getId(), new PlayerScore(secondPlayer.getName()));
-    }
-
     public PlayerScore getWinnerScore(int pointWinnerId) {
         if (pointWinnerId == firstPlayer.getId()) {
             return getFirstPlayerScore();
@@ -47,5 +42,10 @@ public class OngoingMatch {
             return getSecondPlayerScore();
         }
         return getFirstPlayerScore();
+    }
+
+    private void initializePlayersScore(Player firstPlayer, Player secondPlayer) {
+        playersScore.put(firstPlayer.getId(), new PlayerScore(firstPlayer.getName()));
+        playersScore.put(secondPlayer.getId(), new PlayerScore(secondPlayer.getName()));
     }
 }

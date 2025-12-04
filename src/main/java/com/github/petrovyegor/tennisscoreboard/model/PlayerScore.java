@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class PlayerScore {
-    private String playerName;
+    private final String playerName;
     private int sets;
     private int games;
     private Point point;
@@ -38,17 +38,6 @@ public class PlayerScore {
         point = Point.FORTY;
     }
 
-    private Point getNextRegularPoint() {
-        Point nextValue = switch (point) {
-            case LOVE -> Point.FIFTEEN;
-            case FIFTEEN -> Point.THIRTY;
-            case THIRTY -> Point.FORTY;
-            case FORTY -> Point.ADVANTAGE;
-            default -> throw new IllegalStateException("Unsupported Enum value given");
-        };
-        return nextValue;
-    }
-
     public boolean isUnderForty() {
         return point == Point.LOVE || point == Point.FIFTEEN || point == Point.THIRTY;
     }
@@ -74,16 +63,26 @@ public class PlayerScore {
         advantage = false;
     }
 
-    public void resetAfterSet(){
+    public void resetAfterSet() {
         resetAfterGame();
         games = 0;
         tieBreakPoints = 0;
     }
 
-    public String getFormattedRegularOrTieBreakPoint(){
-        if (tieBreakPoints > 0){
+    public String getFormattedRegularOrTieBreakPoint() {
+        if (tieBreakPoints > 0) {
             return String.valueOf(tieBreakPoints);
         }
         return point.getValue();
+    }
+
+    private Point getNextRegularPoint() {
+        return switch (point) {
+            case LOVE -> Point.FIFTEEN;
+            case FIFTEEN -> Point.THIRTY;
+            case THIRTY -> Point.FORTY;
+            case FORTY -> Point.ADVANTAGE;
+            default -> throw new IllegalStateException("Unsupported Enum value given");
+        };
     }
 }

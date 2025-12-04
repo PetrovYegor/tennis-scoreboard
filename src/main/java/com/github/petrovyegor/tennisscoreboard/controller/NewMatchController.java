@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import static com.github.petrovyegor.tennisscoreboard.util.RequestAndParameterValidation.*;
 

@@ -53,19 +53,6 @@ public class OngoingMatchesService {
         );
     }
 
-    private PlayerScoreDto createPlayerScoreDto(Player player, PlayerScore playerScore) {
-        return new PlayerScoreDto(
-                player.getId(),
-                player.getName(),
-                playerScore.getSets(),
-                playerScore.getGames(),
-                playerScore.getPoint(),
-                playerScore.isAdvantage(),
-                playerScore.getTieBreakPoints(),
-                playerScore.getFormattedRegularOrTieBreakPoint()
-        );
-    }
-
     public OngoingMatch findByUuid(UUID matchUuid) {
         return memoryOngoingMatchDao.findById(matchUuid)
                 .orElseThrow(() -> new RestErrorException("Ongoing match with uuid '%s' does not exist!".formatted(matchUuid)));
@@ -77,5 +64,18 @@ public class OngoingMatchesService {
 
     private UUID getNewUUID() {
         return UUID.randomUUID();
+    }
+
+    private PlayerScoreDto createPlayerScoreDto(Player player, PlayerScore playerScore) {
+        return new PlayerScoreDto(
+                player.getId(),
+                player.getName(),
+                playerScore.getSets(),
+                playerScore.getGames(),
+                playerScore.getPoint(),
+                playerScore.isAdvantage(),
+                playerScore.getTieBreakPoints(),
+                playerScore.getFormattedRegularOrTieBreakPoint()
+        );
     }
 }

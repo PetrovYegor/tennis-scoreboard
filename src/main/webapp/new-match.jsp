@@ -30,7 +30,7 @@
             Enter the names of both players to start a new tennis match
         </p>
 
-        <form method="post" action="/new-match" class="new-match-form">
+        <form method="post" action="${pageContext.request.contextPath}/new-match" class="new-match-form">
             <div class="form-row">
                 <label for="player1_name" class="form-label">Player 1 Name:</label>
                 <input type="text" id="player1_name" name="player1_name"

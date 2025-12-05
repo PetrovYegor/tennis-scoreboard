@@ -30,7 +30,7 @@
         </c:if>
 
         <div class="search-section">
-            <form method="get" action="/matches" class="search-form">
+            <form method="get" action="${pageContext.request.contextPath}/matches" class="search-form">
                 <input type="hidden" name="page" value="1">
                 <label for="filter_by_name" class="search-label">Name:</label>
                 <input type="text" id="filter_by_name" name="filter_by_name"
@@ -38,7 +38,7 @@
                        placeholder="Enter player name to filter matches...">
                 <div class="search-buttons">
                     <button type="submit" class="btn">Search</button>
-                    <a href="/matches?page=1" class="btn btn-secondary">Clear</a>
+                    <a href="${pageContext.request.contextPath}/matches?page=1" class="btn btn-secondary">Clear</a>
                 </div>
             </form>
         </div>

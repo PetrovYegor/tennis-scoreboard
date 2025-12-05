@@ -51,12 +51,12 @@
 
         <div class="score-buttons-container">
             <div class="score-buttons">
-                <form method="post" action="/match-score?uuid=${matchState.matchUuid}" class="score-form">
+                <form method="post" action="${pageContext.request.contextPath}/match-score?uuid=${matchState.matchUuid}" class="score-form">
                     <input type="hidden" name="winnerId" value="${matchState.firstPlayerScore.playerId}">
                     <button type="submit" class="player-btn player1-btn">Player 1 Won Point</button>
                 </form>
 
-                <form method="post" action="/match-score?uuid=${matchState.matchUuid}" class="score-form">
+                <form method="post" action="${pageContext.request.contextPath}/match-score?uuid=${matchState.matchUuid}" class="score-form">
                     <input type="hidden" name="winnerId" value="${matchState.secondPlayerScore.playerId}">
                     <button type="submit" class="player-btn player2-btn">Player 2 Won Point</button>
                 </form>

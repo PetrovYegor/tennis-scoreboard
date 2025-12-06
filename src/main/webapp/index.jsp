@@ -9,9 +9,9 @@
 <body>
 <header class="header">
   <nav class="nav-container">
-    <a href="index.jsp" class="nav-link">Home</a>
-    <a href="http://localhost:8080/new-match" class="nav-link">New</a>
-    <a href="http://localhost:8080/matches?page=1" class="nav-link">Matches</a>
+    <a href="${pageContext.request.contextPath}/" class="nav-link">Home</a>
+    <a href="${pageContext.request.contextPath}/new-match" class="nav-link">New</a>
+    <a href="${pageContext.request.contextPath}/matches?page=1" class="nav-link">Matches</a>
   </nav>
 </header>
 

@@ -1,17 +1,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Match Finished</title>
-    <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="css/finished-match.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/finished-match.css">
 </head>
 <body>
 <header class="header">
     <nav class="nav-container">
-        <a href="index.jsp" class="nav-link">Home</a>
-        <a href="http://localhost:8080/new-match" class="nav-link">New</a>
-        <a href="http://localhost:8080/matches?page=1" class="nav-link">Matches</a>
+        <a href="${pageContext.request.contextPath}/" class="nav-link">Home</a>
+        <a href="${pageContext.request.contextPath}/new-match" class="nav-link">New</a>
+        <a href="${pageContext.request.contextPath}/matches?page=1" class="nav-link">Matches</a>
     </nav>
 </header>
 
@@ -20,7 +21,7 @@
         <h1 class="page-title">Match Finished</h1>
 
         <div class="winner-message">
-            🎉 Match finished: ${matchState.winnerName} wins! 🎉
+            Match finished: ${matchState.winnerName} wins!
         </div>
 
         <div class="match-summary">
@@ -48,7 +49,8 @@
         </table>
 
         <div class="home-btn-container">
-            <a href="index.jsp" class="home-btn">HOME</a>
+            <a href="${pageContext.request.contextPath}/" class="home-btn">HOME</a>
+            <a href="${pageContext.request.contextPath}/matches?page=1" class="home-btn">MATCHES</a>
         </div>
     </div>
 </div>

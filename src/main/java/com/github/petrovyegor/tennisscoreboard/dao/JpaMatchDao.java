@@ -11,17 +11,20 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 public class JpaMatchDao implements CrudDao<Match, Integer> {
     public Optional<Match> findById(Integer id) {
         try (EntityManager em = JpaUtil.getEntityManager()) {//TODO неужели нигде не используется?
             Match result = em.find(Match.class, id);
             return Optional.ofNullable(result);
         } catch (Exception e) {
+            log.error("Error while findById executing with parameter '%s'".formatted(id), e);
             throw new DBException("Failed to get match by id '%s'".formatted(id));
         }
     }
@@ -109,6 +112,7 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
 
             return Optional.ofNullable(pageResultDto);
         } catch (Exception e) {
+            log.error("Error while findByCriteria executing with parameters", e);
             throw new DBException(e.getMessage());
             //throw new DBException("Failed to get matches by parameters: page - '%s', page size - '%s', player name - '%s'".formatted(pageNumber, pageSize, playerName));
         }
@@ -126,9 +130,11 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
+            log.error("Error while saving match", e);
             throw new DBException("Failed to save Match with player1 id - '%s', player2 id - '%s', winner id - '%s'".formatted(entity.getFirstPlayer().getId(), entity.getSecondPlayer().getId(), entity.getWinner().getId()));
         } finally {
             em.close();
         }
     }
 }
+

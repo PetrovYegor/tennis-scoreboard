@@ -5,10 +5,12 @@ import com.github.petrovyegor.tennisscoreboard.exception.DBException;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 public class JpaPlayerDao implements PlayerDao {
     @Override
     public Optional<Player> findById(Long id) {
@@ -16,6 +18,7 @@ public class JpaPlayerDao implements PlayerDao {
             Player result = em.find(Player.class, id);
             return Optional.ofNullable(result);
         } catch (Exception e) {
+            log.error("Error searching for player with id '%s'".formatted(id), e);
             throw new DBException("Failed to get player with id '%s'".formatted(id));
         }
     }
@@ -26,6 +29,7 @@ public class JpaPlayerDao implements PlayerDao {
         try (EntityManager em = JpaUtil.getEntityManager()) {
             return em.createQuery(findAllQuery, Player.class).getResultList();
         } catch (Exception e) {
+            log.error("Error while findAll method executing", e);
             throw new DBException("Failed to get all players");
         }
     }
@@ -38,6 +42,7 @@ public class JpaPlayerDao implements PlayerDao {
             em.getTransaction().commit();
             return player;
         } catch (Exception e) {
+            log.error("Error saving player '%s'".formatted(player), e);
             throw new DBException("Failed to save Player with name '%s'".formatted(player.getName()));
         }
     }
@@ -51,6 +56,7 @@ public class JpaPlayerDao implements PlayerDao {
         } catch (NoResultException e) {
             return Optional.empty();
         } catch (Throwable e) {
+            log.error("Error while findByName executing with parameter '%s'".formatted(name), e);
             throw new DBException("Failed to get player with name '%s'".formatted(name));
         }
     }

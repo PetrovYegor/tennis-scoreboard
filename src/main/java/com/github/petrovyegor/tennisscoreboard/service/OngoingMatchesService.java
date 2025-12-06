@@ -10,9 +10,12 @@ import com.github.petrovyegor.tennisscoreboard.exception.RestErrorException;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 public class OngoingMatchesService {
     private final PlayerService playerService;
     private final MemoryOngoingMatchDao memoryOngoingMatchDao;
@@ -34,9 +37,7 @@ public class OngoingMatchesService {
     }
 
     public OngoingMatchDto getMatchState(UUID matchUuid) {
-        OngoingMatch ongoingMatch = memoryOngoingMatchDao.findById(matchUuid)
-                .orElseThrow(() -> new NotFoundException("Match with id '%s' not found".formatted(matchUuid)));//дописать ид в сообщение
-        return convertToDto(ongoingMatch);
+        return convertToDto(findByUuid(matchUuid));
     }
 
     public OngoingMatchDto convertToDto(OngoingMatch ongoingMatch) {
@@ -54,8 +55,12 @@ public class OngoingMatchesService {
     }
 
     public OngoingMatch findByUuid(UUID matchUuid) {
-        return memoryOngoingMatchDao.findById(matchUuid)
-                .orElseThrow(() -> new RestErrorException("Ongoing match with uuid '%s' does not exist!".formatted(matchUuid)));
+        Optional<OngoingMatch> ongoingMatch = memoryOngoingMatchDao.findById(matchUuid);
+        if (ongoingMatch.isPresent()){
+            return ongoingMatch.get();
+        }
+        log.error("Error while findByUuid executing with parameter '%s'".formatted(matchUuid));
+        throw new RestErrorException("Ongoing match with uuid '%s' does not exist!".formatted(matchUuid));
     }
 
     public boolean isOngoingMatchExist(UUID matchUuid){

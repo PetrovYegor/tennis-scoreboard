@@ -4,8 +4,8 @@
 <html>
 <head>
     <title>Error - Tennis Score Board</title>
-    <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="css/error.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/error.css">
 </head>
 <body>
 <header class="header">
@@ -40,8 +40,8 @@
         </c:if>
 
         <div class="action-buttons">
-            <a href="index.jsp" class="btn btn-primary">Go Home</a>
-            <a href="http://localhost:8080/matches?page=1" class="btn btn-secondary">View Matches</a>
+            <a href="${pageContext.request.contextPath}/" class="btn btn-primary">Go Home</a>
+            <a href="${pageContext.request.contextPath}/matches?page=1" class="btn btn-secondary">View Matches</a>
         </div>
     </div>
 </div>

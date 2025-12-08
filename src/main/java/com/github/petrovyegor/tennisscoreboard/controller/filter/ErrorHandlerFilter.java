@@ -17,18 +17,29 @@ public class ErrorHandlerFilter implements Filter {
     private static final String UNSUPPORTED_URL_MESSAGE = "Page not found. Unsupported URL '%s' given. ";
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        String path = request.getRequestURI()
-                .substring(request.getContextPath().length());
+
+        String requestURI = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        String path = requestURI.substring(contextPath.length());
+
+        if (path.startsWith("/css/") ||
+                path.startsWith("/js/") ||
+                path.startsWith("/images/")) {
+
+            request.getRequestDispatcher(path).forward(request, response);
+            return;
+        }
 
         if (!isValidPath(path)) {
-            forwardToErrorPage(request, response, UNSUPPORTED_URL_MESSAGE.formatted(path));
+            request.setAttribute("errorMessage", UNSUPPORTED_URL_MESSAGE.formatted(path));
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
             return;
         }
 
@@ -59,12 +70,13 @@ public class ErrorHandlerFilter implements Filter {
 
     private boolean isValidPath(String path) {
         return path.equals("/") ||
-                path.equals("/index.jsp") ||
-                //path.equals("/error.jsp") ||
                 path.equals("/new-match") ||
+                path.equals("/home") ||
+                path.equals("/index") ||
                 path.startsWith("/matches") ||
                 path.startsWith("/match-score") ||
                 path.startsWith("/finished-match") ||
-                path.startsWith("/css/");
+                path.startsWith("/css/") ||
+                path.startsWith("/error.jsp");
     }
 }

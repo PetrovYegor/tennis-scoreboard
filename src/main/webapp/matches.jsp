@@ -5,8 +5,8 @@
 <html>
 <head>
     <title>Matches</title>
-    <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="css/matches.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/matches.css">
 </head>
 <body>
 <header class="header">

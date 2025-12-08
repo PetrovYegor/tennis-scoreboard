@@ -4,8 +4,8 @@
 <html>
 <head>
     <title>Match Score</title>
-    <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="css/match-score.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/match-score.css">
 </head>
 <body>
 <header class="header">

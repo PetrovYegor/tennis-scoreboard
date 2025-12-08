@@ -4,8 +4,8 @@
 <html>
 <head>
     <title>New Match</title>
-    <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="css/new-match.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/new-match.css">
 </head>
 <body>
 <header class="header">

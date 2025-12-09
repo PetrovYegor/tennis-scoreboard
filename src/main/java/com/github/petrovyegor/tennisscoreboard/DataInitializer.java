@@ -1,73 +1,52 @@
 package com.github.petrovyegor.tennisscoreboard;
 
 import com.github.petrovyegor.tennisscoreboard.exception.DBException;
-import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
+import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class DataInitializer {
-    public static void initTestData(){
+    private static final String[] PLAYER_NAMES = {"John", "William", "Robert", "Julia", "Arnold", "Marry", "Harry", "Bryan"};
+
+    public static void initTestData() {
         EntityManager em = JpaUtil.getEntityManager();
         EntityTransaction transaction = em.getTransaction();//TODO не нравится, переделать весь класс
 
+        Player[] players = new Player[PLAYER_NAMES.length];
+        for (int i = 0; i < players.length; i++) {
+            Player newPlayer = new Player(PLAYER_NAMES[i]);
+            players[i] = newPlayer;//тут помнить, что это должно быт в транзации, посмотреть ГПТ
+            em.persist(newPlayer);
+        }
+        createMatch(em, players[0], players[1], players[0]); //John vs William, John wins
+        createMatch(em, players[1], players[2], players[1]); //William vs Robert, William wins
+        createMatch(em, players[2], players[3], players[2]); //Robert vs Julia, Robert wins
+        createMatch(em, players[3], players[4], players[3]); //Julia vs Arnold, Julia wins
+        createMatch(em, players[4], players[5], players[4]); //Arnold vs Marry, Arnold wins
+        createMatch(em, players[5], players[6], players[5]); //Marry vs Harry, Marry wins
+        createMatch(em, players[6], players[7], players[6]); //Harry vs Bryan, Harry wins
+        createMatch(em, players[7], players[8], players[7]); //Bryan vs John, Bryan wins
+        createMatch(em, players[0], players[1], players[0]); //John vs William, John wins
+        createMatch(em, players[1], players[2], players[1]); //William vs Robert, William wins
+        createMatch(em, players[2], players[3], players[2]); //Robert vs Julia, Robert wins
+        createMatch(em, players[3], players[4], players[3]); //Julia vs Arnold, Julia wins
+        createMatch(em, players[4], players[5], players[4]); //Arnold vs Marry, Arnold wins
+        createMatch(em, players[5], players[6], players[5]); //Marry vs Harry, Marry wins
+        createMatch(em, players[6], players[7], players[6]); //Harry vs Bryan, Harry wins
+        createMatch(em, players[7], players[8], players[7]); //Bryan vs John, Bryan wins
+        createMatch(em, players[0], players[1], players[0]); //John vs William, John wins
+        createMatch(em, players[1], players[2], players[1]); //William vs Robert, William wins
+        createMatch(em, players[2], players[3], players[2]); //Robert vs Julia, Robert wins
+        createMatch(em, players[3], players[4], players[3]); //Julia vs Arnold, Julia wins
+        createMatch(em, players[4], players[5], players[4]); //Arnold vs Marry, Arnold wins
+
+
         try {
             transaction.begin();
-            Player player1 = new Player("John");
-            Player player2 = new Player("William");
-            Player player3 = new Player("Robert");
-            Player player4 = new Player("Julia");
-            Player player5 = new Player("Arnold");
-            Player player6 = new Player("Marry");
 
-            em.persist(player1);
-            em.persist(player2);
-            em.persist(player3);
-            em.persist(player4);
-            em.persist(player5);
-            em.persist(player6);
-
-            Match match1 = new Match(player1, player2, player1);
-            Match match2 = new Match(player6, player5, player6);
-            Match match3 = new Match(player2, player3, player2);
-            Match match4 = new Match(player5, player4, player5);
-            Match match5 = new Match(player3, player4, player3);
-            Match match6 = new Match(player4, player3, player4);
-            Match match7 = new Match(player5, player5, player5);
-            Match match8 = new Match(player6, player1, player6);
-            Match match9 = new Match(player5, player2, player5);
-            Match match10 = new Match(player2, player1, player1);
-            Match match11 = new Match(player6, player4, player6);
-            Match match12 = new Match(player3, player5, player5);
-            Match match13 = new Match(player6, player4, player6);
-            Match match14 = new Match(player6, player4, player6);
-            Match match15 = new Match(player6, player4, player6);
-            Match match16 = new Match(player6, player4, player6);
-            Match match17 = new Match(player6, player4, player6);
-            Match match18 = new Match(player6, player4, player6);
-            Match match19 = new Match(player6, player4, player6);
-            Match match20 = new Match(player6, player4, player6);
-
-            em.persist(match1);
-            em.persist(match2);
-            em.persist(match3);
-            em.persist(match4);
-            em.persist(match5);
-            em.persist(match6);
-            em.persist(match7);
-            em.persist(match8);
-            em.persist(match9);
-            em.persist(match10);
-            em.persist(match11);
-            em.persist(match12);
-            em.persist(match13);
-            em.persist(match14);
-            em.persist(match15);
-            em.persist(match16);
-            em.persist(match17);
-            em.persist(match18);
-            em.persist(match19);
-            em.persist(match20);
 
             transaction.commit();
         } catch (Exception e) {
@@ -79,4 +58,10 @@ public class DataInitializer {
             em.close();
         }
     }
+
+    private static void createMatch(EntityManager em, Player firstPlayer, Player secondPlayer, Player winner) {
+        Match match = new Match(firstPlayer, secondPlayer, winner);
+        em.persist(match);
+    }
 }
+

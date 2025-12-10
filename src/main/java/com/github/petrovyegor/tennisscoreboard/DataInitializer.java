@@ -16,11 +16,6 @@ public class DataInitializer {
 
         try {
             transaction.begin();
-            log.warn("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            log.warn("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            log.warn("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            log.warn("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
             Player[] players = new Player[PLAYER_NAMES.length];
             for (int i = 0; i < players.length; i++) {
                 Player newPlayer = new Player(PLAYER_NAMES[i]);
@@ -50,10 +45,6 @@ public class DataInitializer {
             createMatch(em, players[4], players[5], players[4]); //Arnold vs Marry, Arnold wins
 
             transaction.commit();
-            log.warn("SUCCESS");
-            log.warn("SUCCESS");
-            log.warn("SUCCESS");
-            log.warn("SUCCESS");
         } catch (Exception e) {
             log.error("Failed to initialize DB with test data. " + e);
             if (transaction.isActive()) {

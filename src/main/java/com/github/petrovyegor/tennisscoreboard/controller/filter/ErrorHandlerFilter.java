@@ -8,10 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebFilter(
-        filterName = "03_ErrorHandlerFilter",
-        urlPatterns = "/*"
-)
+@WebFilter("/*")
 public class ErrorHandlerFilter implements Filter {
     private static final String FATAL_ERROR_MESSAGE = "Fatal error. ";
     private static final String UNSUPPORTED_URL_MESSAGE = "Page not found. Unsupported URL '%s' given. ";

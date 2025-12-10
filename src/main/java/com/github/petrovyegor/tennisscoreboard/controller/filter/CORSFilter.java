@@ -7,10 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebFilter(
-        filterName = "02_CORSFilter",
-        urlPatterns = "/*"
-)
+@WebFilter("/*")
 public class CORSFilter implements Filter {
     private static final String ALLOWED_ORIGINS = "*";
     private static final String ALLOWED_METHODS = "GET, POST, OPTIONS";

@@ -1,15 +1,6 @@
 package com.github.petrovyegor.tennisscoreboard.dto.new_match;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import lombok.Data;
-
-@Data
-public class NewMatchRequestDto {
-    @NotNull(message = "Name can not be null")//TODO вспомнить, что это за аннотации и в какой момент они срабатывают
-    @Pattern(regexp = "[a-zA-Z]{3,15}", message = "The name should contain Latin letters, name length should be from 3 to 15 symbols")
-    private final String firstPlayerName;
-    @NotNull(message = "Name can not be null")
-    @Pattern(regexp = "[a-zA-Z]{3,15}", message = "The name should contain Latin letters, name length should be from 3 to 15 symbols")
-    private final String secondPlayerName;
-}
+public record NewMatchRequestDto(//название неподходящее, переименовать
+                                 String firstPlayerName,
+                                 String secondPlayerName
+) {}

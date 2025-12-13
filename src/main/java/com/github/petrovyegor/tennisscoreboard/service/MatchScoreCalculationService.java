@@ -15,8 +15,8 @@ public class MatchScoreCalculationService {
     }
 
     public OngoingMatchDto processAction(MatchScoreRequestDto matchScoreRequestDto) {
-        UUID matchUuid = matchScoreRequestDto.getMatchUuid();
-        int roundWinnerId = matchScoreRequestDto.getRoundWinnerId();
+        UUID matchUuid = matchScoreRequestDto.matchUuid();
+        int roundWinnerId = matchScoreRequestDto.roundWinnerId();
 
         OngoingMatch ongoingMatch = ongoingMatchesService.findByUuid(matchUuid);
 

@@ -20,10 +20,10 @@ public class FinishedMatchesPersistenceService {
     private final JpaPlayerDao jpaPlayerDao = new JpaPlayerDao();
 
     public void processFinishedMatch(MatchScoreRequestDto matchScoreRequestDto) {
-        UUID matchId = matchScoreRequestDto.getMatchUuid();
+        UUID matchId = matchScoreRequestDto.matchUuid();
         OngoingMatch ongoingMatch = ongoingMatchesService.findByUuid(matchId);
 
-        long winnerId = matchScoreRequestDto.getRoundWinnerId();
+        long winnerId = matchScoreRequestDto.roundWinnerId();
         Player winner = jpaPlayerDao.findById(winnerId).orElseThrow(() -> new NotFoundException("Player with id '%s' does not exist"));
         Match match = new Match(ongoingMatch.getFirstPlayer(), ongoingMatch.getSecondPlayer(), winner);
         jpaMatchDao.save(match);

@@ -7,10 +7,12 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Getter
 public class OngoingMatch {
+    @Getter
     private final UUID uuid;
+    @Getter
     private final Player firstPlayer;
+    @Getter
     private final Player secondPlayer;
     private final Map<Long, PlayerScore> playersScore;//TODO это поле не должно быть доступно геттером
 
@@ -22,11 +24,11 @@ public class OngoingMatch {
         initializePlayersScore(firstPlayer, secondPlayer);
     }
 
-    public PlayerScore getFirstPlayerScore(){
+    public PlayerScore getFirstPlayerScore() {
         return playersScore.get(firstPlayer.getId());
     }
 
-    public PlayerScore getSecondPlayerScore(){
+    public PlayerScore getSecondPlayerScore() {
         return playersScore.get(secondPlayer.getId());
     }
 

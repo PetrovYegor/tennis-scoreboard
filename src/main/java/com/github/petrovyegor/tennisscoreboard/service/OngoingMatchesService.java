@@ -5,7 +5,6 @@ import com.github.petrovyegor.tennisscoreboard.dto.match_score.PlayerScoreDto;
 import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchResponseDto;
 import com.github.petrovyegor.tennisscoreboard.dto.ongoing_match.OngoingMatchDto;
-import com.github.petrovyegor.tennisscoreboard.exception.NotFoundException;
 import com.github.petrovyegor.tennisscoreboard.exception.RestErrorException;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
@@ -27,8 +26,8 @@ public class OngoingMatchesService {
 
     public NewMatchResponseDto createOngoingMatch(NewMatchRequestDto newMatchRequestDto) {
         UUID matchUuid = getNewUUID();
-        String firstPlayerName = newMatchRequestDto.getFirstPlayerName();
-        String secondPlayerName = newMatchRequestDto.getSecondPlayerName();
+        String firstPlayerName = newMatchRequestDto.firstPlayerName();
+        String secondPlayerName = newMatchRequestDto.secondPlayerName();
         Player firstPlayer = playerService.getOrCreatePlayer(firstPlayerName);
         Player secondPlayer = playerService.getOrCreatePlayer(secondPlayerName);
         memoryOngoingMatchDao.save(new OngoingMatch(matchUuid, firstPlayer, secondPlayer));
@@ -56,14 +55,14 @@ public class OngoingMatchesService {
 
     public OngoingMatch findByUuid(UUID matchUuid) {
         Optional<OngoingMatch> ongoingMatch = memoryOngoingMatchDao.findById(matchUuid);
-        if (ongoingMatch.isPresent()){
+        if (ongoingMatch.isPresent()) {
             return ongoingMatch.get();
         }
         log.error("Error while findByUuid executing with parameter '%s'".formatted(matchUuid));
         throw new RestErrorException("Ongoing match with uuid '%s' does not exist!".formatted(matchUuid));
     }
 
-    public boolean isOngoingMatchExist(UUID matchUuid){
+    public boolean isOngoingMatchExist(UUID matchUuid) {
         return memoryOngoingMatchDao.isOngoingMatchExist(matchUuid);
     }
 

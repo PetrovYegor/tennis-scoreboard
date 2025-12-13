@@ -7,9 +7,9 @@ import java.util.UUID;
 
 @Data
 public class OngoingMatchDto {
-    private UUID matchUuid;
-    private PlayerScoreDto firstPlayerScore;
-    private PlayerScoreDto secondPlayerScore;
+    private final UUID matchUuid;
+    private final PlayerScoreDto firstPlayerScore;
+    private final PlayerScoreDto secondPlayerScore;
     private boolean isMatchFinished;
     private String winnerName;
 

@@ -37,7 +37,7 @@ public class MatchesController extends HttpServlet {
                 .build();
 
         PageResultDto pageResultDto = finishedMatchesPersistenceService.findMatches(matchesRequestDto);
-        if (isPageParameterMoreThenTotalPages(pageNumber, pageResultDto.getTotalPages())) {
+        if (isPageParameterMoreThenTotalPages(pageNumber, pageResultDto.pageNumber())) {
             response.sendRedirect("/matches?page=1");
             return;
         }

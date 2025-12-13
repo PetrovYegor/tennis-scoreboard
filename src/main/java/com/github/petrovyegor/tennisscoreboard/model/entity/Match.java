@@ -19,10 +19,12 @@ public class Match {
 
     @ManyToOne
     @JoinColumn(name = "\"Player1\"", nullable = false)
-    private Player firstPlayer;//TODO подумать нужно ли // При сохранении Match автоматически сохранится и Player @ManyToOne(cascade = CascadeType.ALL)
+    private Player firstPlayer;
+
     @ManyToOne
     @JoinColumn(name = "\"Player2\"", nullable = false)
     private Player secondPlayer;
+
     @ManyToOne
     @JoinColumn(name = "\"Winner\"", nullable = false)
     private Player winner;

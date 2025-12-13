@@ -18,7 +18,6 @@ import static com.github.petrovyegor.tennisscoreboard.util.RequestAndParameterVa
 @WebServlet(name = "MatchesController", urlPatterns = "/matches")
 public class MatchesController extends HttpServlet {
     private static final int DEFAULT_PAGE_SIZE = 5;
-    //TODO пробежаться по всем контроллерам и решить, как инициализировать сервисы (конструктор)?
     private final FinishedMatchesPersistenceService finishedMatchesPersistenceService = new FinishedMatchesPersistenceService();
 
     @Override
@@ -55,7 +54,7 @@ public class MatchesController extends HttpServlet {
             response.sendRedirect("/matches?page=1");
             return false;
         }
-        if (!isNullOrEmpty(playerNameParameter)) {//TODO проверить валидность этой строки, внёс чугунной головй. Без неё не пятисостит т.к. имя пустое
+        if (!isNullOrEmpty(playerNameParameter)) {
             if (!isNameValid(playerNameParameter)) {
                 log.warn("The received player name parameter is not valid '%s'".formatted(pageParameter));
                 response.sendRedirect("/matches?page=1");

@@ -36,7 +36,7 @@ public class MatchScoreController extends HttpServlet {
         String uuidParameter = request.getParameter("uuid");
         UUID matchUuid = UUID.fromString(uuidParameter);
 
-        MatchScoreResponseDto matchScoreResponseDto = ongoingMatchesService.getMatchState(matchUuid);//Мб поменять всё-таки OngoingMatch Dto на MatchResponseDto
+        MatchScoreResponseDto matchScoreResponseDto = ongoingMatchesService.getMatchState(matchUuid);
         request.setAttribute("matchState", matchScoreResponseDto);
 
         getServletContext().getRequestDispatcher("/match-score.jsp").forward(request, response);

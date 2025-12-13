@@ -7,7 +7,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -20,17 +19,6 @@ public class JpaPlayerDao implements PlayerDao {
         } catch (Exception e) {
             log.error("Error searching for player with id '%s'".formatted(id), e);
             throw new DBException("Failed to get player with id '%s'".formatted(id));
-        }
-    }
-
-    @Override
-    public List<Player> findAll() {//TODO не используется, либо удалить, либо убрать из CrudDao
-        String findAllQuery = "SELECT p FROM Player p";
-        try (EntityManager em = JpaUtil.getEntityManager()) {
-            return em.createQuery(findAllQuery, Player.class).getResultList();
-        } catch (Exception e) {
-            log.error("Error while findAll method executing", e);
-            throw new DBException("Failed to get all players");
         }
     }
 

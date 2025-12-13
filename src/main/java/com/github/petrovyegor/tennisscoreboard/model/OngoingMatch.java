@@ -14,7 +14,7 @@ public class OngoingMatch {
     private final Player firstPlayer;
     @Getter
     private final Player secondPlayer;
-    private final Map<Long, PlayerScore> playersScore;//TODO это поле не должно быть доступно геттером
+    private final Map<Long, PlayerScore> playersScore;
 
     public OngoingMatch(UUID uuid, Player firstPlayer, Player secondPlayer) {
         this.uuid = uuid;

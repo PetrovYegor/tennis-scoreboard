@@ -6,11 +6,7 @@ import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
 import java.util.Optional;
 
 public class PlayerService {
-    private final JpaPlayerDao jpaPlayerDao;
-
-    public PlayerService() {
-        this.jpaPlayerDao = new JpaPlayerDao();
-    }//TODO так ли дожен инициализироваться репозиторий?
+    private final JpaPlayerDao jpaPlayerDao = new JpaPlayerDao();
 
     public Player getOrCreatePlayer(String playerName) {
         Optional<Player> player = jpaPlayerDao.findByName(playerName);

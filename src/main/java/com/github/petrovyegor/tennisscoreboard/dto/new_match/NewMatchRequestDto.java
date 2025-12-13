@@ -1,6 +1,6 @@
 package com.github.petrovyegor.tennisscoreboard.dto.new_match;
 
-public record NewMatchRequestDto(//название неподходящее, переименовать
+public record NewMatchRequestDto(
                                  String firstPlayerName,
                                  String secondPlayerName
 ) {}

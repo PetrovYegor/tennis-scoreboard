@@ -61,7 +61,6 @@ public class ErrorHandlerFilter implements Filter {
                                     HttpServletResponse response,
                                     String message) throws ServletException, IOException {
         request.setAttribute("errorMessage", message);
-        //request.setAttribute("errorDetails", details);
         request.getRequestDispatcher("/error.jsp").forward(request, response);
     }
 

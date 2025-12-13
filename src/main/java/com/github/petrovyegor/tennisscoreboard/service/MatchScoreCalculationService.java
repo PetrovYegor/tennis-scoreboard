@@ -8,11 +8,7 @@ import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
 import java.util.UUID;
 
 public class MatchScoreCalculationService {
-    private final OngoingMatchesService ongoingMatchesService;
-
-    public MatchScoreCalculationService() {
-        ongoingMatchesService = new OngoingMatchesService();
-    }
+    private final OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();
 
     public MatchScoreResponseDto processAction(MatchScoreRequestDto matchScoreRequestDto) {
         UUID matchUuid = matchScoreRequestDto.matchUuid();

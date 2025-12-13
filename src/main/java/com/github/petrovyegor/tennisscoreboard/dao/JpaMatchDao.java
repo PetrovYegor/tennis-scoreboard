@@ -20,7 +20,7 @@ import java.util.Optional;
 @Slf4j
 public class JpaMatchDao implements CrudDao<Match, Integer> {
     public Optional<Match> findById(Integer id) {
-        try (EntityManager em = JpaUtil.getEntityManager()) {//TODO неужели нигде не используется?
+        try (EntityManager em = JpaUtil.getEntityManager()) {
             Match result = em.find(Match.class, id);
             return Optional.ofNullable(result);
         } catch (Exception e) {
@@ -29,28 +29,14 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
         }
     }
 
-    @Override
-    public List<Match> findAll() {
-        return null;
-    }//TODO это либо убрать, либо переписать
-
-//    @Override
-//    public List<Match> findAll() {
-//        //return List.of();
-//        ArrayList<Match> temp = new ArrayList<>();
-//        return temp;
-//    }
-
     public Optional<MatchesResponseDto> findByCriteria(int pageNumber, int pageSize, String playerName) {//мб создать под этот метод отделный интерфейс MatchDao
         try (EntityManager em = JpaUtil.getEntityManager()) {
             CriteriaBuilder cb = em.getCriteriaBuilder();
 
             CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
-            // Определяем корневую сущность - откуда считаем (FROM Match)
             Root<Match> countRoot = countQuery.from(Match.class);
-            countQuery.select(cb.count(countRoot));//хотим получить COUNT (подсчет количества)
+            countQuery.select(cb.count(countRoot));
 
-            //Список стейтментов для Where
             List<Predicate> countPredicates = new ArrayList<>();
 
             if (playerName != null && !playerName.trim().isEmpty()) {
@@ -64,7 +50,6 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
                 countQuery.where(cb.or(countPredicates.toArray(new Predicate[0])));
             }
 
-            //Выполняем Count запрос
             Long totalCount = em.createQuery(countQuery).getSingleResult();
 
             CriteriaQuery<Match> dataQuery = cb.createQuery(Match.class);
@@ -80,28 +65,16 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
                 dataQuery.where(cb.or(dataPredicates.toArray(new Predicate[0])));
             }
 
-            //Добавить сортировку (важно для пагинации)
             dataQuery.orderBy(cb.desc(dataRoot.get("Id")));
 
-            //Создать и выполнить запрос
             TypedQuery<Match> typedQuery = em.createQuery(dataQuery);
 
-            //Смещение
             int offset = (pageNumber - 1) * pageSize;
 
-            //установка пагинации
-            typedQuery.setFirstResult(offset);//смещение offset
-            typedQuery.setMaxResults(pageSize);//лимит
-            //основной контент для отображения в jsp
+            typedQuery.setFirstResult(offset);
+            typedQuery.setMaxResults(pageSize);
             List<Match> content = typedQuery.getResultList();
-
-            //СБОРКА РЕЗУЛЬТАТА
-
-            //Общее количество страниц
             int totalPages = (int) Math.ceil((double) totalCount / pageSize);
-
-            //Создать и вернуть объект пагинации
-            //PageResultDto pageResultDto = null;
             MatchesResponseDto matchesResponseDto = new MatchesResponseDto(
                     content
                     , totalCount
@@ -114,7 +87,6 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
         } catch (Exception e) {
             log.error("Error while findByCriteria executing with parameters", e);
             throw new DBException(e.getMessage());
-            //throw new DBException("Failed to get matches by parameters: page - '%s', page size - '%s', player name - '%s'".formatted(pageNumber, pageSize, playerName));
         }
     }
 

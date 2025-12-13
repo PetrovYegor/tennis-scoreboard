@@ -12,7 +12,7 @@ public class DataInitializer {
 
     public static void initTestData() {
         EntityManager em = JpaUtil.getEntityManager();
-        EntityTransaction transaction = em.getTransaction();//TODO не нравится, переделать весь класс
+        EntityTransaction transaction = em.getTransaction();
 
         try {
             transaction.begin();

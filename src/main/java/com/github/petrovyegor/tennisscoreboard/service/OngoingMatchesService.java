@@ -1,10 +1,10 @@
 package com.github.petrovyegor.tennisscoreboard.service;
 
 import com.github.petrovyegor.tennisscoreboard.dao.MemoryOngoingMatchDao;
+import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreResponseDto;
 import com.github.petrovyegor.tennisscoreboard.dto.match_score.PlayerScoreDto;
 import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchResponseDto;
-import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreResponseDto;
 import com.github.petrovyegor.tennisscoreboard.exception.RestErrorException;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
@@ -16,13 +16,8 @@ import java.util.UUID;
 
 @Slf4j
 public class OngoingMatchesService {
-    private final PlayerService playerService;
-    private final MemoryOngoingMatchDao memoryOngoingMatchDao;
-
-    public OngoingMatchesService() {
-        this.playerService = new PlayerService();
-        this.memoryOngoingMatchDao = new MemoryOngoingMatchDao();
-    }
+    private final PlayerService playerService = new PlayerService();
+    private final MemoryOngoingMatchDao memoryOngoingMatchDao = new MemoryOngoingMatchDao();
 
     public NewMatchResponseDto createOngoingMatch(NewMatchRequestDto newMatchRequestDto) {
         UUID matchUuid = getNewUUID();

@@ -4,7 +4,7 @@ import com.github.petrovyegor.tennisscoreboard.dao.MemoryOngoingMatchDao;
 import com.github.petrovyegor.tennisscoreboard.dto.match_score.PlayerScoreDto;
 import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchResponseDto;
-import com.github.petrovyegor.tennisscoreboard.dto.ongoing_match.OngoingMatchDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreResponseDto;
 import com.github.petrovyegor.tennisscoreboard.exception.RestErrorException;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
@@ -35,18 +35,18 @@ public class OngoingMatchesService {
         return new NewMatchResponseDto(matchUuid);
     }
 
-    public OngoingMatchDto getMatchState(UUID matchUuid) {
+    public MatchScoreResponseDto getMatchState(UUID matchUuid) {
         return convertToDto(findByUuid(matchUuid));
     }
 
-    public OngoingMatchDto convertToDto(OngoingMatch ongoingMatch) {
+    public MatchScoreResponseDto convertToDto(OngoingMatch ongoingMatch) {
         Player firstPlayer = ongoingMatch.getFirstPlayer();
         Player secondPlayer = ongoingMatch.getSecondPlayer();
 
         PlayerScore firstPlayerScore = ongoingMatch.getFirstPlayerScore();
         PlayerScore secondPlayerScore = ongoingMatch.getSecondPlayerScore();
 
-        return new OngoingMatchDto(
+        return new MatchScoreResponseDto(
                 ongoingMatch.getUuid(),
                 createPlayerScoreDto(firstPlayer, firstPlayerScore),
                 createPlayerScoreDto(secondPlayer, secondPlayerScore)

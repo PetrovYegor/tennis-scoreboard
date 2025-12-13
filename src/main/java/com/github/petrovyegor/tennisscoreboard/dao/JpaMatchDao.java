@@ -1,7 +1,7 @@
 package com.github.petrovyegor.tennisscoreboard.dao;
 
 import com.github.petrovyegor.tennisscoreboard.JpaUtil;
-import com.github.petrovyegor.tennisscoreboard.dto.match.PageResultDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match.MatchesResponseDto;
 import com.github.petrovyegor.tennisscoreboard.exception.DBException;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
 import jakarta.persistence.EntityManager;
@@ -41,7 +41,7 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
 //        return temp;
 //    }
 
-    public Optional<PageResultDto> findByCriteria(int pageNumber, int pageSize, String playerName) {//мб создать под этот метод отделный интерфейс MatchDao
+    public Optional<MatchesResponseDto> findByCriteria(int pageNumber, int pageSize, String playerName) {//мб создать под этот метод отделный интерфейс MatchDao
         try (EntityManager em = JpaUtil.getEntityManager()) {
             CriteriaBuilder cb = em.getCriteriaBuilder();
 
@@ -102,7 +102,7 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
 
             //Создать и вернуть объект пагинации
             //PageResultDto pageResultDto = null;
-            PageResultDto pageResultDto = new PageResultDto(
+            MatchesResponseDto matchesResponseDto = new MatchesResponseDto(
                     content
                     , totalCount
                     , totalPages
@@ -110,7 +110,7 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
                     , pageNumber
             );
 
-            return Optional.ofNullable(pageResultDto);
+            return Optional.ofNullable(matchesResponseDto);
         } catch (Exception e) {
             log.error("Error while findByCriteria executing with parameters", e);
             throw new DBException(e.getMessage());

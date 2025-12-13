@@ -5,7 +5,7 @@ import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
 import java.util.List;
 
 
-public record PageResultDto(
+public record MatchesResponseDto(
         List<Match> content,
         long totalCount,
         int totalPages,

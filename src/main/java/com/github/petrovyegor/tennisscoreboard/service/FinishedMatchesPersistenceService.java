@@ -4,7 +4,7 @@ import com.github.petrovyegor.tennisscoreboard.dao.JpaMatchDao;
 import com.github.petrovyegor.tennisscoreboard.dao.JpaPlayerDao;
 import com.github.petrovyegor.tennisscoreboard.dao.MemoryOngoingMatchDao;
 import com.github.petrovyegor.tennisscoreboard.dto.match.MatchesRequestDto;
-import com.github.petrovyegor.tennisscoreboard.dto.match.PageResultDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match.MatchesResponseDto;
 import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreRequestDto;
 import com.github.petrovyegor.tennisscoreboard.exception.NotFoundException;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
@@ -30,7 +30,7 @@ public class FinishedMatchesPersistenceService {
         memoryOngoingMatchDao.delete(matchId);
     }
 
-    public PageResultDto findMatches(MatchesRequestDto matchesRequestDto) {
+    public MatchesResponseDto findMatches(MatchesRequestDto matchesRequestDto) {
         int pageNumber = matchesRequestDto.getPageNumber();
         int pageSize = matchesRequestDto.getPageSize();
         String filterByName = matchesRequestDto.getPlayerName();

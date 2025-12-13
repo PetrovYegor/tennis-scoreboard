@@ -1,7 +1,7 @@
 package com.github.petrovyegor.tennisscoreboard.controller;
 
 import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreRequestDto;
-import com.github.petrovyegor.tennisscoreboard.dto.ongoing_match.OngoingMatchDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreResponseDto;
 import com.github.petrovyegor.tennisscoreboard.service.FinishedMatchesPersistenceService;
 import com.github.petrovyegor.tennisscoreboard.service.MatchScoreCalculationService;
 import com.github.petrovyegor.tennisscoreboard.service.OngoingMatchesService;
@@ -36,8 +36,8 @@ public class MatchScoreController extends HttpServlet {
         String uuidParameter = request.getParameter("uuid");
         UUID matchUuid = UUID.fromString(uuidParameter);
 
-        OngoingMatchDto ongoingMatchDto = ongoingMatchesService.getMatchState(matchUuid);//Мб поменять всё-таки OngoingMatch Dto на MatchResponseDto
-        request.setAttribute("matchState", ongoingMatchDto);
+        MatchScoreResponseDto matchScoreResponseDto = ongoingMatchesService.getMatchState(matchUuid);//Мб поменять всё-таки OngoingMatch Dto на MatchResponseDto
+        request.setAttribute("matchState", matchScoreResponseDto);
 
         getServletContext().getRequestDispatcher("/match-score.jsp").forward(request, response);
     }
@@ -55,12 +55,12 @@ public class MatchScoreController extends HttpServlet {
         int roundWinnerId = Integer.parseInt(matchWinnerIdParameter);
 
         MatchScoreRequestDto matchScoreRequestDto = new MatchScoreRequestDto(matchUuid, roundWinnerId);
-        OngoingMatchDto ongoingMatchDto = matchScoreCalculationService.processAction(matchScoreRequestDto);
+        MatchScoreResponseDto matchScoreResponseDto = matchScoreCalculationService.processAction(matchScoreRequestDto);
 
-        if (ongoingMatchDto.isMatchFinished()) {
+        if (matchScoreResponseDto.isMatchFinished()) {
             finishedMatchesPersistenceService.processFinishedMatch(matchScoreRequestDto);
             request.setAttribute("matchUuid", matchUuid.toString());
-            request.setAttribute("matchState", ongoingMatchDto);
+            request.setAttribute("matchState", matchScoreResponseDto);
             request.getRequestDispatcher("/finished-match.jsp").forward(request, response);
         }
         response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));

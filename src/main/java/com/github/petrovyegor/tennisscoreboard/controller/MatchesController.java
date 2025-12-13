@@ -1,7 +1,7 @@
 package com.github.petrovyegor.tennisscoreboard.controller;
 
 import com.github.petrovyegor.tennisscoreboard.dto.match.MatchesRequestDto;
-import com.github.petrovyegor.tennisscoreboard.dto.match.PageResultDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match.MatchesResponseDto;
 import com.github.petrovyegor.tennisscoreboard.service.FinishedMatchesPersistenceService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -36,13 +36,13 @@ public class MatchesController extends HttpServlet {
                 .playerName(playerNameParameter)
                 .build();
 
-        PageResultDto pageResultDto = finishedMatchesPersistenceService.findMatches(matchesRequestDto);
-        if (isPageParameterMoreThenTotalPages(pageNumber, pageResultDto.pageNumber())) {
+        MatchesResponseDto matchesResponseDto = finishedMatchesPersistenceService.findMatches(matchesRequestDto);
+        if (isPageParameterMoreThenTotalPages(pageNumber, matchesResponseDto.pageNumber())) {
             response.sendRedirect("/matches?page=1");
             return;
         }
 
-        request.setAttribute("matchesData", pageResultDto);
+        request.setAttribute("matchesData", matchesResponseDto);
         getServletContext().getRequestDispatcher("/matches.jsp").forward(request, response);
     }
 

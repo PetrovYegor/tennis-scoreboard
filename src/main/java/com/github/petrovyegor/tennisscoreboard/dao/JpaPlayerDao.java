@@ -1,8 +1,8 @@
 package com.github.petrovyegor.tennisscoreboard.dao;
 
-import com.github.petrovyegor.tennisscoreboard.JpaUtil;
 import com.github.petrovyegor.tennisscoreboard.exception.DBException;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
+import com.github.petrovyegor.tennisscoreboard.util.JpaUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import lombok.extern.slf4j.Slf4j;

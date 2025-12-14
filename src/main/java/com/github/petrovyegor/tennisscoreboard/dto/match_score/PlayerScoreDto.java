@@ -1,9 +1,8 @@
 package com.github.petrovyegor.tennisscoreboard.dto.match_score;
 
 import com.github.petrovyegor.tennisscoreboard.model.Point;
-import lombok.Data;
 
-public record PlayerScoreDto (
+public record PlayerScoreDto(
         long playerId,
         String playerName,
         int sets,

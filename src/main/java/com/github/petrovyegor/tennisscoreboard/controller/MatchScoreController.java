@@ -26,7 +26,6 @@ public class MatchScoreController extends HttpServlet {
     private final FinishedMatchesPersistenceService finishedMatchesPersistenceService = new FinishedMatchesPersistenceService();
     private final PlayerService playerService = new PlayerService();
 
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (!validateMatchScoreGetRequest(request, response)) {
@@ -60,7 +59,7 @@ public class MatchScoreController extends HttpServlet {
         if (matchScoreResponseDto.isMatchFinished()) {
             finishedMatchesPersistenceService.processFinishedMatch(matchScoreRequestDto);
             request.setAttribute("matchUuid", matchUuid.toString());
-            request.setAttribute("matchState", matchScoreResponseDto);
+            request.setAttribute("matchState", matchScoreResponseDto);// может сделать 2 отдельные дто и их просто в артибуты положить?
             request.getRequestDispatcher("/finished-match.jsp").forward(request, response);
         }
         response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));

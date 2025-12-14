@@ -2,6 +2,7 @@ package com.github.petrovyegor.tennisscoreboard;
 
 import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
+import com.github.petrovyegor.tennisscoreboard.util.JpaUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import lombok.extern.slf4j.Slf4j;

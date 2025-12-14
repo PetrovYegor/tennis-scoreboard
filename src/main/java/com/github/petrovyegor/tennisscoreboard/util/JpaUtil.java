@@ -1,4 +1,4 @@
-package com.github.petrovyegor.tennisscoreboard;
+package com.github.petrovyegor.tennisscoreboard.util;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;

@@ -29,11 +29,11 @@ public class MatchesController extends HttpServlet {
         String playerNameParameter = request.getParameter("filter_by_name");
 
         int pageNumber = Integer.parseInt(pageParameter);
-        MatchesRequestDto matchesRequestDto = MatchesRequestDto.builder()
-                .pageNumber(pageNumber)
-                .pageSize(DEFAULT_PAGE_SIZE)
-                .playerName(playerNameParameter)
-                .build();
+        MatchesRequestDto matchesRequestDto = new MatchesRequestDto(
+                pageNumber,
+                DEFAULT_PAGE_SIZE,
+                playerNameParameter
+        );
 
         MatchesResponseDto matchesResponseDto = finishedMatchesPersistenceService.findMatches(matchesRequestDto);
         if (isPageParameterMoreThenTotalPages(pageNumber, matchesResponseDto.pageNumber())) {

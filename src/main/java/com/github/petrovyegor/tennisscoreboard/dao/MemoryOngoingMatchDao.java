@@ -2,7 +2,6 @@ package com.github.petrovyegor.tennisscoreboard.dao;
 
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,10 +17,6 @@ public class MemoryOngoingMatchDao implements CrudDao<OngoingMatch, UUID> {
     public OngoingMatch save(OngoingMatch ongoingMatch) {
         ongoingMatches.put(ongoingMatch.getUuid(), ongoingMatch);
         return ongoingMatch;
-    }
-
-    public List<OngoingMatch> findAll() {
-        return ongoingMatches.values().stream().toList();
     }
 
     public void delete(UUID matchUuid) {

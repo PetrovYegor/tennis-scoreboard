@@ -25,8 +25,8 @@
         </div>
 
         <div class="match-summary">
-            Final match result between ${matchScore.firstPlayerScore.playerName}
-            and ${matchScore.secondPlayerScore.playerName}
+            Final match result between ${matchScore.firstPlayerName}
+            and ${matchScore.secondPlayerName}
         </div>
 
         <table class="table results-table">
@@ -38,11 +38,11 @@
             </thead>
             <tbody>
             <tr class="winner-row">
-                <td class="player-name">${matchScore.firstPlayerScore.playerName}</td>
+                <td class="player-name">${matchScore.firstPlayerName}</td>
                 <td class="sets-value">${matchScore.firstPlayerScore.sets}</td>
             </tr>
             <tr>
-                <td class="player-name">${matchScore.secondPlayerScore.playerName}</td>
+                <td class="player-name">${matchScore.secondPlayerName}</td>
                 <td class="sets-value">${matchScore.secondPlayerScore.sets}</td>
             </tr>
             </tbody>

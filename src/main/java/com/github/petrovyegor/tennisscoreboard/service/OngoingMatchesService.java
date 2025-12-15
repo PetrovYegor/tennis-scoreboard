@@ -1,7 +1,7 @@
 package com.github.petrovyegor.tennisscoreboard.service;
 
 import com.github.petrovyegor.tennisscoreboard.dao.MemoryOngoingMatchDao;
-import com.github.petrovyegor.tennisscoreboard.dto.match_score.RoundResultDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreResponseDto;
 import com.github.petrovyegor.tennisscoreboard.dto.match_score.PlayerScoreDto;
 import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchResponseDto;
@@ -26,26 +26,12 @@ public class OngoingMatchesService {
         Player firstPlayer = playerService.getOrCreatePlayer(firstPlayerName);
         Player secondPlayer = playerService.getOrCreatePlayer(secondPlayerName);
         memoryOngoingMatchDao.save(new OngoingMatch(matchUuid, firstPlayer, secondPlayer));
-
         return new NewMatchResponseDto(matchUuid);
     }
 
-    public RoundResultDto getMatchScore(UUID matchUuid) {
-        return convertToDto(findByUuid(matchUuid));
-    }
-
-    public RoundResultDto convertToDto(OngoingMatch ongoingMatch) {
-        Player firstPlayer = ongoingMatch.getFirstPlayer();
-        Player secondPlayer = ongoingMatch.getSecondPlayer();
-
-        PlayerScore firstPlayerScore = ongoingMatch.getFirstPlayerScore();
-        PlayerScore secondPlayerScore = ongoingMatch.getSecondPlayerScore();
-
-        return new RoundResultDto(
-                ongoingMatch.getUuid(),
-                createPlayerScoreDto(firstPlayer, firstPlayerScore),
-                createPlayerScoreDto(secondPlayer, secondPlayerScore)
-        );
+    public MatchScoreResponseDto getMatchScore(UUID matchUuid) {
+        OngoingMatch ongoingMatch = findByUuid(matchUuid);
+        return toMatchScoreResponseDto(ongoingMatch);
     }
 
     public OngoingMatch findByUuid(UUID matchUuid) {
@@ -65,10 +51,23 @@ public class OngoingMatchesService {
         return UUID.randomUUID();
     }
 
-    private PlayerScoreDto createPlayerScoreDto(Player player, PlayerScore playerScore) {
+    private MatchScoreResponseDto toMatchScoreResponseDto(OngoingMatch ongoingMatch) {
+        PlayerScore firstPlayerScore = ongoingMatch.getFirstPlayerScore();
+        PlayerScore secondPlayerScore = ongoingMatch.getSecondPlayerScore();
+        PlayerScoreDto firstPlayerScoreDto = toPlayerScoreDto(firstPlayerScore);
+        PlayerScoreDto secondPlayerScoreDto = toPlayerScoreDto(secondPlayerScore);
+        return new MatchScoreResponseDto(
+                ongoingMatch.getUuid(),
+                ongoingMatch.getFirstPlayer().getId(),
+                ongoingMatch.getSecondPlayer().getId(),
+                ongoingMatch.getFirstPlayer().getName(),
+                ongoingMatch.getSecondPlayer().getName(),
+                firstPlayerScoreDto,
+                secondPlayerScoreDto);
+    }
+
+    private PlayerScoreDto toPlayerScoreDto(PlayerScore playerScore) {
         return new PlayerScoreDto(
-                player.getId(),
-                player.getName(),
                 playerScore.getSets(),
                 playerScore.getGames(),
                 playerScore.getPoint(),

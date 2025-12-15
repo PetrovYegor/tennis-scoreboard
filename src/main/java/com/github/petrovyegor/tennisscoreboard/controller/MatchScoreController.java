@@ -2,7 +2,7 @@ package com.github.petrovyegor.tennisscoreboard.controller;
 
 import com.github.petrovyegor.tennisscoreboard.dto.finished_match.MatchResultDto;
 import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreRequestDto;
-import com.github.petrovyegor.tennisscoreboard.dto.match_score.RoundResultDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreResponseDto;
 import com.github.petrovyegor.tennisscoreboard.service.FinishedMatchesPersistenceService;
 import com.github.petrovyegor.tennisscoreboard.service.MatchScoreCalculationService;
 import com.github.petrovyegor.tennisscoreboard.service.OngoingMatchesService;
@@ -36,8 +36,8 @@ public class MatchScoreController extends HttpServlet {
         String uuidParameter = request.getParameter("uuid");
         UUID matchUuid = UUID.fromString(uuidParameter);
 
-        RoundResultDto roundResultDto = ongoingMatchesService.getMatchScore(matchUuid);
-        request.setAttribute("matchScore", roundResultDto);
+        MatchScoreResponseDto matchScoreResponseDto = ongoingMatchesService.getMatchScore(matchUuid);
+        request.setAttribute("matchScore", matchScoreResponseDto);
 
         getServletContext().getRequestDispatcher("/match-score.jsp").forward(request, response);
     }
@@ -58,10 +58,10 @@ public class MatchScoreController extends HttpServlet {
         MatchResultDto matchResultDto = matchScoreCalculationService.processAction(matchScoreRequestDto);
 
         if (matchResultDto.isMatchFinished()) {
-            RoundResultDto roundResultDto = ongoingMatchesService.getMatchScore(matchUuid);
+            MatchScoreResponseDto matchScoreResponseDto = ongoingMatchesService.getMatchScore(matchUuid);
             finishedMatchesPersistenceService.processFinishedMatch(matchScoreRequestDto);
             request.setAttribute("matchUuid", matchUuid.toString());
-            request.setAttribute("matchScore", roundResultDto);
+            request.setAttribute("matchScore", matchScoreResponseDto);
             request.setAttribute("matchResult", matchResultDto);
             request.getRequestDispatcher("/finished-match.jsp").forward(request, response);
         }

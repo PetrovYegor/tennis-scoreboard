@@ -31,9 +31,9 @@ public class FinishedMatchesPersistenceService {
     }
 
     public MatchesResponseDto findMatches(MatchesRequestDto matchesRequestDto) {
-        int pageNumber = matchesRequestDto.getPageNumber();
-        int pageSize = matchesRequestDto.getPageSize();
-        String filterByName = matchesRequestDto.getPlayerName();
+        int pageNumber = matchesRequestDto.pageNumber();
+        int pageSize = matchesRequestDto.pageSize();
+        String filterByName = matchesRequestDto.playerName();
         return jpaMatchDao.findByCriteria(pageNumber, pageSize, filterByName).orElseThrow(() -> new RuntimeException("Failed to retrieve list of finished matches"));
     }
 }

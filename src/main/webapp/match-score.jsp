@@ -21,7 +21,7 @@
         <h1 class="page-title">Match Score</h1>
 
         <div class="match-info">
-            Match in progress: ${matchState.firstPlayerScore.playerName} vs ${matchState.secondPlayerScore.playerName}
+            Match in progress: ${matchScore.firstPlayerScore.playerName} vs ${matchScore.secondPlayerScore.playerName}
         </div>
 
         <table class="table score-table">
@@ -35,29 +35,29 @@
             </thead>
             <tbody>
             <tr>
-                <td class="player-name">${matchState.firstPlayerScore.playerName}</td>
-                <td class="score-value">${matchState.firstPlayerScore.sets}</td>
-                <td class="score-value">${matchState.firstPlayerScore.games}</td>
-                <td class="score-value">${matchState.firstPlayerScore.displayPoint}</td>
+                <td class="player-name">${matchScore.firstPlayerScore.playerName}</td>
+                <td class="score-value">${matchScore.firstPlayerScore.sets}</td>
+                <td class="score-value">${matchScore.firstPlayerScore.games}</td>
+                <td class="score-value">${matchScore.firstPlayerScore.displayPoint}</td>
             </tr>
             <tr>
-                <td class="player-name">${matchState.secondPlayerScore.playerName}</td>
-                <td class="score-value">${matchState.secondPlayerScore.sets}</td>
-                <td class="score-value">${matchState.secondPlayerScore.games}</td>
-                <td class="score-value">${matchState.secondPlayerScore.displayPoint}</td>
+                <td class="player-name">${matchScore.secondPlayerScore.playerName}</td>
+                <td class="score-value">${matchScore.secondPlayerScore.sets}</td>
+                <td class="score-value">${matchScore.secondPlayerScore.games}</td>
+                <td class="score-value">${matchScore.secondPlayerScore.displayPoint}</td>
             </tr>
             </tbody>
         </table>
 
         <div class="score-buttons-container">
             <div class="score-buttons">
-                <form method="post" action="${pageContext.request.contextPath}/match-score?uuid=${matchState.matchUuid}" class="score-form">
-                    <input type="hidden" name="winnerId" value="${matchState.firstPlayerScore.playerId}">
+                <form method="post" action="${pageContext.request.contextPath}/match-score?uuid=${matchScore.matchUuid}" class="score-form">
+                    <input type="hidden" name="winnerId" value="${matchScore.firstPlayerScore.playerId}">
                     <button type="submit" class="player-btn player1-btn">Player 1 Won Point</button>
                 </form>
 
-                <form method="post" action="${pageContext.request.contextPath}/match-score?uuid=${matchState.matchUuid}" class="score-form">
-                    <input type="hidden" name="winnerId" value="${matchState.secondPlayerScore.playerId}">
+                <form method="post" action="${pageContext.request.contextPath}/match-score?uuid=${matchScore.matchUuid}" class="score-form">
+                    <input type="hidden" name="winnerId" value="${matchScore.secondPlayerScore.playerId}">
                     <button type="submit" class="player-btn player2-btn">Player 2 Won Point</button>
                 </form>
             </div>

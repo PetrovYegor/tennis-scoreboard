@@ -1,7 +1,8 @@
 package com.github.petrovyegor.tennisscoreboard.service;
 
+import com.github.petrovyegor.tennisscoreboard.dto.finished_match.MatchResultDto;
 import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreRequestDto;
-import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreResponseDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match_score.RoundResultDto;
 import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
 
@@ -10,7 +11,7 @@ import java.util.UUID;
 public class MatchScoreCalculationService {
     private final OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();
 
-    public MatchScoreResponseDto processAction(MatchScoreRequestDto matchScoreRequestDto) {
+    public MatchResultDto processAction(MatchScoreRequestDto matchScoreRequestDto) {
         UUID matchUuid = matchScoreRequestDto.matchUuid();
         int roundWinnerId = matchScoreRequestDto.roundWinnerId();
 
@@ -21,11 +22,10 @@ public class MatchScoreCalculationService {
 
         handleWonPoint(roundWinnerScore, opponentScore);
 
-        MatchScoreResponseDto matchState = ongoingMatchesService.getMatchState(matchUuid);
-        matchState.setMatchFinished(isWinnerExist(roundWinnerScore, opponentScore));
-        matchState.setWinnerName(roundWinnerScore.getPlayerName());
+        boolean isMatchFinished = isWinnerExist(roundWinnerScore, opponentScore);
+        String winnerName = roundWinnerScore.getPlayerName();
 
-        return matchState;
+        return new MatchResultDto(matchUuid, isMatchFinished, winnerName);
     }
 
     public void handleWonPoint(PlayerScore roundWinnerScore, PlayerScore opponentScore) {

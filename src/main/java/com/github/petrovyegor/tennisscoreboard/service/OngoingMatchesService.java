@@ -1,7 +1,7 @@
 package com.github.petrovyegor.tennisscoreboard.service;
 
 import com.github.petrovyegor.tennisscoreboard.dao.MemoryOngoingMatchDao;
-import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreResponseDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match_score.RoundResultDto;
 import com.github.petrovyegor.tennisscoreboard.dto.match_score.PlayerScoreDto;
 import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchRequestDto;
 import com.github.petrovyegor.tennisscoreboard.dto.new_match.NewMatchResponseDto;
@@ -30,18 +30,18 @@ public class OngoingMatchesService {
         return new NewMatchResponseDto(matchUuid);
     }
 
-    public MatchScoreResponseDto getMatchState(UUID matchUuid) {
+    public RoundResultDto getMatchScore(UUID matchUuid) {
         return convertToDto(findByUuid(matchUuid));
     }
 
-    public MatchScoreResponseDto convertToDto(OngoingMatch ongoingMatch) {
+    public RoundResultDto convertToDto(OngoingMatch ongoingMatch) {
         Player firstPlayer = ongoingMatch.getFirstPlayer();
         Player secondPlayer = ongoingMatch.getSecondPlayer();
 
         PlayerScore firstPlayerScore = ongoingMatch.getFirstPlayerScore();
         PlayerScore secondPlayerScore = ongoingMatch.getSecondPlayerScore();
 
-        return new MatchScoreResponseDto(
+        return new RoundResultDto(
                 ongoingMatch.getUuid(),
                 createPlayerScoreDto(firstPlayer, firstPlayerScore),
                 createPlayerScoreDto(secondPlayer, secondPlayerScore)

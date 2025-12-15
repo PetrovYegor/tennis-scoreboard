@@ -9,5 +9,4 @@ public record PlayerScoreDto(
         boolean advantage,
         int tieBreakPoints,
         String displayPoint
-) {
-}
+) {}

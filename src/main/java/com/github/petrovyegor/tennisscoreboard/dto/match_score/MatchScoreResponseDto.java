@@ -10,15 +10,5 @@ public record MatchScoreResponseDto(
         String secondPlayerName,
         PlayerScoreDto firstPlayerScore,
         PlayerScoreDto secondPlayerScore
-) {
-
-    //private boolean isMatchFinished;
-    //private String winnerName;
-
-//    public RoundResultDto(UUID matchUuid, PlayerScoreDto firstPlayerScore, PlayerScoreDto secondPlayerScore) {
-//        this.matchUuid = matchUuid;
-//        this.firstPlayerScore = firstPlayerScore;
-//        this.secondPlayerScore = secondPlayerScore;
-//    }
-}
+) {}
 

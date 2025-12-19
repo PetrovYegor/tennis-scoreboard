@@ -21,12 +21,12 @@
         <h1 class="page-title">Match Finished</h1>
 
         <div class="winner-message">
-            Match finished: ${matchResult.winnerName} wins!
+            Match finished: ${matchResult.winnerName()} wins!
         </div>
 
         <div class="match-summary">
-            Final match result between ${matchScore.firstPlayerName}
-            and ${matchScore.secondPlayerName}
+            Final match result between ${matchScore.firstPlayerName()}
+            and ${matchScore.secondPlayerName()}
         </div>
 
         <table class="table results-table">
@@ -38,12 +38,12 @@
             </thead>
             <tbody>
             <tr class="winner-row">
-                <td class="player-name">${matchScore.firstPlayerName}</td>
-                <td class="sets-value">${matchScore.firstPlayerScore.sets}</td>
+                <td class="player-name">${matchScore.firstPlayerName()}</td>
+                <td class="sets-value">${matchScore.firstPlayerScore().sets()}</td>
             </tr>
             <tr>
-                <td class="player-name">${matchScore.secondPlayerName}</td>
-                <td class="sets-value">${matchScore.secondPlayerScore.sets}</td>
+                <td class="player-name">${matchScore.secondPlayerName()}</td>
+                <td class="sets-value">${matchScore.secondPlayerScore().sets()}</td>
             </tr>
             </tbody>
         </table>

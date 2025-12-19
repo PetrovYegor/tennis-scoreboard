@@ -7,8 +7,8 @@
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>C:/roadmap/tennis-scoreboard/logs/tennis-scoreboard.log</file>
+    <appender name="FILE_HOME" class="ch.qos.logback.core.FileAppender">
+        <file>/var/lib/tomcat10/logs/tennis-scoreboard.log</file>
         <append>true</append>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
@@ -18,8 +18,7 @@
     <logger name="com.github.petrovyegor.tennisscoreboard" level="DEBUG"/>
 
     <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE"/>
+        <appender-ref ref="FILE_HOME"/>
     </root>
 
 </configuration>

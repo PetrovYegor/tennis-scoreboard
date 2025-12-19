@@ -49,7 +49,7 @@ public class ErrorHandlerFilter implements Filter {
                  DBException e) {
             forwardToErrorPage(request, response, e.getMessage());
         } catch (Exception e) {
-            forwardToErrorPage(request, response, FATAL_ERROR_MESSAGE + e.getMessage());
+            forwardToErrorPage(request, response, e.getMessage() + e.getCause());
         }
     }
 

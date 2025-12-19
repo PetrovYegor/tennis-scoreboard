@@ -21,8 +21,8 @@
     <div class="content-box">
         <h1 class="page-title">Finished Matches</h1>
 
-        <c:set var="currentPage" value="${matchesData.pageNumber}"/>
-        <c:set var="totalPages" value="${matchesData.totalPages}"/>
+        <c:set var="currentPage" value="${matchesData.pageNumber()}"/>
+        <c:set var="totalPages" value="${matchesData.totalPages()}"/>
         <c:set var="filterValue" value="${param.filter_by_name}"/>
         <c:set var="filterParam" value=""/>
         <c:if test="${not empty filterValue}">
@@ -44,7 +44,7 @@
         </div>
 
         <c:choose>
-            <c:when test="${not empty matchesData.content}">
+            <c:when test="${not empty matchesData.content()}">
                 <table class="table matches-table">
                     <thead>
                     <tr>
@@ -55,7 +55,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach var="match" items="${matchesData.content}">
+                    <c:forEach var="match" items="${matchesData.content()}">
                         <tr>
                             <td class="id-cell">${match.id}</td>
                             <td>${match.firstPlayer.name}</td>
@@ -78,7 +78,7 @@
 
         <div class="pagination-section">
             <div class="total-count">
-                Total count: ${matchesData.totalCount}
+                Total count: ${matchesData.totalCount()}
             </div>
 
             <div class="pagination">

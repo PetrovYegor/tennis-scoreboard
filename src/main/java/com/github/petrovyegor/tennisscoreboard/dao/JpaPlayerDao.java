@@ -38,7 +38,7 @@ public class JpaPlayerDao implements PlayerDao {
     @Override
     public Optional<Player> findByName(String name) {
         try (EntityManager em = JpaUtil.getEntityManager()) {
-            String findByNameQuery = "SELECT p FROM Player p WHERE p.name = :name";//надо ли переписывать на Criteria Api? TODO
+            String findByNameQuery = "SELECT p FROM Player p WHERE p.name = :name";
             Player result = em.createQuery(findByNameQuery, Player.class).setParameter("name", name).getSingleResult();
             return Optional.ofNullable(result);
         } catch (NoResultException e) {

@@ -29,7 +29,7 @@ public class JpaMatchDao implements CrudDao<Match, Integer> {
         }
     }
 
-    public Optional<MatchesResponseDto> findByCriteria(int pageNumber, int pageSize, String playerName) {//мб создать под этот метод отделный интерфейс MatchDao
+    public Optional<MatchesResponseDto> findByCriteria(int pageNumber, int pageSize, String playerName) {
         try (EntityManager em = JpaUtil.getEntityManager()) {
             CriteriaBuilder cb = em.getCriteriaBuilder();
 

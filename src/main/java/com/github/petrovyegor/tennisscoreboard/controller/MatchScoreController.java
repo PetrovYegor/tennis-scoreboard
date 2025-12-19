@@ -65,7 +65,7 @@ public class MatchScoreController extends HttpServlet {
             request.setAttribute("matchResult", matchResultDto);
             request.getRequestDispatcher("/finished-match.jsp").forward(request, response);
         }
-        response.sendRedirect("/match-score?uuid=%s".formatted(matchUuid));
+        response.sendRedirect("match-score?uuid=%s".formatted(matchUuid));
     }
 
     private boolean validateMatchScoreGetRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

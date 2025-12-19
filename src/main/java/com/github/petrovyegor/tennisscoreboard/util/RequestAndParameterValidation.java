@@ -6,7 +6,7 @@ import java.util.UUID;
 
 @Slf4j
 public class RequestAndParameterValidation {
-    private static final String FILTER_BY_NAME_PATTERN = "[a-zA-Z0-9\\W_]{0,50}";
+    private static final String FILTER_BY_NAME_PATTERN = "[\\w\\W]{0,50}";;
 
     public static boolean isNullOrEmpty(String source) {
         return source == null || source.trim().isEmpty();

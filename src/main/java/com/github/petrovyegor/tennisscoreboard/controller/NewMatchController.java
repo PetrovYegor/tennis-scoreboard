@@ -34,7 +34,7 @@ public class NewMatchController extends HttpServlet {
 
         NewMatchRequestDto newMatchRequestDto = new NewMatchRequestDto(firstPlayerName, secondPlayerName);
         NewMatchResponseDto newMatchResponseDto = ongoingMatchesService.createOngoingMatch(newMatchRequestDto);
-        response.sendRedirect("/match-score?uuid=%s".formatted(newMatchResponseDto.matchUuid()));
+        response.sendRedirect("match-score?uuid=%s".formatted(newMatchResponseDto.matchUuid()));
     }
 
     private boolean validateNewMatchPostRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

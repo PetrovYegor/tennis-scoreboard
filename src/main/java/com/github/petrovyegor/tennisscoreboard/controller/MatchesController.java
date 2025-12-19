@@ -37,7 +37,7 @@ public class MatchesController extends HttpServlet {
 
         MatchesResponseDto matchesResponseDto = finishedMatchesPersistenceService.findMatches(matchesRequestDto);
         if (isPageParameterMoreThenTotalPages(pageNumber, matchesResponseDto.pageNumber())) {
-            response.sendRedirect("/matches?page=1");
+            response.sendRedirect("matches?page=1");
             return;
         }
 
@@ -51,13 +51,13 @@ public class MatchesController extends HttpServlet {
 
         if (!isPageNotNullAndValid(pageParameter)) {
             log.warn("The received page number parameter is not valid '%s'".formatted(pageParameter));
-            response.sendRedirect("/matches?page=1");
+            response.sendRedirect("matches?page=1");
             return false;
         }
         if (!isNullOrEmpty(playerNameParameter)) {
             if (!isNameValid(playerNameParameter)) {
                 log.warn("The received player name parameter is not valid '%s'".formatted(pageParameter));
-                response.sendRedirect("/matches?page=1");
+                response.sendRedirect("matches?page=1");
                 return false;
             }
         }

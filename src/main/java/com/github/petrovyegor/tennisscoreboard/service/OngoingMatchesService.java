@@ -20,7 +20,7 @@ public class OngoingMatchesService {
     private final MemoryOngoingMatchDao memoryOngoingMatchDao = new MemoryOngoingMatchDao();
 
     public NewMatchResponseDto createOngoingMatch(NewMatchRequestDto newMatchRequestDto) {
-        UUID matchUuid = getNewUUID();
+        UUID matchUuid = UUID.randomUUID();
         String firstPlayerName = newMatchRequestDto.firstPlayerName();
         String secondPlayerName = newMatchRequestDto.secondPlayerName();
         Player firstPlayer = playerService.getOrCreatePlayer(firstPlayerName);
@@ -45,10 +45,6 @@ public class OngoingMatchesService {
 
     public boolean isOngoingMatchExist(UUID matchUuid) {
         return memoryOngoingMatchDao.isOngoingMatchExist(matchUuid);
-    }
-
-    private UUID getNewUUID() {
-        return UUID.randomUUID();
     }
 
     private MatchScoreResponseDto toMatchScoreResponseDto(OngoingMatch ongoingMatch) {

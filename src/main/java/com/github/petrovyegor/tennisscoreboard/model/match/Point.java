@@ -1,4 +1,4 @@
-package com.github.petrovyegor.tennisscoreboard.model;
+package com.github.petrovyegor.tennisscoreboard.model.match;
 
 public enum Point {
     LOVE("0"),

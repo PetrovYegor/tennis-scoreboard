@@ -1,8 +1,8 @@
 package com.github.petrovyegor.tennisscoreboard.controller;
 
-import com.github.petrovyegor.tennisscoreboard.dto.finished_match.MatchResultDto;
-import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreRequestDto;
-import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreResponseDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match.finished.MatchResultDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match.score.MatchScoreRequestDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match.score.MatchScoreResponseDto;
 import com.github.petrovyegor.tennisscoreboard.service.FinishedMatchesPersistenceService;
 import com.github.petrovyegor.tennisscoreboard.service.MatchScoreCalculationService;
 import com.github.petrovyegor.tennisscoreboard.service.OngoingMatchesService;

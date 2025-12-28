@@ -1,7 +1,7 @@
 package com.github.petrovyegor.tennisscoreboard;
 
-import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
-import com.github.petrovyegor.tennisscoreboard.model.Point;
+import com.github.petrovyegor.tennisscoreboard.model.match.PlayerScore;
+import com.github.petrovyegor.tennisscoreboard.model.match.Point;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

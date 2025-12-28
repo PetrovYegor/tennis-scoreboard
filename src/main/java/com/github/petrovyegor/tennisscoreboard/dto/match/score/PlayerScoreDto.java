@@ -1,6 +1,6 @@
-package com.github.petrovyegor.tennisscoreboard.dto.match_score;
+package com.github.petrovyegor.tennisscoreboard.dto.match.score;
 
-import com.github.petrovyegor.tennisscoreboard.model.Point;
+import com.github.petrovyegor.tennisscoreboard.model.match.Point;
 
 public record PlayerScoreDto(
         int sets,

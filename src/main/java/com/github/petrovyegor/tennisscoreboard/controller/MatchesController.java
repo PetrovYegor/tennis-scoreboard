@@ -1,7 +1,7 @@
 package com.github.petrovyegor.tennisscoreboard.controller;
 
-import com.github.petrovyegor.tennisscoreboard.dto.match.MatchesRequestDto;
-import com.github.petrovyegor.tennisscoreboard.dto.match.MatchesResponseDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match.finished.MatchesRequestDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match.finished.MatchesResponseDto;
 import com.github.petrovyegor.tennisscoreboard.service.FinishedMatchesPersistenceService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

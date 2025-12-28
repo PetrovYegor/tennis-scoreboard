@@ -1,4 +1,4 @@
-package com.github.petrovyegor.tennisscoreboard.dto.finished_match;
+package com.github.petrovyegor.tennisscoreboard.dto.match.finished;
 
 import java.util.UUID;
 

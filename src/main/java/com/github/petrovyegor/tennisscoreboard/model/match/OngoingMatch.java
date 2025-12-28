@@ -1,4 +1,4 @@
-package com.github.petrovyegor.tennisscoreboard.model;
+package com.github.petrovyegor.tennisscoreboard.model.match;
 
 import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
 import lombok.Getter;

@@ -1,9 +1,9 @@
 package com.github.petrovyegor.tennisscoreboard.service;
 
-import com.github.petrovyegor.tennisscoreboard.dto.finished_match.MatchResultDto;
-import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreRequestDto;
-import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
-import com.github.petrovyegor.tennisscoreboard.model.PlayerScore;
+import com.github.petrovyegor.tennisscoreboard.dto.match.finished.MatchResultDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match.score.MatchScoreRequestDto;
+import com.github.petrovyegor.tennisscoreboard.model.match.OngoingMatch;
+import com.github.petrovyegor.tennisscoreboard.model.match.PlayerScore;
 
 import java.util.UUID;
 

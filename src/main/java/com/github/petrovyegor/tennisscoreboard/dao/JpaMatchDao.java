@@ -1,6 +1,6 @@
 package com.github.petrovyegor.tennisscoreboard.dao;
 
-import com.github.petrovyegor.tennisscoreboard.dto.match.MatchesResponseDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match.finished.MatchesResponseDto;
 import com.github.petrovyegor.tennisscoreboard.exception.DBException;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
 import com.github.petrovyegor.tennisscoreboard.util.JpaUtil;

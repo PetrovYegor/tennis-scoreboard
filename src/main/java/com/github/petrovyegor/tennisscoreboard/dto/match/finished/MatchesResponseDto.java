@@ -1,4 +1,4 @@
-package com.github.petrovyegor.tennisscoreboard.dto.match;
+package com.github.petrovyegor.tennisscoreboard.dto.match.finished;
 
 import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
 

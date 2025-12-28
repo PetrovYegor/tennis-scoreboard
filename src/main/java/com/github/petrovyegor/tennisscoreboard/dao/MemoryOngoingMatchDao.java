@@ -1,6 +1,6 @@
 package com.github.petrovyegor.tennisscoreboard.dao;
 
-import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
+import com.github.petrovyegor.tennisscoreboard.model.match.OngoingMatch;
 
 import java.util.Optional;
 import java.util.UUID;

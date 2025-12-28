@@ -3,11 +3,11 @@ package com.github.petrovyegor.tennisscoreboard.service;
 import com.github.petrovyegor.tennisscoreboard.dao.JpaMatchDao;
 import com.github.petrovyegor.tennisscoreboard.dao.JpaPlayerDao;
 import com.github.petrovyegor.tennisscoreboard.dao.MemoryOngoingMatchDao;
-import com.github.petrovyegor.tennisscoreboard.dto.match.MatchesRequestDto;
-import com.github.petrovyegor.tennisscoreboard.dto.match.MatchesResponseDto;
-import com.github.petrovyegor.tennisscoreboard.dto.match_score.MatchScoreRequestDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match.finished.MatchesRequestDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match.finished.MatchesResponseDto;
+import com.github.petrovyegor.tennisscoreboard.dto.match.score.MatchScoreRequestDto;
 import com.github.petrovyegor.tennisscoreboard.exception.NotFoundException;
-import com.github.petrovyegor.tennisscoreboard.model.OngoingMatch;
+import com.github.petrovyegor.tennisscoreboard.model.match.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
 

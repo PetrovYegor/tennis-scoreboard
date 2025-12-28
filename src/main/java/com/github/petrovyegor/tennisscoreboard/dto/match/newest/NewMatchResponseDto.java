@@ -1,4 +1,4 @@
-package com.github.petrovyegor.tennisscoreboard.dto.new_match;
+package com.github.petrovyegor.tennisscoreboard.dto.match.newest;
 
 import java.util.UUID;
 

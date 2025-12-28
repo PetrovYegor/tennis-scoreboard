@@ -7,11 +7,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Set;
 
 @WebFilter("/*")
 public class ErrorHandlerFilter implements Filter {
-    private static final String FATAL_ERROR_MESSAGE = "Fatal error. ";
     private static final String UNSUPPORTED_URL_MESSAGE = "Page not found. Unsupported URL '%s' given. ";
+    private static final Set<String> EXACT_PATHS = Set.of(
+            "/", "/index", "/new-match", "/home"
+    );
+    private static final List<String> PREFIX_PATHS = List.of(
+            "/matches", "/match-score", "/finished-match", "/css/", "/js/", "/images", "/error.jsp"
+    );
 
     @Override
     public void init(FilterConfig filterConfig) {
@@ -65,14 +72,6 @@ public class ErrorHandlerFilter implements Filter {
     }
 
     private boolean isValidPath(String path) {
-        return path.equals("/") ||
-                path.equals("/new-match") ||
-                path.equals("/home") ||
-                path.equals("/index") ||
-                path.startsWith("/matches") ||
-                path.startsWith("/match-score") ||
-                path.startsWith("/finished-match") ||
-                path.startsWith("/css/") ||
-                path.startsWith("/error.jsp");
+        return EXACT_PATHS.contains(path) || PREFIX_PATHS.stream().anyMatch(path::startsWith);
     }
 }

@@ -21,21 +21,21 @@ public class PlayerScore {
     }
 
     public void addTieBreakPoint() {
-        tieBreakPoints++;
+        this.tieBreakPoints++;
     }
 
     public void addPoint() {
-        point = getNextRegularPoint();
+        this.point = getNextRegularPoint();
     }
 
     public void setAdvantage() {
-        advantage = true;
-        point = Point.ADVANTAGE;
+        this.advantage = true;
+        this.point = Point.ADVANTAGE;
     }
 
     public void loseAdvantage() {
-        advantage = false;
-        point = Point.FORTY;
+        this.advantage = false;
+        this.point = Point.FORTY;
     }
 
     public boolean isUnderForty() {
@@ -51,22 +51,22 @@ public class PlayerScore {
     }
 
     public void winGame() {
-        games++;
+        this.games++;
     }
 
     public void winSet() {
-        sets++;
+        this.sets++;
     }
 
     public void resetAfterGame() {
-        point = Point.LOVE;
-        advantage = false;
+        this.point = Point.LOVE;
+        this.advantage = false;
     }
 
     public void resetAfterSet() {
         resetAfterGame();
-        games = 0;
-        tieBreakPoints = 0;
+        this.games = 0;
+        this.tieBreakPoints = 0;
     }
 
     public String getFormattedRegularOrTieBreakPoint() {

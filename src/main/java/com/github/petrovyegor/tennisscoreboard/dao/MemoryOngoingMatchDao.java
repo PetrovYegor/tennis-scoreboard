@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class MemoryOngoingMatchDao implements CrudDao<OngoingMatch, UUID> {
+public class MemoryOngoingMatchDao implements BaseEntityDao<OngoingMatch, UUID> {
     private static final ConcurrentHashMap<UUID, OngoingMatch> ongoingMatches = new ConcurrentHashMap<>();
 
     public Optional<OngoingMatch> findById(UUID matchUuid) {

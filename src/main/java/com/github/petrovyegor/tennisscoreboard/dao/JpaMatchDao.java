@@ -1,6 +1,5 @@
 package com.github.petrovyegor.tennisscoreboard.dao;
 
-import com.github.petrovyegor.tennisscoreboard.dto.match.finished.MatchesResponseDto;
 import com.github.petrovyegor.tennisscoreboard.exception.DBException;
 import com.github.petrovyegor.tennisscoreboard.model.PageResult;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
@@ -19,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-public class JpaMatchDao implements CrudDao<Match, Integer> {
+public class JpaMatchDao implements BaseEntityDao<Match, Integer> {
     public Optional<Match> findById(Integer id) {
         try (EntityManager em = JpaUtil.getEntityManager()) {
             Match result = em.find(Match.class, id);

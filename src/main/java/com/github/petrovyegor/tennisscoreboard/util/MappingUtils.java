@@ -1,7 +1,9 @@
 package com.github.petrovyegor.tennisscoreboard.util;
 
+import com.github.petrovyegor.tennisscoreboard.dto.match.finished.MatchesResponseDto;
 import com.github.petrovyegor.tennisscoreboard.dto.match.score.MatchScoreResponseDto;
 import com.github.petrovyegor.tennisscoreboard.dto.match.score.PlayerScoreDto;
+import com.github.petrovyegor.tennisscoreboard.model.PageResult;
 import com.github.petrovyegor.tennisscoreboard.model.match.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.model.match.PlayerScore;
 
@@ -30,5 +32,15 @@ public class MappingUtils {
                 ongoingMatch.getSecondPlayer().getName(),
                 firstPlayerScoreDto,
                 secondPlayerScoreDto);
+    }
+
+    public static MatchesResponseDto toMatchesResponseDto(PageResult pageResult) {
+        return new MatchesResponseDto(
+                pageResult.content(),
+                pageResult.totalCount(),
+                pageResult.totalPages(),
+                pageResult.pageSize(),
+                pageResult.pageNumber()
+        );
     }
 }

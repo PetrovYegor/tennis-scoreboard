@@ -7,9 +7,11 @@ import com.github.petrovyegor.tennisscoreboard.dto.match.finished.MatchesRequest
 import com.github.petrovyegor.tennisscoreboard.dto.match.finished.MatchesResponseDto;
 import com.github.petrovyegor.tennisscoreboard.dto.match.score.MatchScoreRequestDto;
 import com.github.petrovyegor.tennisscoreboard.exception.NotFoundException;
+import com.github.petrovyegor.tennisscoreboard.model.PageResult;
 import com.github.petrovyegor.tennisscoreboard.model.match.OngoingMatch;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
 import com.github.petrovyegor.tennisscoreboard.model.entity.Player;
+import com.github.petrovyegor.tennisscoreboard.util.MappingUtils;
 
 import java.util.UUID;
 
@@ -34,6 +36,7 @@ public class FinishedMatchesPersistenceService {
         int pageNumber = matchesRequestDto.pageNumber();
         int pageSize = matchesRequestDto.pageSize();
         String filterByName = matchesRequestDto.playerName();
-        return jpaMatchDao.findByCriteria(pageNumber, pageSize, filterByName).orElseThrow(() -> new RuntimeException("Failed to retrieve list of finished matches"));
+        PageResult pageResult = jpaMatchDao.findByName(pageNumber, pageSize, filterByName).orElseThrow(() -> new RuntimeException("Failed to retrieve list of finished matches"));
+        return MappingUtils.toMatchesResponseDto(pageResult);
     }
 }

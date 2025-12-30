@@ -1,10 +1,10 @@
-package com.github.petrovyegor.tennisscoreboard.dto.match.finished;
+package com.github.petrovyegor.tennisscoreboard.model;
 
 import com.github.petrovyegor.tennisscoreboard.model.entity.Match;
 
 import java.util.List;
 
-public record MatchesResponseDto(
+public record PageResult (
         List<Match> content,
         long totalCount,
         int totalPages,
